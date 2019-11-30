@@ -23,7 +23,7 @@ namespace ta {
 
             virtual void setClearColor(ta::graphics::Color color);
             ta::graphics::Color getClearColor();
-            ta::graphics::ShaderProgram getDefaultShader();
+            ta::graphics::ShaderProgram& getDefaultShader();
 
             virtual void draw2d(ta::graphics::Drawable& drawable);
             virtual void draw3d(ta::graphics::Drawable& drawable);
