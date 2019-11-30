@@ -11,12 +11,12 @@ namespace ta {
         class Shader {
         public:
             enum class Type {
-                Vertex,
-                TesselationControl,
-                TesselationEvaluation,
-                Geometry,
-                Fragment,
-                Compute
+                Vertex = GL_VERTEX_SHADER,
+                TesselationControl = GL_TESS_CONTROL_SHADER,
+                TesselationEvaluation = GL_TESS_EVALUATION_SHADER,
+                Geometry = GL_GEOMETRY_SHADER,
+                Fragment = GL_FRAGMENT_SHADER,
+                Compute = GL_COMPUTE_SHADER
             };
 
             /**
@@ -55,13 +55,6 @@ namespace ta {
              * @return The ID
              */
             unsigned int getID() const;
-
-            /**
-             * @brief Converts a ta::graphics::Shader::Type to an OpenGL shader type
-             * @param  type The type to convert
-             * @return      The converted type
-             */
-            static GLenum typeToGL(ta::graphics::Shader::Type type);
 
         private:
             /* data */

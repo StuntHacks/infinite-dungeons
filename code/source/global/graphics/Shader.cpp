@@ -11,7 +11,6 @@ namespace ta {
 
         bool Shader::compile(const std::string& source, ta::graphics::Shader::Type type) {
             m_type = type;
-            GLenum glType = typeToGL(type);
 
             GLint success;
             GLchar msg[512];
@@ -22,10 +21,10 @@ namespace ta {
                 glDeleteShader(m_shader);
             }
 
-            m_shader = glCreateShader(glType);
+            m_shader = glCreateShader(static_cast<GLenum>(type));
 
             if (!m_shader) {
-                printf("OpenGL: %u: cannot create shader\n", glType);
+                printf("OpenGL: %u: cannot create shader\n", static_cast<GLenum>(type));
                 return false;
             }
 
@@ -37,7 +36,7 @@ namespace ta {
 
             if (!success) {
                 glGetShaderInfoLog(m_shader, sizeof(msg), nullptr, msg);
-                printf("OpenGL: %u: %s\n", glType, msg);
+                printf("OpenGL: %u: %s\n", static_cast<GLenum>(type), msg);
                 glDeleteShader(m_shader);
                 return false;
             }
@@ -59,31 +58,6 @@ namespace ta {
 
         unsigned int Shader::getID() const {
             return m_shader;
-        }
-
-        GLenum Shader::typeToGL(ta::graphics::Shader::Type type) {
-            switch (type) {
-            case ta::graphics::Shader::Type::Vertex:
-                return GL_VERTEX_SHADER;
-                break;
-            case ta::graphics::Shader::Type::TesselationControl:
-                return GL_TESS_CONTROL_SHADER;
-                break;
-            case ta::graphics::Shader::Type::TesselationEvaluation:
-                return GL_TESS_EVALUATION_SHADER;
-                break;
-            case ta::graphics::Shader::Type::Geometry:
-                return GL_GEOMETRY_SHADER;
-                break;
-            case ta::graphics::Shader::Type::Fragment:
-                return GL_FRAGMENT_SHADER;
-                break;
-            case ta::graphics::Shader::Type::Compute:
-                return GL_COMPUTE_SHADER;
-                break;
-            default:
-                return GL_NONE;
-            }
         }
     } /* graphics */
 } /* ta */
