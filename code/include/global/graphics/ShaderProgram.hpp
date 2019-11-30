@@ -2,6 +2,15 @@
 
 #include <string>
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+
+#include "Vertex.hpp"
+
 namespace ta {
     namespace graphics {
         class Shader;
@@ -52,6 +61,16 @@ namespace ta {
              * @return The ID
              */
             const unsigned int getID() const;
+
+            void setFloat(const std::string& name, float value);
+            void setInteger(const std::string& name, int value);
+            void setVector2f(const std::string& name, float x, float y);
+            void setVector2f(const std::string& name, const ta::graphics::Vector2f& value);
+            void setVector3f(const std::string& name, float x, float y, float z);
+            void setVector3f(const std::string& name, const ta::graphics::Vector3f& value);
+            void setVector4f(const std::string& name, float x, float y, float z, float w);
+            void setVector4f(const std::string& name, const ta::graphics::Vector4f& value);
+            void setMatrix4(const std::string& name, const glm::mat4& matrix);
 
         private:
             /* data */

@@ -67,5 +67,41 @@ namespace ta {
         const unsigned int ShaderProgram::getID() const {
             return m_program;
         }
+
+        void ShaderProgram::setFloat(const std::string& name, float value) {
+            glUniform1f(glGetUniformLocation(m_program, name.c_str()), value);
+        }
+
+        void ShaderProgram::setInteger(const std::string& name, int value) {
+            glUniform1i(glGetUniformLocation(m_program, name.c_str()), value);
+        }
+
+        void ShaderProgram::setVector2f(const std::string& name, float x, float y) {
+            glUniform2f(glGetUniformLocation(m_program, name.c_str()), x, y);
+        }
+
+        void ShaderProgram::setVector2f(const std::string& name, const ta::graphics::Vector2f& value) {
+            glUniform2f(glGetUniformLocation(m_program, name.c_str()), value.u, value.v);
+        }
+
+        void ShaderProgram::setVector3f(const std::string& name, float x, float y, float z) {
+            glUniform3f(glGetUniformLocation(m_program, name.c_str()), x, y, z);
+        }
+
+        void ShaderProgram::setVector3f(const std::string& name, const ta::graphics::Vector3f& value) {
+            glUniform3f(glGetUniformLocation(m_program, name.c_str()), value.x, value.y, value.z);
+        }
+
+        void ShaderProgram::setVector4f(const std::string& name, float x, float y, float z, float w) {
+            glUniform4f(glGetUniformLocation(m_program, name.c_str()), x, y, z, w);
+        }
+
+        void ShaderProgram::setVector4f(const std::string& name, const ta::graphics::Vector4f& value) {
+            glUniform4f(glGetUniformLocation(m_program, name.c_str()), value.x, value.y, value.z, value.w);
+        }
+
+        void ShaderProgram::setMatrix4(const std::string& name, const glm::mat4& matrix) {
+            glUniformMatrix4fv(glGetUniformLocation(m_program, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+        }
     } /* graphics */
 } /* ta */
