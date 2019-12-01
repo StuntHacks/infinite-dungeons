@@ -3,16 +3,11 @@
 #include "global/graphics/Shader.hpp"
 #include "global/graphics/ShaderProgram.hpp"
 #include "global/graphics/Vertex.hpp"
+#include "opengl.hpp"
 
 #include <string>
 #include <switch.h>
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <EGL/egl.h>
 
 EGLDisplay ta::graphics::Renderer::m_display;
 EGLContext ta::graphics::Renderer::m_context;
