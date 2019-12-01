@@ -120,7 +120,7 @@ namespace ta {
          * @return        Button values in bits
          */
         static inline u32 buttonsDown(Player player = Player::All) {
-            return (player == Player::All ? m_inputData.releasedButtons : m_inputData.playerData[(int) player].downButtons);
+            return (player == Player::All ? m_inputData.downButtons : m_inputData.playerData[(int) player].downButtons);
         }
 
         /**
@@ -129,7 +129,7 @@ namespace ta {
          * @return        Button values in bits
          */
         static inline u32 buttonsPressed(Player player = Player::All) {
-            return (player == Player::All ? m_inputData.releasedButtons : m_inputData.playerData[(int) player].pressedButtons);
+            return (player == Player::All ? m_inputData.pressedButtons : m_inputData.playerData[(int) player].pressedButtons);
         }
 
         /**
