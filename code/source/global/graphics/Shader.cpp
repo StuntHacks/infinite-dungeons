@@ -1,7 +1,7 @@
 #include "global/graphics/Shader.hpp"
+#include "global/Console.hpp"
 
 #include <fstream>
-#include <stdio.h>
 
 namespace ta {
     namespace graphics {
@@ -24,7 +24,7 @@ namespace ta {
             m_shader = glCreateShader(static_cast<GLenum>(type));
 
             if (!m_shader) {
-                printf("OpenGL: %u: cannot create shader\n", static_cast<GLenum>(type));
+                ta::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + ": cannot create shader", "Shader.cpp:24");
                 return false;
             }
 
@@ -36,7 +36,7 @@ namespace ta {
 
             if (!success) {
                 glGetShaderInfoLog(m_shader, sizeof(msg), nullptr, msg);
-                printf("OpenGL: %u: %s\n", static_cast<GLenum>(type), msg);
+                ta::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + msg, "Shader.cpp:35");
                 glDeleteShader(m_shader);
                 return false;
             }

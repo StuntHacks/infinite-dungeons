@@ -1,5 +1,6 @@
 #include "global/graphics/ShaderProgram.hpp"
 #include "global/graphics/Shader.hpp"
+#include "global/Console.hpp"
 
 #include <glad/glad.h>
 #include <stdio.h>
@@ -34,7 +35,7 @@ namespace ta {
                 if (!success) {
                     char buf[512];
                     glGetProgramInfoLog(m_program, sizeof(buf), nullptr, buf);
-                    printf("ShaderProgram: Link error: %s\n", buf);
+                    ta::Console::error("Link error " + std::string(buf), "ShaderProgram.cpp:32");
                     return false;
                 }
 
