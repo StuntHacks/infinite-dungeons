@@ -3,11 +3,11 @@
 #include "global/graphics/Shader.hpp"
 #include "global/graphics/ShaderProgram.hpp"
 #include "global/graphics/Vertex.hpp"
+#include "global/Console.hpp"
 #include "opengl.hpp"
 
 #include <string>
 #include <switch.h>
-
 
 EGLDisplay ta::graphics::Renderer::m_display;
 EGLContext ta::graphics::Renderer::m_context;
@@ -18,30 +18,30 @@ namespace ta {
         Renderer::Renderer(bool force2d) :
         m_clearColor(0, 0, 0, 0) {
             if (!m_context) {
+                ta::Console::log("Initializing screen...", "Renderer.cpp:19", ta::Console::White);
+
                 // Connect to the EGL default display
                 m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
-                printf(CONSOLE_RESET "Initializing screen...\n");
-
                 if (!m_display) {
-                    printf(CONSOLE_RED "EGL: Could not connect to display! error: %d\n" CONSOLE_RESET, eglGetError());
+                    ta::Console::error("EGL: Could not connect to display! error: " + eglGetError(), "Renderer.cpp:24", true);
                     return;
                 }
 
-                printf(CONSOLE_GREEN "EGL: Connected to display successfully!\n" CONSOLE_RESET);
+                ta::Console::success("EGL: Connected to display successfully!", "Renderer.cpp:24");
 
                 // Initialize the EGL display connection
                 eglInitialize(m_display, nullptr, nullptr);
 
                 // Select OpenGL (Core) as the desired graphics API
                 if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-                    printf(CONSOLE_RED "EGL: Could not bind OpenGL-API! error: %d\n" CONSOLE_RESET, eglGetError());
+                    ta::Console::error("EGL: Could not bind OpenGL-API! error: " + eglGetError(), "Renderer.cpp:34", true);
                     eglTerminate(m_display);
                     m_display = nullptr;
                     return;
                 }
 
-                printf(CONSOLE_GREEN "EGL: Bound OpenGL-API successfully!\n" CONSOLE_RESET);
+                ta::Console::success("EGL: Bound OpenGL-API successfully!", "Renderer.cpp:34");
 
                 // Get an appropriate EGL framebuffer configuration
                 EGLConfig config;
@@ -61,25 +61,25 @@ namespace ta {
                 eglChooseConfig(m_display, framebufferAttributeList, &config, 1, &numConfigs);
 
                 if (numConfigs == 0) {
-                    printf(CONSOLE_RED "EGL: No config found! error: %d\n" CONSOLE_RESET, eglGetError());
+                    ta::Console::error("EGL: No config found! error: " + eglGetError(), "Renderer.cpp:61", true);
                     eglTerminate(m_display);
                     m_display = nullptr;
                     return;
                 }
 
-                printf(CONSOLE_RESET "EGL: Configurations loaded\n" CONSOLE_RESET);
+                ta::Console::log("EGL: Configurations loaded", "Renderer.cpp:61", ta::Console::White);
 
                 // Create an EGL window surface
                 m_surface = eglCreateWindowSurface(m_display, config, nwindowGetDefault(), nullptr);
 
                 if (!m_surface) {
-                    printf(CONSOLE_RED "EGL: Surface creation failed! error: %d\n" CONSOLE_RESET, eglGetError());
+                    ta::Console::error("EGL: Surface creation failed! error: " + eglGetError(), "Renderer.cpp:73", true);
                     eglTerminate(m_display);
                     m_display = nullptr;
                     return;
                 }
 
-                printf(CONSOLE_GREEN "EGL: Surface created successfully!\n" CONSOLE_RESET);
+                ta::Console::success("EGL: Surface created successfully!", "Renderer.cpp:73");
 
                 // Create an EGL rendering context
                 static const EGLint contextAttributeList[] = {
@@ -92,7 +92,7 @@ namespace ta {
                 m_context = eglCreateContext(m_display, config, EGL_NO_CONTEXT, contextAttributeList);
 
                 if (!m_context) {
-                    printf(CONSOLE_RED "EGL: Context creation failed! error: %d\n" CONSOLE_RESET, eglGetError());
+                    ta::Console::error("EGL: Context creation failed! error: " + eglGetError(), "Renderer.cpp:92", true);
                     eglDestroySurface(m_display, m_surface);
                     m_surface = nullptr;
                     eglTerminate(m_display);
@@ -100,7 +100,7 @@ namespace ta {
                     return;
                 }
 
-                printf(CONSOLE_GREEN "EGL: Context created successfully!\n" CONSOLE_RESET);
+                ta::Console::success("EGL: Context created successfully!", "Renderer.cpp:92");
 
                 // Connect the context to the surface
                 eglMakeCurrent(m_display, m_surface, m_surface, m_context);
@@ -145,18 +145,36 @@ namespace ta {
 
                 if (!m_defaultShader.attach(vsh).attach(fsh).link()) {
                     // this should never happen
-                    printf(CONSOLE_RED "Renderer: Failed to link default shader\n" CONSOLE_RESET);
+                    ta::Console::error("Failed to link default shader", "Renderer.cpp:146", true);
+
+                    eglDestroyContext(m_display, m_context);
+                    m_context = nullptr;
+
+                    eglDestroySurface(m_display, m_surface);
+                    m_surface = nullptr;
+
+                    eglTerminate(m_display);
+                    m_display = nullptr;
                     return;
                 }
 
-                printf(CONSOLE_RESET "Renderer: Default shader linked\n" CONSOLE_RESET);
+                ta::Console::log("Default shader linked", "Renderer.cpp:146", ta::Console::White);
 
                 if (!m_defaultShader.use()) {
-                    printf(CONSOLE_RED "Renderer: Failed to use default shader\n" CONSOLE_RESET);
+                    ta::Console::error("Failed to use default shader", "Renderer.cpp:163", true);
+
+                    eglDestroyContext(m_display, m_context);
+                    m_context = nullptr;
+
+                    eglDestroySurface(m_display, m_surface);
+                    m_surface = nullptr;
+
+                    eglTerminate(m_display);
+                    m_display = nullptr;
                     return;
                 }
 
-                printf(CONSOLE_GREEN "Renderer: Default shader applied successfully!\n" CONSOLE_RESET);
+                ta::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:163");
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
