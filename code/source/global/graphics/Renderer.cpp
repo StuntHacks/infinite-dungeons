@@ -261,7 +261,7 @@ namespace ta {
                 glDisable(GL_CULL_FACE);
                 glDisable(GL_DEPTH_TEST);
 
-                glm::mat4 projectionMatrix = glm::ortho(0.0f, 1920.0f, 1080.0f, 0.0f);
+                glm::mat4 projectionMatrix = getOrthoProjection();
                 m_defaultShader.setMatrix4("projection", projectionMatrix);
 
                 if (m_force2d) {
@@ -361,6 +361,5 @@ namespace ta {
         ta::graphics::ShaderProgram& Renderer::getCurrentShader() {
             return m_currentShader != "" ? m_shaders[m_currentShader] : m_defaultShader;
         }
-
     } /* graphics */
 } /* ta */
