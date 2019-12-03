@@ -16,6 +16,7 @@ EGLSurface ta::graphics::Renderer::m_surface;
 namespace ta {
     namespace graphics {
         Renderer::Renderer(bool force2d) :
+        m_currentShader(""),
         m_clearColor(0, 0, 0, 0) {
             if (!m_context) {
                 ta::Console::log("Initializing screen...", "Renderer.cpp:19", ta::Console::White);
@@ -221,10 +222,6 @@ namespace ta {
             return m_clearColor;
         }
 
-        ta::graphics::ShaderProgram& Renderer::getDefaultShader() {
-            return m_defaultShader;
-        }
-
         void Renderer::clear() {
             clear2d();
             clear3d();
@@ -298,5 +295,72 @@ namespace ta {
             glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ta::graphics::Vertex), (void*) offsetof(ta::graphics::Vertex, normals));
             glEnableVertexAttribArray(3);
         }
+
+        bool Renderer::addShader(const ta::graphics::ShaderProgram& program, const std::string& name, bool overwrite) {
+            auto search = m_shaders.find(name);
+            if (search == m_shaders.end()) {
+                m_shaders[name] = program;
+                return true;
+            }
+
+            if (overwrite) {
+                m_shaders.erase(name);
+                m_shaders[name] = program;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool Renderer::removeShader(const std::string& name) {
+            if (name == m_currentShader) {
+                m_defaultShader.use();
+            }
+
+            auto search = m_shaders.find(name);
+            if (search != m_shaders.end()) {
+                m_shaders.erase(name);
+                return true;
+            }
+
+            return false;
+        }
+
+        void Renderer::clearShaders() {
+            m_defaultShader.use();
+            m_shaders.clear();
+        }
+
+        ta::graphics::ShaderProgram& Renderer::getShader(const std::string& name) {
+            return m_shaders[name];
+        }
+
+        bool Renderer::useShader(const std::string& name) {
+            auto search = m_shaders.find(name);
+            if (search != m_shaders.end()) {
+                m_currentShader = "name";
+                return m_shaders[name].use();
+            }
+
+            return false;
+        }
+
+        ta::graphics::ShaderProgram& Renderer::getDefaultShader() {
+            return m_defaultShader;
+        }
+
+        bool Renderer::useDefaultShader() {
+            m_currentShader = "";
+            return m_defaultShader.use();
+        }
+
+        const std::string& Renderer::getCurrentShaderName() const {
+            return m_currentShader;
+        }
+
+        ta::graphics::ShaderProgram& Renderer::getCurrentShader() {
+            return m_currentShader != "" ? m_shaders[m_currentShader] : m_defaultShader;
+        }
+
     } /* graphics */
 } /* ta */
