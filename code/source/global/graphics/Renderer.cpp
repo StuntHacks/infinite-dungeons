@@ -248,7 +248,7 @@ namespace ta {
                     glEnable(GL_DEPTH_TEST);
                     glDisable(GL_BLEND);
                     glm::mat4 view = glm::mat4(1.0f);
-                    m_defaultShader.setMatrix4("projection", view);
+                    getCurrentShader().setMatrix4("projection", view);
 
                     for (auto& drawable: m_drawStack3d) {
                         drawable->draw(*this, false);
@@ -262,7 +262,7 @@ namespace ta {
                 glDisable(GL_DEPTH_TEST);
 
                 glm::mat4 projectionMatrix = getOrthoProjection();
-                m_defaultShader.setMatrix4("projection", projectionMatrix);
+                getCurrentShader().setMatrix4("projection", projectionMatrix);
 
                 if (m_force2d) {
                     for (auto& drawable: m_drawStack3d) {
@@ -338,7 +338,7 @@ namespace ta {
         bool Renderer::useShader(const std::string& name) {
             auto search = m_shaders.find(name);
             if (search != m_shaders.end()) {
-                m_currentShader = "name";
+                m_currentShader = name;
                 return m_shaders[name].use();
             }
 
