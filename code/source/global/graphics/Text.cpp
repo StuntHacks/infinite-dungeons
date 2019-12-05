@@ -9,9 +9,8 @@ ta::graphics::ShaderProgram ta::graphics::Text::m_shader;
 
 namespace ta {
     namespace graphics {
-        Text::Text(ta::graphics::Font& font, const std::wstring& text, int height, int width, float posX, float posY, ta::graphics::Color textColor) :
+        Text::Text(ta::graphics::Font& font, const std::wstring& text, int height, float posX, float posY, ta::graphics::Color textColor) :
         m_height(height),
-        m_width(width),
         m_posX(posX),
         m_posY(posY),
         m_textColor(textColor),
@@ -88,7 +87,6 @@ namespace ta {
 
         void Text::setFont(ta::graphics::Font& font) {
             m_font = font;
-            _reloadFont();
         }
 
         ta::graphics::Font& Text::getFont() const {
@@ -109,36 +107,10 @@ namespace ta {
 
         void Text::setHeight(int height) {
             m_height = height;
-            _reloadFont();
         }
 
         int Text::getHeight() {
             return m_height;
-        }
-
-        void Text::setWidth(int width) {
-            m_width = width;
-            _reloadFont();
-        }
-
-        int Text::getWidth() {
-            return m_width;
-        }
-
-        void Text::setDimensions(int height, int width) {
-            m_height = height;
-            m_width = width;
-            _reloadFont();
-        }
-
-        void Text::setDimensions(ta::graphics::Vector2f dimensions) {
-            m_height = dimensions.u;
-            m_width = dimensions.v;
-            _reloadFont();
-        }
-
-        ta::graphics::Vector2f Text::getDimensions() {
-            return { static_cast<float>(m_height), static_cast<float>(m_width) };
         }
 
         void Text::setPosX(float posX) {
@@ -180,7 +152,6 @@ namespace ta {
         }
 
         void Text::draw(ta::graphics::Renderer& renderer, bool) {
-            // ta::Lock lock(m_mutex);
             m_shader.use();
             m_shader.setMatrix4("projection", renderer.getOrthoProjection());
             m_shader.setVector4f("textColor", { m_textColor.getRed(), m_textColor.getGreen(), m_textColor.getBlue(), m_textColor.getAlpha() });
@@ -204,7 +175,7 @@ namespace ta {
                     continue;
                 }
 
-                Character ch = m_characters[*c];
+                ta::graphics::Font::Character ch = m_font.getCharacter(*c, m_height);
 
                 GLfloat xpos = x + ch.bearing.x;
                 GLfloat ypos = y - ch.bearing.y;
@@ -229,59 +200,6 @@ namespace ta {
             glBindTexture(GL_TEXTURE_2D, 0);
 
             renderer.getCurrentShader().use();
-        }
-
-        // private methods
-        void Text::_reloadFont() {
-            ta::Lock lock(m_mutex);
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-            FT_Set_Pixel_Sizes(m_font.getFontFace(), m_width, m_height);
-            ta::Console::log("Height: " + std::to_string(m_height), "Text.cpp:239");
-
-            FT_UInt index;
-            FT_ULong character = FT_Get_First_Char(m_font.getFontFace(), &index);
-
-            while (index) {
-                if (FT_Load_Char(m_font.getFontFace(), character, FT_LOAD_RENDER)) {
-                    ta::Console::error("FREETYPE: Failed to load Glyph", "Text.cpp:70");
-                    character = FT_Get_Next_Char(m_font.getFontFace(), character, &index);
-                    continue;
-                }
-
-                // generate texture
-                GLuint texture;
-                glGenTextures(1, &texture);
-                glBindTexture(GL_TEXTURE_2D, texture);
-                glTexImage2D(
-                    GL_TEXTURE_2D,
-                    0,
-                    GL_RED,
-                    m_font.getFontFace()->glyph->bitmap.width,
-                    m_font.getFontFace()->glyph->bitmap.rows,
-                    0,
-                    GL_RED,
-                    GL_UNSIGNED_BYTE,
-                    m_font.getFontFace()->glyph->bitmap.buffer
-                );
-
-                // set texture options
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-                // store character for later use
-                Character charObject = {
-                    texture,
-                    glm::ivec2(m_font.getFontFace()->glyph->bitmap.width, m_font.getFontFace()->glyph->bitmap.rows),
-                    glm::ivec2(m_font.getFontFace()->glyph->bitmap_left, m_font.getFontFace()->glyph->bitmap_top),
-                    static_cast<GLuint>(m_font.getFontFace()->glyph->advance.x)
-                };
-
-                m_characters.insert(std::pair<FT_ULong, Character>(character, charObject));
-                character = FT_Get_Next_Char(m_font.getFontFace(), character, &index);
-            }
         }
     } /* graphics */
 } /* ta */
