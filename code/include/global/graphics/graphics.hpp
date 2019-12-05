@@ -1,5 +1,6 @@
 #include "Color.hpp"
 #include "Drawable.hpp"
+#include "Font.hpp"
 #include "Renderer.hpp"
 #include "RenderTarget.hpp"
 #include "Shader.hpp"
