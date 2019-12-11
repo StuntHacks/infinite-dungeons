@@ -24,10 +24,17 @@ namespace ta {
 
             void setText(const std::wstring& text);
             void appendText(const std::wstring& text);
+            void appendText(const wchar_t character);
             std::wstring getText() const;
+            /// @brief Prepares the characters for the given string. If it's empty, the current text will be used.
+            void prepare(const std::wstring& text = L"");
 
             void setHeight(int height);
             int getHeight();
+            void setLineSpacing(int lineSpacing);
+            int getLineSpacing();
+            void setLetterSpacing(int letterSpacing);
+            int getLetterSpacing();
 
             void setPosX(float posX);
             float getPosX();
@@ -44,7 +51,7 @@ namespace ta {
 
         private:
             /* data */
-            int m_height;
+            int m_height, m_lineSpacing, m_letterSpacing;
             float m_posX, m_posY;
             unsigned int m_vao, m_vbo;
             ta::graphics::Color m_textColor;
