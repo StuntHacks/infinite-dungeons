@@ -11,6 +11,8 @@ namespace ta {
     namespace graphics {
         Text::Text(ta::graphics::Font& font, const std::wstring& text, int height, float posX, float posY, ta::graphics::Color textColor) :
         m_height(height),
+        m_lineSpacing(0),
+        m_letterSpacing(0),
         m_posX(posX),
         m_posY(posY),
         m_textColor(textColor),
@@ -101,8 +103,26 @@ namespace ta {
             m_text += text;
         }
 
+        void Text::appendText(const wchar_t character) {
+            m_text += character;
+        }
+
         std::wstring Text::getText() const {
             return m_text;
+        }
+
+        void Text::prepare(const std::wstring& text) {
+            std::wstring::const_iterator c;
+
+            if (text == L"") {
+                for (c = m_text.begin(); c != m_text.end(); c++) {
+                    m_font.getCharacter(*c, m_height);
+                }
+            } else {
+                for (c = text.begin(); c != text.end(); c++) {
+                    m_font.getCharacter(*c, m_height);
+                }
+            }
         }
 
         void Text::setHeight(int height) {
@@ -111,6 +131,22 @@ namespace ta {
 
         int Text::getHeight() {
             return m_height;
+        }
+
+        void Text::setLineSpacing(int lineSpacing) {
+            m_lineSpacing = lineSpacing;
+        }
+
+        int Text::getLineSpacing() {
+            return m_lineSpacing;
+        }
+
+        void Text::setLetterSpacing(int letterSpacing) {
+            m_letterSpacing = letterSpacing;
+        }
+
+        int Text::getLetterSpacing() {
+            return m_letterSpacing;
         }
 
         void Text::setPosX(float posX) {
@@ -166,9 +202,44 @@ namespace ta {
             std::wstring::const_iterator c;
             for (c = m_text.begin(); c != m_text.end(); c++) {
                 if (*c == '\n') {
-                    y += m_height;
+                    y += m_height + m_lineSpacing;
                     x = m_posX;
                     continue;
+                }
+
+                if (*c == '\\') {
+                    if (std::next(c) == m_text.end()) {
+                        continue;
+                    }
+
+                    c++;
+
+                    switch (*c) {
+                    case 'r':
+                        m_shader.setVector4f("textColor", { 1.0f, 0.2f, 0.25f, m_textColor.getAlpha() });
+                        continue;
+                    case 'g':
+                        m_shader.setVector4f("textColor", { 0.0f, 1.0f, 0.4f, m_textColor.getAlpha() });
+                        continue;
+                    case 'b':
+                        m_shader.setVector4f("textColor", { 0.4f, 0.6f, 1.0f, m_textColor.getAlpha() });
+                        continue;
+                    case 'c':
+                        m_shader.setVector4f("textColor", { 0.2f, 1.0f, 1.0f, m_textColor.getAlpha() });
+                        continue;
+                    case 'm':
+                        m_shader.setVector4f("textColor", { 1.0f, 0.4f, 0.9f, m_textColor.getAlpha() });
+                        continue;
+                    case 'y':
+                        m_shader.setVector4f("textColor", { 1.0f, 1.0f, 0.3f, m_textColor.getAlpha() });
+                        continue;
+                    case 'd':
+                        m_shader.setVector4f("textColor", { m_textColor.getRed(), m_textColor.getGreen(), m_textColor.getBlue(), m_textColor.getAlpha() });
+                        continue;
+                    default:
+                        /* code */
+                        break;
+                    }
                 }
 
                 if (*c == '\r') {
@@ -193,7 +264,7 @@ namespace ta {
                 glDrawArrays(GL_TRIANGLES, 0, 6);
 
                 // advance is in 1/64 pixels
-                x += (ch.advance >> 6); // bitshift by 6 to get value in pixels (2^6 = 64)
+                x += (ch.advance >> 6) + m_letterSpacing; // bitshift by 6 to get value in pixels (2^6 = 64)
             }
 
             glBindVertexArray(0);
