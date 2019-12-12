@@ -3,6 +3,7 @@
 #include "global/graphics/Shader.hpp"
 #include "global/graphics/ShaderProgram.hpp"
 #include "global/graphics/Vertex.hpp"
+#include "global/menu/TextBoxManager.hpp"
 #include "global/Console.hpp"
 #include "opengl.hpp"
 
@@ -239,6 +240,8 @@ namespace ta {
 
         void Renderer::render(bool clearScreen) {
             if (m_context) {
+                ta::menu::TextBoxManager::getInstance().draw(*this);
+
                 if (clearScreen) {
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
                 }
