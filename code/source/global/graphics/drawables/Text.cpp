@@ -2,10 +2,7 @@
 #include "global/graphics/Renderer.hpp"
 #include "global/graphics/Shader.hpp"
 #include "global/graphics/drawables/Text.hpp"
-#include "global/Console.hpp"
 #include "switch/lock.hpp"
-
-ta::graphics::ShaderProgram ta::graphics::Text::m_shader;
 
 namespace ta {
     namespace graphics {

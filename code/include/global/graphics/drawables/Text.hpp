@@ -58,7 +58,7 @@ namespace ta {
             std::wstring m_text;
 
             ta::graphics::Font& m_font;
-            static ta::graphics::ShaderProgram m_shader;
+            ta::graphics::ShaderProgram m_shader;
         };
     } /* graphics */
 } /* ta */
