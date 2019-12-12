@@ -1,3 +1,5 @@
+#pragma once
+
 namespace ta {
     class Application {
     public:
