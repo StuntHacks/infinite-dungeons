@@ -80,7 +80,6 @@ namespace ta {
                 FT_Set_Pixel_Sizes(m_face, 0, height);
 
                 if (FT_Load_Char(m_face, character, FT_LOAD_RENDER)) {
-                    ta::Console::error("FREETYPE: Failed to load Glyph", "Font.cpp:84");
                     return ch;
                 }
 
