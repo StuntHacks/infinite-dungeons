@@ -7,6 +7,9 @@
 
 namespace ta {
     namespace menu {
+        /**
+         * @todo Move special characters into an enum
+         */
         class TextBox: public ta::graphics::Drawable {
         public:
             enum class State {
