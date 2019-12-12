@@ -17,8 +17,6 @@ namespace ta {
             if (filename != "") {
                 loadFromFile(filename);
             }
-
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         }
 
         Font::~Font() {
@@ -69,6 +67,7 @@ namespace ta {
         ta::graphics::Font::Character Font::getCharacter(wchar_t character, int height) {
             Character ch;
             ch.valid = false;
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
             if (m_characters.count(character) != 0) {
                 if (m_characters[character].count(height) != 0) {
@@ -81,7 +80,6 @@ namespace ta {
                 FT_Set_Pixel_Sizes(m_face, 0, height);
 
                 if (FT_Load_Char(m_face, character, FT_LOAD_RENDER)) {
-                    ta::Console::error("FREETYPE: Failed to load Glyph", "Font.cpp:84");
                     return ch;
                 }
 

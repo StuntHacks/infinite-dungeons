@@ -3,6 +3,7 @@
 #include "global/graphics/Shader.hpp"
 #include "global/graphics/ShaderProgram.hpp"
 #include "global/graphics/Vertex.hpp"
+#include "global/menu/TextBoxManager.hpp"
 #include "global/Console.hpp"
 #include "opengl.hpp"
 
@@ -177,6 +178,8 @@ namespace ta {
 
                 ta::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:163");
 
+                m_defaultShader.setMatrix4("transform", glm::mat4(1.0f));
+
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -237,8 +240,10 @@ namespace ta {
 
         void Renderer::render(bool clearScreen) {
             if (m_context) {
+                ta::menu::TextBoxManager::getInstance().draw(*this);
+
                 if (clearScreen) {
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
                 }
 
                 // 3D
