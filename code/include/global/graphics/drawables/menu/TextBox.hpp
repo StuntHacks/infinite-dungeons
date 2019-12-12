@@ -7,6 +7,9 @@
 
 namespace ta {
     namespace menu {
+        /**
+         * @todo Move special characters into an enum
+         */
         class TextBox: public ta::graphics::Drawable {
         public:
             enum class State {
@@ -54,12 +57,15 @@ namespace ta {
 
         protected:
             TextBox();
+            std::vector<std::wstring> split(const std::wstring& text, const std::wstring& delimeter);
 
             /* data */
             int m_displayTime, m_pauseBefore, m_pauseAfter, m_frameCounter;
+            size_t m_page;
             bool m_autoProceed;
             std::wstring m_text;
             std::wstring::const_iterator m_cursor;
+            std::vector<std::wstring> m_pages;
             ta::menu::TextBox::State m_state;
 
             ta::graphics::Font m_font;
