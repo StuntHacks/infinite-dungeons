@@ -17,8 +17,6 @@ namespace ta {
             if (filename != "") {
                 loadFromFile(filename);
             }
-
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         }
 
         Font::~Font() {
@@ -69,6 +67,7 @@ namespace ta {
         ta::graphics::Font::Character Font::getCharacter(wchar_t character, int height) {
             Character ch;
             ch.valid = false;
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
             if (m_characters.count(character) != 0) {
                 if (m_characters[character].count(height) != 0) {
