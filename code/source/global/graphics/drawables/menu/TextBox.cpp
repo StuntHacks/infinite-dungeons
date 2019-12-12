@@ -9,7 +9,7 @@ namespace ta {
         }
 
         std::wstring TextBox::getDisplayedText() const {
-            return std::wstring(m_text.begin(), m_cursor);
+            return std::wstring(m_pages[m_page].begin(), m_cursor);
         }
 
         wchar_t TextBox::getCurrentChar() {
@@ -36,7 +36,10 @@ namespace ta {
                 m_pauseBefore = pauseBefore;
                 m_pauseAfter = pauseAfter;
 
-                m_cursor = m_text.begin();
+                m_pages = split(m_text, L"\\p");
+                m_page = 0;
+
+                m_cursor = m_pages[m_page].begin();
                 m_textObject.setText(L"");
 
                 m_frameCounter = 0;
@@ -50,9 +53,9 @@ namespace ta {
         }
 
         void TextBox::finish() {
-            while (m_cursor != m_text.end()) {
-                bool nextValid = std::next(m_cursor) != m_text.end();
-                bool secondNextValid = std::next(std::next(m_cursor)) != m_text.end();
+            while (m_cursor != m_pages[m_page].end()) {
+                bool nextValid = std::next(m_cursor) != m_pages[m_page].end();
+                bool secondNextValid = std::next(std::next(m_cursor)) != m_pages[m_page].end();
 
                 if (*m_cursor == '\\' && nextValid) {
                     switch (*std::next(m_cursor)) {
@@ -110,9 +113,15 @@ namespace ta {
 
                 m_frameCounter++;
             } else if (m_state == ta::menu::TextBox::State::Drawing) {
-                if (m_cursor == m_text.end()) {
+                if (m_cursor == m_pages[m_page].end()) {
                     m_frameCounter = 0;
-                    m_state = ta::menu::TextBox::State::DisplayingFinal;
+
+                    if (m_page < m_pages.size() - 1) {
+                        m_state = ta::menu::TextBox::State::Displaying;
+                    } else {
+                        m_state = ta::menu::TextBox::State::DisplayingFinal;
+                    }
+
                     return;
                 } else {
                     if (ta::Input::buttonDown(ta::Input::Button::B)) {
@@ -121,8 +130,8 @@ namespace ta {
                     }
 
                     if (m_frameCounter % ta::settings::TextSpeed == 0) {
-                        bool nextValid = std::next(m_cursor) != m_text.end();
-                        bool secondNextValid = std::next(std::next(m_cursor)) != m_text.end();
+                        bool nextValid = std::next(m_cursor) != m_pages[m_page].end();
+                        bool secondNextValid = std::next(std::next(m_cursor)) != m_pages[m_page].end();
 
                         if (*m_cursor == '\\' && nextValid) {
                             switch (*std::next(m_cursor)) {
@@ -134,9 +143,6 @@ namespace ta {
                                 }
 
                                 interrupt();
-                                return;
-                            case 'p':
-
                                 return;
                             default:
                                 m_textObject.appendText(*m_cursor);
@@ -175,6 +181,11 @@ namespace ta {
             } else if (m_state == ta::menu::TextBox::State::Displaying) {
                 if (ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
                     m_frameCounter = 0;
+
+                    m_page++;
+                    m_textObject.setText(L"");
+                    m_cursor = m_pages[m_page].begin();
+
                     m_state = ta::menu::TextBox::State::Drawing;
                     return;
                 }
@@ -191,12 +202,17 @@ namespace ta {
             } else if (m_state == ta::menu::TextBox::State::PauseAfter) {
                 if (m_frameCounter >= m_pauseAfter) {
                     m_frameCounter = 0;
-                    m_text = L"";
-                    m_cursor = m_text.begin();
-                    m_autoProceed = false;
                     m_displayTime = 0;
                     m_pauseBefore = 0;
                     m_pauseAfter = 0;
+
+                    m_text = L"";
+                    m_cursor = m_text.begin();
+
+                    m_pages.clear();
+                    m_page = 0;
+
+                    m_autoProceed = false;
                     m_state = ta::menu::TextBox::State::Finished;
                     return;
                 }
@@ -215,12 +231,32 @@ namespace ta {
         m_pauseBefore(0),
         m_pauseAfter(0),
         m_frameCounter(0),
+        m_page(0),
         m_autoProceed(false),
         m_text(L""),
         m_state(ta::menu::TextBox::State::Finished),
         m_font(ta::settings::DefaultFontPath),
         m_textObject(m_font) {
             m_cursor = m_text.begin();
+        }
+
+        std::vector<std::wstring> TextBox::split(const std::wstring& text, const std::wstring& delimeter) {
+             std::vector<std::wstring> splittedString;
+             size_t startIndex = 0;
+             size_t endIndex = 0;
+
+             while ((endIndex = text.find(delimeter, startIndex)) < text.size()) {
+                 std::wstring val = text.substr(startIndex, endIndex - startIndex);
+                 splittedString.push_back(val);
+                 startIndex = endIndex + delimeter.size();
+             }
+
+             if (startIndex < text.size()) {
+                 std::wstring val = text.substr(startIndex);
+                 splittedString.push_back(val);
+             }
+
+             return splittedString;
         }
     } /* menu */
 } /* ta */
