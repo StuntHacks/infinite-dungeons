@@ -58,6 +58,7 @@ namespace ta {
         protected:
             TextBox();
             std::vector<std::wstring> split(const std::wstring& text, const std::wstring& delimeter);
+            void drawCharacter();
 
             /* data */
             int m_displayTime, m_pauseBefore, m_pauseAfter, m_frameCounter;

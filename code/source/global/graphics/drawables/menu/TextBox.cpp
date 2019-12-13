@@ -54,45 +54,7 @@ namespace ta {
 
         void TextBox::finish() {
             while (m_cursor != m_pages[m_page].end()) {
-                bool nextValid = std::next(m_cursor) != m_pages[m_page].end();
-                bool secondNextValid = std::next(std::next(m_cursor)) != m_pages[m_page].end();
-
-                if (*m_cursor == '\\' && nextValid) {
-                    switch (*std::next(m_cursor)) {
-                    case 'i':
-                        m_cursor++;
-
-                        if (secondNextValid) {
-                            m_cursor++;
-                        }
-
-                        interrupt();
-                        return;
-                    case 'p':
-
-                        return;
-                    default:
-                        m_textObject.appendText(*m_cursor);
-                        m_cursor++;
-                        m_textObject.appendText(*m_cursor);
-
-                        if (secondNextValid) {
-                            m_cursor++;
-                            m_textObject.appendText(*m_cursor);
-                        }
-
-                        break;
-                    }
-                } else {
-                    m_textObject.appendText(*m_cursor);
-
-                    if ((*m_cursor == ' ' || *m_cursor == '\n' || *m_cursor == '\r') && nextValid) {
-                        m_cursor++;
-                        m_textObject.appendText(*m_cursor);
-                    }
-                }
-
-                m_cursor++;
+                drawCharacter();
             }
 
             m_frameCounter = 0;
@@ -130,42 +92,7 @@ namespace ta {
                     }
 
                     if (m_frameCounter % ta::settings::TextSpeed == 0) {
-                        bool nextValid = std::next(m_cursor) != m_pages[m_page].end();
-                        bool secondNextValid = std::next(std::next(m_cursor)) != m_pages[m_page].end();
-
-                        if (*m_cursor == '\\' && nextValid) {
-                            switch (*std::next(m_cursor)) {
-                            case 'i':
-                                m_cursor++;
-
-                                if (secondNextValid) {
-                                    m_cursor++;
-                                }
-
-                                interrupt();
-                                return;
-                            default:
-                                m_textObject.appendText(*m_cursor);
-                                m_cursor++;
-                                m_textObject.appendText(*m_cursor);
-
-                                if (secondNextValid) {
-                                    m_cursor++;
-                                    m_textObject.appendText(*m_cursor);
-                                }
-
-                                break;
-                            }
-                        } else {
-                            m_textObject.appendText(*m_cursor);
-
-                            if ((*m_cursor == ' ' || *m_cursor == '\n' || *m_cursor == '\r') && nextValid) {
-                                m_cursor++;
-                                m_textObject.appendText(*m_cursor);
-                            }
-                        }
-
-                        m_cursor++;
+                        drawCharacter();
                     }
                 }
 
@@ -181,8 +108,8 @@ namespace ta {
             } else if (m_state == ta::menu::TextBox::State::Displaying) {
                 if (ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
                     m_frameCounter = 0;
-
                     m_page++;
+
                     m_textObject.setText(L"");
                     m_cursor = m_pages[m_page].begin();
 
@@ -257,6 +184,45 @@ namespace ta {
              }
 
              return splittedString;
+        }
+
+        void TextBox::drawCharacter() {
+            bool nextValid = std::next(m_cursor) != m_pages[m_page].end();
+            bool secondNextValid = std::next(std::next(m_cursor)) != m_pages[m_page].end();
+
+            if (*m_cursor == '\\' && nextValid) {
+                switch (*std::next(m_cursor)) {
+                case 'i':
+                    m_cursor++;
+
+                    if (secondNextValid) {
+                        m_cursor++;
+                    }
+
+                    interrupt();
+                    return;
+                default:
+                    m_textObject.appendText(*m_cursor);
+                    m_cursor++;
+                    m_textObject.appendText(*m_cursor);
+
+                    if (secondNextValid) {
+                        m_cursor++;
+                        m_textObject.appendText(*m_cursor);
+                    }
+
+                    break;
+                }
+            } else {
+                m_textObject.appendText(*m_cursor);
+
+                if ((*m_cursor == ' ' || *m_cursor == '\n' || *m_cursor == '\r') && nextValid) {
+                    m_cursor++;
+                    m_textObject.appendText(*m_cursor);
+                }
+            }
+
+            m_cursor++;
         }
     } /* menu */
 } /* ta */
