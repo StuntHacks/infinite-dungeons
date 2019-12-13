@@ -1,9 +1,11 @@
 #pragma once
 
+#include <functional>
+#include <string>
+#include <vector>
+
 #include "global/graphics/Font.hpp"
 #include "global/graphics/drawables/Text.hpp"
-#include <vector>
-#include <string>
 
 namespace ta {
     namespace menu {
@@ -32,8 +34,9 @@ namespace ta {
 
             /**
              * @brief Displays the textbox
+             * @param callback A callback to call after the textbox is finished. The single parameter is the selected choice in multi-choice boxes, or -1 otherwise
              */
-            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0);
+            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
 
             /**
              * @brief Interrupts the drawing process
@@ -67,6 +70,7 @@ namespace ta {
             std::wstring m_text;
             std::wstring::const_iterator m_cursor;
             std::vector<std::wstring> m_pages;
+            std::function<void(int)> m_callback;
             ta::menu::TextBox::State m_state;
 
             ta::graphics::Font m_font;

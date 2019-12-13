@@ -28,13 +28,15 @@ namespace ta {
             return m_pauseAfter;
         }
 
-        void TextBox::display(const std::wstring& text, bool autoProceed, int displayTime, int pauseBefore, int pauseAfter) {
+        void TextBox::display(const std::wstring& text, bool autoProceed, int displayTime, int pauseBefore, int pauseAfter, std::function<void(int)> callback) {
             if (m_state == ta::menu::TextBox::State::Finished) {
                 m_text = text;
                 m_autoProceed = autoProceed;
                 m_displayTime = displayTime;
                 m_pauseBefore = pauseBefore;
                 m_pauseAfter = pauseAfter;
+
+                m_callback = callback;
 
                 m_pages = split(m_text, L"\\p");
 
@@ -152,10 +154,13 @@ namespace ta {
 
                     m_autoProceed = false;
                     m_state = ta::menu::TextBox::State::Finished;
+
+                    m_callback(-1);
+                    m_callback = [](int){};
+
                     return;
                 }
 
-                m_frameCounter++;
                 break;
             default:
                 /* do nothing */
@@ -178,6 +183,7 @@ namespace ta {
         m_page(0),
         m_autoProceed(false),
         m_text(L""),
+        m_callback([](int){}),
         m_state(ta::menu::TextBox::State::Finished),
         m_font(ta::settings::DefaultFontPath),
         m_textObject(m_font) {
