@@ -37,6 +37,11 @@ namespace ta {
                 m_pauseAfter = pauseAfter;
 
                 m_pages = split(m_text, L"\\p");
+
+                for (auto& page: m_pages) {
+                    m_textObject.prepare(page);
+                }
+
                 m_page = 0;
 
                 m_cursor = m_pages[m_page].begin();
