@@ -58,7 +58,12 @@ namespace ta {
             }
 
             m_frameCounter = 0;
-            m_state = ta::menu::TextBox::State::Displaying;
+
+            if (m_page < m_pages.size() - 1) {
+                m_state = ta::menu::TextBox::State::Displaying;
+            } else {
+                m_state = ta::menu::TextBox::State::DisplayingFinal;
+            }
         }
 
         void TextBox::skip() {
