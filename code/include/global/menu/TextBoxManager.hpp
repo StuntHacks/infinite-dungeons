@@ -26,6 +26,11 @@ namespace ta {
              */
             void addTextBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
 
+            /**
+             * @param callback See ta::menu::TextBox::display()
+             */
+            void addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0);
+
             void pause(bool pause = true);
 
             /**
@@ -59,6 +64,10 @@ namespace ta {
                 int displayTime, pauseBefore, pauseAfter;
                 bool autoProceed;
                 std::function<void(int)> callback;
+                bool isQuestion = false;
+                int defaultOption = 0;
+                unsigned int selected = 0;
+                std::vector<ta::menu::TextBox::QuestionOption> options;
             };
 
             /* data */

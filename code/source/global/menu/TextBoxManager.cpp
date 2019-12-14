@@ -25,6 +25,26 @@ namespace ta {
             }
         }
 
+        void TextBoxManager::addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected) {
+            m_boxStack.push_back({
+                type,
+                text,
+                0,
+                0,
+                0,
+                false,
+                callback,
+                true,
+                defaultOption,
+                selected,
+                options
+            });
+
+            if (m_boxStack.size() == 1 && m_cursor == 0) {
+                display();
+            }
+        }
+
         void TextBoxManager::pause(bool pause) {
             m_pause = pause;
         }
@@ -74,14 +94,24 @@ namespace ta {
         void TextBoxManager::display() {
             if (m_cursor < m_boxStack.size() && m_boxStack.size() > 0) {
                 if (m_boxes[static_cast<int>(m_boxStack[m_cursor].type)]->getState() == ta::menu::TextBox::State::Finished) {
-                    m_boxes[static_cast<int>(m_boxStack[m_cursor].type)]->display(
-                        m_boxStack[m_cursor].text,
-                        m_boxStack[m_cursor].autoProceed,
-                        m_boxStack[m_cursor].displayTime,
-                        m_boxStack[m_cursor].pauseBefore,
-                        m_boxStack[m_cursor].pauseAfter,
-                        std::bind(&ta::menu::TextBoxManager::callback, this, std::placeholders::_1)
-                    );
+                    if (!m_boxStack[m_cursor].isQuestion) {
+                        m_boxes[static_cast<int>(m_boxStack[m_cursor].type)]->display(
+                            m_boxStack[m_cursor].text,
+                            m_boxStack[m_cursor].autoProceed,
+                            m_boxStack[m_cursor].displayTime,
+                            m_boxStack[m_cursor].pauseBefore,
+                            m_boxStack[m_cursor].pauseAfter,
+                            std::bind(&ta::menu::TextBoxManager::callback, this, std::placeholders::_1)
+                        );
+                    } else {
+                        m_boxes[static_cast<int>(m_boxStack[m_cursor].type)]->displayQuestion(
+                            m_boxStack[m_cursor].text,
+                            std::bind(&ta::menu::TextBoxManager::callback, this, std::placeholders::_1),
+                            m_boxStack[m_cursor].options,
+                            m_boxStack[m_cursor].defaultOption,
+                            m_boxStack[m_cursor].selected
+                        );
+                    }
                 }
             }
         }
