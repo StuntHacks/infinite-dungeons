@@ -54,6 +54,15 @@ namespace ta {
             }
         }
 
+        void TextBox::displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected) {
+            m_isQuestion = true;
+            m_options = options;
+            m_defaultOption = defaultOption >= 0 && defaultOption < static_cast<int>(m_options.size()) ? defaultOption : -1;
+            m_optionsCursor = selected < m_options.size() ? selected : 0;
+
+            display(text, false, 0, 0, 0, callback);
+        }
+
         void TextBox::interrupt() {
             m_frameCounter = 0;
             m_state = ta::menu::TextBox::State::Interrupted;
@@ -132,10 +141,36 @@ namespace ta {
 
                 break;
             case ta::menu::TextBox::State::DisplayingFinal:
-                if (ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
-                    m_frameCounter = 0;
-                    m_state = ta::menu::TextBox::State::PauseAfter;
-                    return;
+                if (m_isQuestion) {
+                    if (ta::Input::buttonPressed(ta::Input::Button::Up)) {
+                        if (m_optionsCursor > 0) {
+                            m_optionsCursor--;
+                        } else {
+                            m_optionsCursor = m_options.size() - 1;
+                        }
+                    } else if (ta::Input::buttonPressed(ta::Input::Button::Down)) {
+                        if (m_optionsCursor < m_options.size() - 1) {
+                            m_optionsCursor++;
+                        } else {
+                            m_optionsCursor = 0;
+                        }
+                    }
+
+                    if (ta::Input::buttonPressed(ta::Input::Button::A)) {
+                        m_result = m_options[m_optionsCursor].resultValue > -1 ? m_options[m_optionsCursor].resultValue : m_optionsCursor;
+                        m_frameCounter = 0;
+                        m_state = ta::menu::TextBox::State::PauseAfter;
+                    } else if (ta::Input::buttonPressed(ta::Input::Button::B) && m_defaultOption != -1) {
+                        m_result = m_options[m_defaultOption].resultValue > -1 ? m_options[m_defaultOption].resultValue : m_defaultOption;
+                        m_frameCounter = 0;
+                        m_state = ta::menu::TextBox::State::PauseAfter;
+                    }
+                } else {
+                    if (ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                        m_frameCounter = 0;
+                        m_state = ta::menu::TextBox::State::PauseAfter;
+                        return;
+                    }
                 }
 
                 break;
@@ -145,6 +180,11 @@ namespace ta {
                     m_displayTime = 0;
                     m_pauseBefore = 0;
                     m_pauseAfter = 0;
+                    m_optionsCursor = 0;
+                    m_defaultOption = -1;
+
+                    m_isQuestion = false;
+                    m_options.clear();
 
                     m_text = L"";
                     m_cursor = m_text.begin();
@@ -155,8 +195,9 @@ namespace ta {
                     m_autoProceed = false;
                     m_state = ta::menu::TextBox::State::Finished;
 
-                    m_callback(-1);
+                    m_callback(m_result);
                     m_callback = [](int){};
+                    m_result = -1;
 
                     return;
                 }
@@ -180,11 +221,15 @@ namespace ta {
         m_pauseBefore(0),
         m_pauseAfter(0),
         m_frameCounter(0),
+        m_result(-1),
+        m_defaultOption(-1),
         m_page(0),
+        m_optionsCursor(0),
         m_autoProceed(false),
+        m_isQuestion(false),
+        m_state(ta::menu::TextBox::State::Finished),
         m_text(L""),
         m_callback([](int){}),
-        m_state(ta::menu::TextBox::State::Finished),
         m_font(ta::settings::DefaultFontPath),
         m_textObject(m_font) {
             m_cursor = m_text.begin();
