@@ -197,8 +197,9 @@ namespace ta {
                     m_autoProceed = false;
                     m_state = ta::menu::TextBox::State::Finished;
 
-                    m_callback(m_result);
+                    std::function<void(int)> callback = m_callback;
                     m_callback = [](int){};
+                    callback(m_result);
                     m_result = -1;
 
                     return;
