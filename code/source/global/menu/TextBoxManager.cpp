@@ -25,13 +25,13 @@ namespace ta {
             }
         }
 
-        void TextBoxManager::addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected) {
+        void TextBoxManager::addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected, int pauseBefore, int pauseAfter) {
             m_boxStack.push_back({
                 type,
                 text,
                 0,
-                0,
-                0,
+                pauseBefore,
+                pauseAfter,
                 false,
                 callback,
                 true,

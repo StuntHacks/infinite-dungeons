@@ -29,7 +29,7 @@ namespace ta {
             /**
              * @param callback See ta::menu::TextBox::display()
              */
-            void addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0);
+            void addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0, int pauseBefore = 0, int pauseAfter = 0);
 
             void pause(bool pause = true);
 
