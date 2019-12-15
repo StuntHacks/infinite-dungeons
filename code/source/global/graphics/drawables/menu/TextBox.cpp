@@ -54,13 +54,15 @@ namespace ta {
             }
         }
 
-        void TextBox::displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected) {
-            m_isQuestion = true;
-            m_options = options;
-            m_defaultOption = defaultOption >= 0 && defaultOption < static_cast<int>(m_options.size()) ? defaultOption : -1;
-            m_optionsCursor = selected < m_options.size() ? selected : 0;
+        void TextBox::displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected, int pauseBefore, int pauseAfter) {
+            if (m_state == ta::menu::TextBox::State::Finished) {
+                m_isQuestion = true;
+                m_options = options;
+                m_defaultOption = defaultOption >= 0 && defaultOption < static_cast<int>(m_options.size()) ? defaultOption : -1;
+                m_optionsCursor = selected < m_options.size() ? selected : 0;
 
-            display(text, false, 0, 0, 0, callback);
+                display(text, false, 0, pauseBefore, pauseAfter, callback);
+            }
         }
 
         void TextBox::interrupt() {

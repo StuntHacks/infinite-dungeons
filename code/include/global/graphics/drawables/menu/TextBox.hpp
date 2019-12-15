@@ -47,7 +47,7 @@ namespace ta {
              * @brief Displays the textbox as a questionbox
              * @param callback A callback to call after the textbox is finished. The single parameter is the selected choice in multi-choice boxes, or -1 otherwise
              */
-            virtual void displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0);
+            virtual void displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0, int pauseBefore = 0, int pauseAfter = 0);
 
             /**
              * @brief Interrupts the drawing process
