@@ -110,19 +110,21 @@ namespace ta {
 
                     return;
                 } else {
-                    if (ta::Input::buttonDown(ta::Input::Button::B) && !m_autoProceed) {
-                        finish();
-                        return;
-                    }
-
-                    if (m_frameCounter % ta::settings::TextSpeed == 0) {
+                    if (m_frameCounter % (ta::Input::buttonDown(ta::Input::Button::B) ? 2 : ta::settings::TextSpeed) == 0) {
                         drawCharacter();
                     }
                 }
 
                 break;
             case ta::menu::TextBox::State::Interrupted:
-                if (((ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B)) && !m_autoProceed) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                // TODO: Clean this mess up
+                if (
+                    (
+                        (ta::Input::buttonPressed(ta::Input::Button::A) ||
+                        (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime)
+                    ) && !m_autoProceed) ||
+                    (m_autoProceed && m_frameCounter >= m_displayTime)
+                ) {
                     m_frameCounter = 0;
                     m_state = ta::menu::TextBox::State::Drawing;
                     return;
@@ -130,7 +132,14 @@ namespace ta {
 
                 break;
             case ta::menu::TextBox::State::Displaying:
-                if (((ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B)) && !m_autoProceed) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                // TODO: Clean this mess up
+                if (
+                    (
+                        (ta::Input::buttonPressed(ta::Input::Button::A) ||
+                        (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime)
+                    ) && !m_autoProceed) ||
+                    (m_autoProceed && m_frameCounter >= m_displayTime)
+                ) {
                     m_frameCounter = 0;
                     m_page++;
 
@@ -168,7 +177,7 @@ namespace ta {
                         m_state = ta::menu::TextBox::State::PauseAfter;
                     }
                 } else {
-                    if (ta::Input::buttonPressed(ta::Input::Button::A) || ta::Input::buttonPressed(ta::Input::Button::B) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                    if (ta::Input::buttonPressed(ta::Input::Button::A) || (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
                         m_frameCounter = 0;
                         m_state = ta::menu::TextBox::State::PauseAfter;
                         return;
