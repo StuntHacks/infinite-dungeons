@@ -1,9 +1,11 @@
 #pragma once
 
+#include <functional>
+#include <string>
+#include <vector>
+
 #include "global/graphics/Font.hpp"
 #include "global/graphics/drawables/Text.hpp"
-#include <vector>
-#include <string>
 
 namespace ta {
     namespace menu {
@@ -22,6 +24,11 @@ namespace ta {
                 Finished
             };
 
+            struct QuestionOption {
+                std::wstring text;
+                int resultValue = -1;
+            };
+
             virtual std::wstring getText() const;
             virtual std::wstring getDisplayedText() const;
             virtual wchar_t getCurrentChar();
@@ -32,8 +39,15 @@ namespace ta {
 
             /**
              * @brief Displays the textbox
+             * @param callback A callback to call after the textbox is finished. The single parameter is the selected choice in multi-choice boxes, or -1 otherwise
              */
-            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0);
+            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
+
+            /**
+             * @brief Displays the textbox as a questionbox
+             * @param callback A callback to call after the textbox is finished. The single parameter is the selected choice in multi-choice boxes, or -1 otherwise
+             */
+            virtual void displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0, int pauseBefore = 0, int pauseAfter = 0);
 
             /**
              * @brief Interrupts the drawing process
@@ -58,15 +72,21 @@ namespace ta {
         protected:
             TextBox();
             std::vector<std::wstring> split(const std::wstring& text, const std::wstring& delimeter);
+            void drawCharacter();
 
             /* data */
-            int m_displayTime, m_pauseBefore, m_pauseAfter, m_frameCounter;
-            size_t m_page;
-            bool m_autoProceed;
+            int m_displayTime, m_pauseBefore, m_pauseAfter, m_frameCounter, m_result, m_defaultOption;
+            size_t m_page, m_optionsCursor;
+            bool m_autoProceed, m_isQuestion;
+            ta::menu::TextBox::State m_state;
+
             std::wstring m_text;
             std::wstring::const_iterator m_cursor;
+
             std::vector<std::wstring> m_pages;
-            ta::menu::TextBox::State m_state;
+            std::vector<ta::menu::TextBox::QuestionOption> m_options;
+
+            std::function<void(int)> m_callback;
 
             ta::graphics::Font m_font;
             ta::graphics::Text m_textObject;
