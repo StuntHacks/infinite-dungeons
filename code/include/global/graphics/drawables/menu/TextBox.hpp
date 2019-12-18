@@ -41,7 +41,7 @@ namespace ta {
              * @brief Displays the textbox
              * @param callback A callback to call after the textbox is finished. The single parameter is the selected choice in multi-choice boxes, or -1 otherwise
              */
-            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
+            virtual void display(const std::wstring& text, bool autoProceed = false, int displayTime = 10, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
 
             /**
              * @brief Displays the textbox as a questionbox
