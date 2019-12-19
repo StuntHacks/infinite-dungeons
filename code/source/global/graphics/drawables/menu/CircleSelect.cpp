@@ -47,7 +47,7 @@ namespace ta {
 
         void CircleSelect::update() {
             if (m_state != ta::menu::CircleSelect::State::CleanUp && m_state != ta::menu::CircleSelect::State::Finished) {
-                if (ta::Input::buttonReleased(ta::Input::ZL)) {
+                if (!ta::Input::buttonDown(ta::Input::ZL)) {
                     m_state = ta::menu::CircleSelect::State::CleanUp;
                 }
             }
