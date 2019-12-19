@@ -5,4 +5,5 @@
 #include "RenderTarget.hpp"
 #include "Shader.hpp"
 #include "ShaderProgram.hpp"
+#include "Texture.hpp"
 #include "Vertex.hpp"
