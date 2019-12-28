@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
+#include <functional>
 #include <map>
+#include <vector>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <glad/glad.h>
@@ -44,6 +45,9 @@ namespace ta {
             const std::string& getCurrentShaderName() const;
             ta::graphics::ShaderProgram& getCurrentShader();
 
+            static bool addDrawHook(const std::string& name, std::function<void(ta::graphics::Renderer&)> callback);
+            static bool removeDrawHook(const std::string& name);
+
             static inline glm::mat4 getOrthoProjection() {
                 return glm::ortho(0.0f, 1920.0f, 1080.0f, 0.0f);
             }
@@ -56,6 +60,8 @@ namespace ta {
             std::vector<ta::graphics::Drawable*> m_drawStack2d, m_drawStack3d;
             ta::graphics::ShaderProgram m_defaultShader;
             std::map<std::string, ta::graphics::ShaderProgram> m_shaders;
+
+            static inline std::map<std::string, std::function<void(ta::graphics::Renderer&)>> m_drawHooks;
 
             static EGLDisplay m_display;
             static EGLContext m_context;

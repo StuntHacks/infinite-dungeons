@@ -242,6 +242,10 @@ namespace ta {
             if (m_context) {
                 ta::menu::TextBoxManager::getInstance().draw(*this);
 
+                for (auto& callback: m_drawHooks) {
+                    callback.second(*this);
+                }
+
                 if (clearScreen) {
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
                 }
@@ -365,6 +369,26 @@ namespace ta {
 
         ta::graphics::ShaderProgram& Renderer::getCurrentShader() {
             return m_currentShader != "" ? m_shaders[m_currentShader] : m_defaultShader;
+        }
+
+        bool Renderer::addDrawHook(const std::string& name, std::function<void(ta::graphics::Renderer&)> callback) {
+            auto search = m_drawHooks.find(name);
+            if (search == m_drawHooks.end()) {
+                m_drawHooks[name] = callback;
+                return true;
+            }
+
+            return false;
+        }
+
+        bool Renderer::removeDrawHook(const std::string& name) {
+            auto search = m_drawHooks.find(name);
+            if (search != m_drawHooks.end()) {
+                m_drawHooks.erase(name);
+                return true;
+            }
+
+            return false;
         }
     } /* graphics */
 } /* ta */
