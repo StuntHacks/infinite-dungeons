@@ -188,7 +188,7 @@ namespace ta {
             m_shader = shader;
         }
 
-        ta::graphics::ShaderProgram& getShader() {
+        ta::graphics::ShaderProgram& Sprite::getShader() {
             return m_shader;
         }
 
