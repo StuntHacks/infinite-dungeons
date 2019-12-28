@@ -125,7 +125,7 @@ namespace ta {
 
                     void main()
                     {
-                        gl_Position = transform * projection * vec4(aPos.xyz, 1.0);
+                        gl_Position = projection * transform * vec4(aPos.xyz, 1.0);
                         ourColor = aColor;
                     }
                 )text";
