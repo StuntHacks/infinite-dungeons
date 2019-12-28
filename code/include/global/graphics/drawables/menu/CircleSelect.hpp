@@ -4,10 +4,7 @@
 #include <string>
 #include <vector>
 
-<<<<<<< Updated upstream
-=======
 #include "switch/input.hpp"
->>>>>>> Stashed changes
 #include "global/graphics/Font.hpp"
 #include "global/graphics/drawables/Text.hpp"
 
@@ -25,11 +22,7 @@ namespace ta {
 
             struct Item {
                 std::wstring title;
-<<<<<<< Updated upstream
-                // ta::Texture& icon;
-=======
                 // ta::graphics::Texture& icon;
->>>>>>> Stashed changes
                 std::vector<std::wstring> data;
             };
 
@@ -42,11 +35,7 @@ namespace ta {
              * @brief Displays the Selection
              * @param callback A callback to call after a selection is done. The single parameter is the selected choice, or -1 if nothing was selected
              */
-<<<<<<< Updated upstream
-            virtual void display(std::vector<ta::menu::CircleSelect::Item> options, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
-=======
             virtual void display(std::vector<ta::menu::CircleSelect::Item> options, ta::Input::Button button, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
->>>>>>> Stashed changes
 
             /**
              * @brief Closes the selection
@@ -67,10 +56,7 @@ namespace ta {
             ta::menu::CircleSelect::State m_state;
             std::wstring m_title;
             std::vector<ta::menu::CircleSelect::Item> m_options;
-<<<<<<< Updated upstream
-=======
             ta::Input::Button m_button;
->>>>>>> Stashed changes
 
             std::function<void(int)> m_callback;
 
