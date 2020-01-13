@@ -6,6 +6,7 @@
 
 #include "switch/input.hpp"
 #include "global/graphics/Font.hpp"
+#include "global/graphics/Texture.hpp"
 #include "global/graphics/drawables/Text.hpp"
 
 namespace ta {
@@ -22,14 +23,13 @@ namespace ta {
 
             struct Item {
                 std::wstring title;
-                // ta::graphics::Texture& icon;
+                ta::graphics::Texture* icon;
                 std::vector<std::wstring> data;
             };
 
             virtual std::wstring getTitle() const;
             virtual int getSelectedID() const;
             virtual std::vector<ta::menu::CircleSelect::Item> getOptions() const;
-            virtual ta::menu::CircleSelect::Item getSelectedOption() const;
 
             /**
              * @brief Displays the Selection

@@ -19,14 +19,6 @@ namespace ta {
             return m_options;
         }
 
-        ta::menu::CircleSelect::Item CircleSelect::getSelectedOption() const {
-            if (m_result > -1 && m_result < static_cast<int>(m_options.size())) {
-                return m_options[m_result];
-            } else {
-                return { L"" };
-            }
-        }
-
         void CircleSelect::display(std::vector<ta::menu::CircleSelect::Item> options, ta::Input::Button button, std::function<void(int)> callback, const std::wstring& title) {
             if (m_state == ta::menu::CircleSelect::State::Finished) {
                 m_frameCounter = 0;

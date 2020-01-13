@@ -73,6 +73,10 @@ namespace ta {
             m_texture = texture;
         }
 
+        void Sprite::setTexture(ta::graphics::Texture* texture) {
+            m_texture = *texture;
+        }
+
         ta::graphics::Texture& Sprite::getTexture() {
             return m_texture;
         }
