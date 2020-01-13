@@ -5,6 +5,7 @@
 #pragma once
 
 #include <switch.h>
+#include "global/graphics/Vertex.hpp"
 
 namespace ta {
     /**
@@ -17,6 +18,7 @@ namespace ta {
          * @brief Represents the different buttons
          */
         enum Button {
+            None = 0,
             A = (1U<<( 0 )),                                      ///< A
             B = (1U<<( 1 )),                                      ///< B
             X = (1U<<( 2 )),                                      ///< X
@@ -41,6 +43,10 @@ namespace ta {
             RightStickUp = (1U<<( 21 )),                          ///< Right stick up
             RightStickRight = (1U<<( 22 )),                       ///< Right stick right
             RightStickDown = (1U<<( 23 )),                        ///< Right stick down
+            StickLeft = LeftStickLeft | RightStickLeft,           ///< Any stick left
+            StickUp = LeftStickUp | RightStickUp,                 ///< Any stick up
+            StickRight = LeftStickRight | RightStickRight,        ///< Any stick right
+            StickDown = LeftStickDown | RightStickDown,           ///< Any stick down
             Up = DPadUp | LeftStickUp | RightStickUp,             ///< Up
             Down = DPadDown | LeftStickDown | RightStickDown,     ///< Down
             Left = DPadLeft | LeftStickLeft | RightStickLeft,     ///< Left
@@ -52,6 +58,11 @@ namespace ta {
             SL = LeftSL | RightSL,                                ///< SL
             SR = LeftSR | RightSR,                                ///< SR
             Touch = (1U<<( 28 )),                                 ///< Touch (only whether the user touches *somewhere* on the screen)
+        };
+
+        enum class Joystick: int {
+            Left = JOYSTICK_LEFT,
+            Right = JOYSTICK_RIGHT
         };
 
         /**
@@ -89,6 +100,8 @@ namespace ta {
                     downButtons,     ///< Buttons that are pressed by this player this frame, regardless whether they were pressed in the last frame or not
                     releasedButtons; ///< Buttons that have been released by this player this frame
                 ControllerData controllerData; ///< Controller data
+                ta::graphics::Vector2i joystickCartesian[2];
+                ta::graphics::Vector2f joystickPolar[2];
             };
 
             int pressedButtons,  ///< Buttons that have been pressed by any player this frame
@@ -169,6 +182,17 @@ namespace ta {
          */
         static inline bool buttonReleased(Button buttons, Player player = Player::All) {
             return (buttonsReleased(player) & buttons);
+        }
+
+        static inline ta::graphics::Vector2i getJoystickCartesian(ta::Input::Joystick stick, Player player) {
+            return m_inputData.playerData[(int) player].joystickCartesian[static_cast<int>(stick)];
+        }
+
+        /**
+         * @return First value is the angle (in degrees), second is the distance
+         */
+        static inline ta::graphics::Vector2f getJoystickPolar(ta::Input::Joystick stick, Player player) {
+            return m_inputData.playerData[(int) player].joystickPolar[static_cast<int>(stick)];
         }
 
     private:

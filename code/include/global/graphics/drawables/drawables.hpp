@@ -1,3 +1,4 @@
+#include "Sprite.hpp"
 #include "Text.hpp"
 
 // menu

@@ -6,7 +6,9 @@
 namespace ta {
     namespace graphics {
         Texture::Texture() :
-        m_texture(0) { /* do nothing */ }
+        m_texture(0),
+        m_width(0),
+        m_height(0) { /* do nothing */ }
 
         Texture::~Texture() {
             glDeleteTextures(1, &m_texture);
@@ -14,7 +16,7 @@ namespace ta {
 
         bool Texture::loadFromFile(const std::string& filepath, bool smoothTexture, GLenum wrapS, GLenum wrapT) {
             if (m_texture != 0) {
-
+                return false;
             }
 
             glGenTextures(1, &m_texture);
@@ -36,10 +38,12 @@ namespace ta {
             if (data) {
                 glTexImage2D(GL_TEXTURE_2D, 0, nrChannels < 4 ? GL_RGB : GL_RGBA, width, height, 0, nrChannels < 4 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);
                 glGenerateMipmap(GL_TEXTURE_2D);
+                m_width = width;
+                m_height = height;
 
-                ta::Console::success("Successfully loaded texture!", "Texture.cpp:34");
+                ta::Console::success("Successfully loaded texture \"" + filepath + "\"!", "Texture.cpp:36");
             } else {
-                ta::Console::error("Failed to load texture \"" + filepath + "\"!", "Texture.cpp:34");
+                ta::Console::error("Failed to load texture \"" + filepath + "\"!", "Texture.cpp:36");
                 stbi_image_free(data);
                 return false;
             }
@@ -52,6 +56,14 @@ namespace ta {
 
         unsigned int Texture::getTexture() {
             return m_texture;
+        }
+
+        unsigned int Texture::getWidth() {
+            return m_width;
+        }
+
+        unsigned int Texture::getHeight() {
+            return m_height;
         }
     } /* graphics */
 } /* ta */
