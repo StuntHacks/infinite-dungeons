@@ -73,6 +73,10 @@ namespace ta {
             m_texture = texture;
         }
 
+        void Sprite::setTexture(ta::graphics::Texture* texture) {
+            m_texture = *texture;
+        }
+
         ta::graphics::Texture& Sprite::getTexture() {
             return m_texture;
         }
@@ -188,7 +192,7 @@ namespace ta {
             m_shader = shader;
         }
 
-        ta::graphics::ShaderProgram& getShader() {
+        ta::graphics::ShaderProgram& Sprite::getShader() {
             return m_shader;
         }
 
