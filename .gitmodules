@@ -1,0 +1,3 @@
+[submodule "code/include/extern/tinyxml2"]
+	path = code/include/extern/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
