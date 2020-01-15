@@ -1,5 +1,6 @@
 #pragma once
 
+#include "global/Asset.hpp"
 #include "global/graphics/Color.hpp"
 #include "global/graphics/Drawable.hpp"
 #include "global/graphics/ShaderProgram.hpp"
@@ -13,8 +14,11 @@ namespace ta {
         class Sprite: public Drawable {
         public:
             Sprite();
+            virtual ~Sprite();
 
             void setTexture(ta::graphics::Texture& texture);
+            void setTexture(const std::string& assetpath, bool smoothTexture = true);
+            void setTexture(ta::Asset asset, bool smoothTexture = true);
             ta::graphics::Texture& getTexture();
 
             void setWidth(float width);
