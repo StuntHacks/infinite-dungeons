@@ -2,7 +2,7 @@
 
 #include <switch.h>
 
-namespace ta {
+namespace id {
     namespace Display {
         static inline float getScreenWidth() {
             return appletGetOperationMode() == AppletOperationMode_Handheld ? 1280 : 1920;
@@ -12,4 +12,4 @@ namespace ta {
             return appletGetOperationMode() == AppletOperationMode_Handheld ? 720 : 1080;
         }
     } /* Display */
-} /* ta */
+} /* id */

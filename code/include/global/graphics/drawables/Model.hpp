@@ -9,14 +9,14 @@
 #include "global/graphics/Texture.hpp"
 #include "global/graphics/Vertex.hpp"
 
-namespace ta {
+namespace id {
     namespace loaders {
         class ModelLoader;
     } /* loaders */
 
     namespace graphics {
         class Model: public Drawable {
-        friend class ta::loaders::ModelLoader;
+        friend class id::loaders::ModelLoader;
         public:
             struct Vertex {
                 Vector3f position;
@@ -27,9 +27,9 @@ namespace ta {
             };
 
             struct Material {
-                ta::graphics::Vector3f ambient;
-                ta::graphics::Vector3f diffuse;
-                ta::graphics::Vector3f specular;
+                id::graphics::Vector3f ambient;
+                id::graphics::Vector3f diffuse;
+                id::graphics::Vector3f specular;
                 float shininess;
             };
 
@@ -37,8 +37,8 @@ namespace ta {
             public:
                 Joint(int id, const std::string& name, glm::mat4 localBindTransform);
 
-                std::vector<ta::graphics::Model::Joint>& getChildren();
-                void addChildren(ta::graphics::Model::Joint child);
+                std::vector<id::graphics::Model::Joint>& getChildren();
+                void addChildren(id::graphics::Model::Joint child);
 
                 void setLocalAnimationTransform(glm::mat4 transform);
                 glm::mat4 getLocalAnimationTransform() const;
@@ -53,7 +53,7 @@ namespace ta {
                 int m_id;
                 std::string m_name;
                 glm::mat4 m_localBindTransform, m_inverseBindTransform, m_animationTransform;
-                std::vector<ta::graphics::Model::Joint> m_children;
+                std::vector<id::graphics::Model::Joint> m_children;
             };
 
             Model();
@@ -61,7 +61,7 @@ namespace ta {
 
             template <class LoaderType>
             bool loadFromFile(const std::string& filepath) {
-                static_assert(std::is_base_of<ta::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
+                static_assert(std::is_base_of<id::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
 
                 std::ifstream file(filepath);
                 std::string buffer((std::istreambuf_iterator<char>(file)),
@@ -72,12 +72,12 @@ namespace ta {
 
             template <class LoaderType>
             bool loadFromMemory(const std::string& buffer) {
-                static_assert(std::is_base_of<ta::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
+                static_assert(std::is_base_of<id::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
 
                 return _load<LoaderType>(buffer);
             };
 
-            virtual void draw(ta::graphics::Renderer& renderer, bool);
+            virtual void draw(id::graphics::Renderer& renderer, bool);
 
         protected:
             struct DrawBatch {
@@ -96,7 +96,7 @@ namespace ta {
                     return false;
                 }
 
-                std::vector<ta::graphics::Model::Vertex> geometry = loader.getGeometry();
+                std::vector<id::graphics::Model::Vertex> geometry = loader.getGeometry();
 
                 m_drawBatches.clear();
                 m_drawBatches = loader.getDrawBatches();
@@ -106,7 +106,7 @@ namespace ta {
 
         private:
             /* data */
-            std::vector<ta::graphics::Model::DrawBatch> m_drawBatches;
+            std::vector<id::graphics::Model::DrawBatch> m_drawBatches;
         };
     } /* graphics */
-} /* ta */
+} /* id */

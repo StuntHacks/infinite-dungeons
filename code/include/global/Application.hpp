@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ta {
+namespace id {
     class Application {
     public:
         static bool isRunning();
@@ -12,4 +12,4 @@ namespace ta {
         /* data */
         static inline bool m_isRunning = true;
     };
-} /* ta */
+} /* id */

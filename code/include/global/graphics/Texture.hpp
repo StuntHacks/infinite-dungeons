@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "opengl.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         class Texture {
         public:
@@ -30,4 +30,4 @@ namespace ta {
             bool m_autoDelete;
         };
     } /* graphics */
-} /* ta */
+} /* id */

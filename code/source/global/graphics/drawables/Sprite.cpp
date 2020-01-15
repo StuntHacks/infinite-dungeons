@@ -4,7 +4,7 @@
 #include "global/Console.hpp"
 #include "opengl.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         Sprite::Sprite() :
         m_posX(0.0f),
@@ -14,9 +14,9 @@ namespace ta {
         m_rotation(0.0f),
         m_opacity(1.0f),
         m_color(1.0f, 1.0f, 1.0f, 1.0f) {
-            ta::graphics::Shader vsh, fsh;
-            vsh.load("romfs:/shaders/generic/texturedPolygon.vert", ta::graphics::Shader::Type::Vertex);
-            fsh.load("romfs:/shaders/generic/texturedPolygon.frag", ta::graphics::Shader::Type::Fragment);
+            id::graphics::Shader vsh, fsh;
+            vsh.load("romfs:/shaders/generic/texturedPolygon.vert", id::graphics::Shader::Type::Vertex);
+            fsh.load("romfs:/shaders/generic/texturedPolygon.frag", id::graphics::Shader::Type::Fragment);
 
             m_shader.attach(vsh).attach(fsh).link();
 
@@ -57,8 +57,8 @@ namespace ta {
 
             glBindVertexArray(m_vao);
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            ta::graphics::Renderer::prepare();
-            glBufferData(GL_ARRAY_BUFFER, sizeof(ta::graphics::Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
+            id::graphics::Renderer::prepare();
+            glBufferData(GL_ARRAY_BUFFER, sizeof(id::graphics::Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
@@ -70,22 +70,22 @@ namespace ta {
         }
 
         // texture
-        void Sprite::setTexture(ta::graphics::Texture& texture) {
+        void Sprite::setTexture(id::graphics::Texture& texture) {
             m_texture = texture;
             m_texture.setAutoDelete(false);
         }
 
         void Sprite::setTexture(const std::string& assetpath, bool smoothTexture) {
-            m_texture = ta::AssetPipeline::getInstance().getTexture(assetpath, smoothTexture);
+            m_texture = id::AssetPipeline::getInstance().getTexture(assetpath, smoothTexture);
         }
 
-        void Sprite::setTexture(ta::Asset asset, bool smoothTexture) {
-            if (asset.getType() == ta::AssetPipeline::Type::Texture) {
-                m_texture = ta::AssetPipeline::getInstance().getTexture(asset.getAssetpath(), smoothTexture);
+        void Sprite::setTexture(id::Asset asset, bool smoothTexture) {
+            if (asset.getType() == id::AssetPipeline::Type::Texture) {
+                m_texture = id::AssetPipeline::getInstance().getTexture(asset.getAssetpath(), smoothTexture);
             }
         }
 
-        ta::graphics::Texture& Sprite::getTexture() {
+        id::graphics::Texture& Sprite::getTexture() {
             return m_texture;
         }
 
@@ -111,12 +111,12 @@ namespace ta {
             m_height = height;
         }
 
-        void Sprite::setDimensions(ta::graphics::Vector2f dimensions) {
+        void Sprite::setDimensions(id::graphics::Vector2f dimensions) {
             m_width = dimensions.u;
             m_height = dimensions.v;
         }
 
-        ta::graphics::Vector2f Sprite::getDimensions() {
+        id::graphics::Vector2f Sprite::getDimensions() {
             return { m_width, m_height };
         }
 
@@ -150,7 +150,7 @@ namespace ta {
             m_posY = posY;
         }
 
-        void Sprite::setPosition(ta::graphics::Vector2f position) {
+        void Sprite::setPosition(id::graphics::Vector2f position) {
             m_posX = position.u;
             m_posY = position.v;
         }
@@ -160,7 +160,7 @@ namespace ta {
             m_posY += deltaY;
         }
 
-        ta::graphics::Vector2f Sprite::getPosition() {
+        id::graphics::Vector2f Sprite::getPosition() {
             return { m_posX, m_posY };
         }
 
@@ -187,25 +187,25 @@ namespace ta {
         }
 
         // color
-        void Sprite::setColor(ta::graphics::Color color) {
+        void Sprite::setColor(id::graphics::Color color) {
             m_color = color;
         }
 
-        ta::graphics::Color Sprite::getColor() {
+        id::graphics::Color Sprite::getColor() {
             return m_color;
         }
 
         // shader
-        void Sprite::setShader(ta::graphics::ShaderProgram& shader) {
+        void Sprite::setShader(id::graphics::ShaderProgram& shader) {
             m_shader = shader;
         }
 
-        ta::graphics::ShaderProgram& Sprite::getShader() {
+        id::graphics::ShaderProgram& Sprite::getShader() {
             return m_shader;
         }
 
         // drawing
-        void Sprite::draw(ta::graphics::Renderer& renderer, bool) {
+        void Sprite::draw(id::graphics::Renderer& renderer, bool) {
             m_shader.use();
 
             m_shader.setFloat("opacity", m_opacity);
@@ -227,4 +227,4 @@ namespace ta {
             renderer.getCurrentShader().use();
         }
     } /* graphics */
-} /* ta */
+} /* id */

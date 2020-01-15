@@ -2,7 +2,7 @@
 
 #include "mutex.hpp"
 
-namespace ta {
+namespace id {
     class Mutex;
 
     /**
@@ -26,4 +26,4 @@ namespace ta {
         /* data */
         Mutex m_mutex;
     };
-} /* ta */
+} /* id */

@@ -5,31 +5,32 @@
 #include "global/graphics/Renderer.hpp"
 #include "global/Application.hpp"
 
-namespace ta {
+namespace id {
     namespace menu {
         class TextBoxManager {
-        friend class ta::Application;
-        friend class ta::graphics::Renderer;
-        friend class ta::menu::TextBox;
+        friend class id::Application;
+        friend class id::graphics::Renderer;
+        friend class id::menu::TextBox;
         public:
             enum class BoxType {
                 Transparent = 0,
                 // Speech,
                 // Thought,
-                // Information
+                // Information,
+                // Freeform
             };
 
-            static ta::menu::TextBoxManager& getInstance();
+            static id::menu::TextBoxManager& getInstance();
 
             /**
-             * @param callback See ta::menu::TextBox::display()
+             * @param callback See id::menu::TextBox::display()
              */
-            void addTextBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
+            void addTextBox(id::menu::TextBoxManager::BoxType type, const std::wstring& text, bool autoProceed = false, int displayTime = 0, int pauseBefore = 0, int pauseAfter = 0, std::function<void(int)> callback = [](int){});
 
             /**
-             * @param callback See ta::menu::TextBox::display()
+             * @param callback See id::menu::TextBox::display()
              */
-            void addQuestionBox(ta::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0, int pauseBefore = 0, int pauseAfter = 0);
+            void addQuestionBox(id::menu::TextBoxManager::BoxType type, const std::wstring& text, std::function<void(int)> callback, std::vector<id::menu::TextBox::QuestionOption> options, int defaultOption = -1, unsigned int selected = 0, int pauseBefore = 0, int pauseAfter = 0);
 
             void pause(bool pause = true);
 
@@ -54,7 +55,7 @@ namespace ta {
 
             void display();
             void update();
-            void draw(ta::graphics::Renderer& renderer);
+            void draw(id::graphics::Renderer& renderer);
 
             void callback(int result);
 
@@ -67,7 +68,7 @@ namespace ta {
                 bool isQuestion = false;
                 int defaultOption = 0;
                 unsigned int selected = 0;
-                std::vector<ta::menu::TextBox::QuestionOption> options;
+                std::vector<id::menu::TextBox::QuestionOption> options;
             };
 
             /* data */
@@ -77,4 +78,4 @@ namespace ta {
             std::vector<TextBox*> m_boxes;
         };
     } /* menu */
-} /* ta */
+} /* id */

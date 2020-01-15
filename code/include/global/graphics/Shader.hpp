@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <string>
 
-namespace ta {
+namespace id {
     namespace graphics {
         /**
          * @brief A single OpenGL shader
@@ -32,7 +32,7 @@ namespace ta {
              * @retval true  The shader was successfully compiled
              * @retval false The compilation of the shader resulted in an error
              */
-            bool compile(const std::string& source, ta::graphics::Shader::Type type);
+            bool compile(const std::string& source, id::graphics::Shader::Type type);
 
             /**
              * @brief Loads a shader from a given file path
@@ -42,13 +42,13 @@ namespace ta {
              * @retval true    The shader was successfully loaded and compiled
              * @retval false   The compilation of the shader resulted in an error
              */
-            bool load(const std::string& filepath, ta::graphics::Shader::Type type);
+            bool load(const std::string& filepath, id::graphics::Shader::Type type);
 
             /**
              * @brief Returns the type of the shader
              * @return The shader type
              */
-            ta::graphics::Shader::Type getType() const;
+            id::graphics::Shader::Type getType() const;
 
             /**
              * @brief Returns the ID of the shader ready to be used with OpenGL
@@ -58,8 +58,8 @@ namespace ta {
 
         private:
             /* data */
-            ta::graphics::Shader::Type m_type;
+            id::graphics::Shader::Type m_type;
             unsigned int m_shader;
         };
     } /* graphics */
-} /* ta */
+} /* id */

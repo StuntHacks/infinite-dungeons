@@ -8,7 +8,7 @@
 #include "opengl.hpp"
 #include "switch/mutex.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         class Font {
         public:
@@ -27,16 +27,16 @@ namespace ta {
             bool loadFromMemory(const unsigned char* location, signed long size, signed long index = 0);
 
             FT_Face& getFontFace();
-            ta::graphics::Font::Character getCharacter(wchar_t character, int height);
+            id::graphics::Font::Character getCharacter(wchar_t character, int height);
 
         private:
             /* data */
             std::string m_path;
-            std::map<FT_ULong, std::map<FT_ULong, ta::graphics::Font::Character>> m_characters;
+            std::map<FT_ULong, std::map<FT_ULong, id::graphics::Font::Character>> m_characters;
 
-            ta::Mutex m_mutex;
+            id::Mutex m_mutex;
             FT_Library m_freetype;
             FT_Face m_face;
         };
     } /* graphics */
-} /* ta */
+} /* id */

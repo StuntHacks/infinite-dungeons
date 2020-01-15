@@ -8,7 +8,7 @@
         mask &= letter;              \
     }
 
-namespace ta {
+namespace id {
     Input::InputData Input::m_inputData;
 
     void Input::scanInput() {
@@ -100,4 +100,4 @@ namespace ta {
             m_inputData.playerData[i].releasedButtons = keysUp;
         }
     }
-} /* ta */
+} /* id */

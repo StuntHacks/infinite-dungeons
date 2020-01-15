@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ta {
+namespace id {
     namespace graphics {
         /**
          * @brief Represents a color
@@ -99,4 +99,4 @@ namespace ta {
             float m_red, m_green, m_blue, m_alpha;
         };
     } /* graphics */
-} /* ta */
+} /* id */

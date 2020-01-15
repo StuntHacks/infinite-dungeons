@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace ta {
+namespace id {
     class Console {
     public:
         enum Color {
@@ -17,13 +17,13 @@ namespace ta {
             White
         };
 
-        static void log(const std::string& message, ta::Console::Color color = ta::Console::Reset);
-        static void log(const std::string& message, const std::string& file = "", ta::Console::Color color = ta::Console::Reset);
+        static void log(const std::string& message, id::Console::Color color = id::Console::Reset);
+        static void log(const std::string& message, const std::string& file = "", id::Console::Color color = id::Console::Reset);
         static void success(const std::string& message, const std::string& file = "");
         static void warn(const std::string& message, const std::string& file = "");
         static void error(const std::string& message, const std::string& file = "", bool critical = false);
 
-        static std::string color(ta::Console::Color color);
+        static std::string color(id::Console::Color color);
     private:
         static inline const std::string _colorStrings[] = {
             "\x1b[0m",
@@ -38,4 +38,4 @@ namespace ta {
         };
         /* data */
     };
-} /* ta */
+} /* id */

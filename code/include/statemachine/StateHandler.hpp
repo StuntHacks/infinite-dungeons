@@ -3,20 +3,20 @@
 #include "switch/switch.hpp"
 #include "global/graphics/graphics.hpp"
 
-namespace ta {
+namespace id {
     class GameState;
 
     class StateHandler {
     public:
         virtual ~StateHandler();
 
-        void change(ta::GameState& t_state);
-        void push(ta::GameState& t_state);
+        void change(id::GameState& t_state);
+        void push(id::GameState& t_state);
         void pop();
-        void update(ta::graphics::Renderer& renderer);
+        void update(id::graphics::Renderer& renderer);
 
     private:
         /* data */
-        std::vector<ta::GameState*> m_states;
+        std::vector<id::GameState*> m_states;
     };
-} /* ta */
+} /* id */

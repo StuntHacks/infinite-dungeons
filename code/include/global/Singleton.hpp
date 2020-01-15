@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ta {
+namespace id {
     template <class T>
     class Singleton {
     public:
@@ -9,4 +9,4 @@ namespace ta {
             return instance;
         };
     };
-} /* ta */
+} /* id */

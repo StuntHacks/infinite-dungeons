@@ -6,7 +6,7 @@
 
 #include <sys/lock.h>
 
-namespace ta {
+namespace id {
     /**
      * @brief A mutex
      */
@@ -38,4 +38,4 @@ namespace ta {
         /* data */
         _LOCK_RECURSIVE_T m_mutex;
     };
-} /* ta */
+} /* id */
