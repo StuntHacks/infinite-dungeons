@@ -1,7 +1,7 @@
 #pragma once
 #include "StateHandler.hpp"
-#include "global/Singleton.hpp"
-#include "global/graphics/graphics.hpp"
+#include "common/Singleton.hpp"
+#include "common/graphics/graphics.hpp"
 
 namespace id {
     class GameState {

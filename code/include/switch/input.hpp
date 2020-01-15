@@ -5,7 +5,7 @@
 #pragma once
 
 #include <switch.h>
-#include "global/graphics/Vertex.hpp"
+#include "common/graphics/Vertex.hpp"
 
 namespace id {
     /**
