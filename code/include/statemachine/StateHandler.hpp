@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "switch/switch.hpp"
-#include "global/graphics/graphics.hpp"
+#include "common/graphics/graphics.hpp"
 
 namespace id {
     class GameState;

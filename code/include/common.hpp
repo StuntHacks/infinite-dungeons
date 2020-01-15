@@ -1,10 +1,11 @@
 #include <switch.h>
 
 #include "switch/switch.hpp"
-#include "global/Application.hpp"
-#include "global/Asset.hpp"
-#include "global/AssetPipeline.hpp"
-#include "global/Console.hpp"
-#include "global/menu/menu.hpp"
-#include "global/graphics/graphics.hpp"
-#include "global/graphics/drawables/drawables.hpp"
+#include "common/Application.hpp"
+#include "common/Asset.hpp"
+#include "common/AssetPipeline.hpp"
+#include "common/Console.hpp"
+#include "common/menu/menu.hpp"
+#include "common/loaders/loaders.hpp"
+#include "common/graphics/graphics.hpp"
+#include "common/graphics/drawables/drawables.hpp"
