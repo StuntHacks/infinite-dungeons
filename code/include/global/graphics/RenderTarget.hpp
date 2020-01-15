@@ -5,7 +5,7 @@
 #include "Vertex.hpp"
 #include "opengl.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         /**
          * @brief Can be used to render something without directly displaying it on screen
@@ -35,10 +35,10 @@ namespace ta {
             void setPosY(float posY);
             float getPosY();
             void setPosition(float posX, float posY);
-            void setPosition(ta::graphics::Vector2f dimensions);
-            ta::graphics::Vector2f getPosition();
+            void setPosition(id::graphics::Vector2f dimensions);
+            id::graphics::Vector2f getPosition();
 
-            void draw(ta::graphics::Renderer& renderer, bool);
+            void draw(id::graphics::Renderer& renderer, bool);
             GLuint getTexture() const;
 
         private:
@@ -46,7 +46,7 @@ namespace ta {
             int m_width, m_height;
             GLuint m_framebuffer, m_texture, m_vao, m_vbo;
             float m_posX, m_posY;
-            std::vector<ta::graphics::Vertex> m_vertices;
+            std::vector<id::graphics::Vertex> m_vertices;
         };
     } /* graphics */
-} /* ta */
+} /* id */

@@ -1,6 +1,6 @@
 #include "switch/lock.hpp"
 
-namespace ta {
+namespace id {
     Lock::Lock(Mutex& t_mutex) :
             m_mutex(t_mutex) {
         m_mutex.lock();
@@ -9,4 +9,4 @@ namespace ta {
     Lock::~Lock() {
         m_mutex.unlock();
     }
-} /* ta */
+} /* id */

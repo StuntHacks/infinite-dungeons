@@ -4,14 +4,14 @@
 
 #include <switch.h>
 
-namespace ta {
+namespace id {
     bool Application::isRunning() {
-        ta::Input::scanInput();
-        ta::menu::TextBoxManager::getInstance().update();
+        id::Input::scanInput();
+        id::menu::TextBoxManager::getInstance().update();
         return m_isRunning && appletMainLoop();
     }
 
     void Application::exit() {
         m_isRunning = false;
     }
-} /* ta */
+} /* id */

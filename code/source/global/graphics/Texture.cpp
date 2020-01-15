@@ -3,7 +3,7 @@
 #include "extern/stb_image.h"
 #include "global/Console.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         Texture::Texture(bool autoDelete) :
         m_texture(0),
@@ -52,9 +52,9 @@ namespace ta {
                 m_width = width;
                 m_height = height;
 
-                ta::Console::success("Successfully loaded texture \"" + filepath + "\"!", "Texture.cpp:36");
+                id::Console::success("Successfully loaded texture \"" + filepath + "\"!", "Texture.cpp:36");
             } else {
-                ta::Console::error("Failed to load texture \"" + filepath + "\"!", "Texture.cpp:36");
+                id::Console::error("Failed to load texture \"" + filepath + "\"!", "Texture.cpp:36");
                 stbi_image_free(data);
                 return false;
             }
@@ -96,4 +96,4 @@ namespace ta {
             glBindTexture(GL_TEXTURE_2D, m_texture);
         }
     } /* graphics */
-} /* ta */
+} /* id */

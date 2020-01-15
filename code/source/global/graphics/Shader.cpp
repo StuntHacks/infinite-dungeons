@@ -3,13 +3,13 @@
 
 #include <fstream>
 
-namespace ta {
+namespace id {
     namespace graphics {
         Shader::~Shader() {
             glDeleteShader(m_shader);
         }
 
-        bool Shader::compile(const std::string& source, ta::graphics::Shader::Type type) {
+        bool Shader::compile(const std::string& source, id::graphics::Shader::Type type) {
             m_type = type;
 
             GLint success;
@@ -24,7 +24,7 @@ namespace ta {
             m_shader = glCreateShader(static_cast<GLenum>(type));
 
             if (!m_shader) {
-                ta::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + ": cannot create shader", "Shader.cpp:24");
+                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + ": cannot create shader", "Shader.cpp:24");
                 return false;
             }
 
@@ -36,7 +36,7 @@ namespace ta {
 
             if (!success) {
                 glGetShaderInfoLog(m_shader, sizeof(msg), nullptr, msg);
-                ta::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + msg, "Shader.cpp:35");
+                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + msg, "Shader.cpp:35");
                 glDeleteShader(m_shader);
                 return false;
             }
@@ -44,7 +44,7 @@ namespace ta {
             return true;
         }
 
-        bool Shader::load(const std::string& filepath, ta::graphics::Shader::Type type) {
+        bool Shader::load(const std::string& filepath, id::graphics::Shader::Type type) {
             std::ifstream filestream(filepath);
             std::string source((std::istreambuf_iterator<char>(filestream)),
                                 std::istreambuf_iterator<char>());
@@ -52,7 +52,7 @@ namespace ta {
             return compile(source, type);
         }
 
-        ta::graphics::Shader::Type Shader::getType() const {
+        id::graphics::Shader::Type Shader::getType() const {
             return m_type;
         }
 
@@ -60,4 +60,4 @@ namespace ta {
             return m_shader;
         }
     } /* graphics */
-} /* ta */
+} /* id */

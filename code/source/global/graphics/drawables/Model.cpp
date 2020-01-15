@@ -1,6 +1,6 @@
 #include "global/graphics/drawables/Model.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         Model::Model() { /* do nothing */ }
 
@@ -8,7 +8,7 @@ namespace ta {
 
         }
 
-        void Model::draw(ta::graphics::Renderer& renderer, bool) {
+        void Model::draw(id::graphics::Renderer& renderer, bool) {
 
         }
 
@@ -18,11 +18,11 @@ namespace ta {
         m_name(name),
         m_localBindTransform(localBindTransform) { /* do nothing */ }
 
-        std::vector<ta::graphics::Model::Joint>& Model::Joint::getChildren() {
+        std::vector<id::graphics::Model::Joint>& Model::Joint::getChildren() {
             return m_children;
         }
 
-        void Model::Joint::addChildren(ta::graphics::Model::Joint child) {
+        void Model::Joint::addChildren(id::graphics::Model::Joint child) {
             m_children.push_back(child);
         }
 
@@ -52,4 +52,4 @@ namespace ta {
             }
         }
     } /* graphics */
-} /* ta */
+} /* id */

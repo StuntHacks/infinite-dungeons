@@ -2,17 +2,17 @@
 #include "global/Console.hpp"
 #include "switch/lock.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         Font::Font(const std::string& filename) :
         m_path(filename),
         m_face(nullptr) {
             if (FT_Init_FreeType(&m_freetype)) {
-                ta::Console::error("FREETYPE: Could not init FreeType Library", "Font.cpp:9");
+                id::Console::error("FREETYPE: Could not init FreeType Library", "Font.cpp:9");
                 return;
             }
 
-            ta::Console::success("FREETYPE: Successfully loaded FreeType Library", "Font.cpp:9");
+            id::Console::success("FREETYPE: Successfully loaded FreeType Library", "Font.cpp:9");
 
             if (filename != "") {
                 loadFromFile(filename);
@@ -36,11 +36,11 @@ namespace ta {
             int error = FT_New_Face(m_freetype, filename.c_str(), 0, &m_face);
 
             if (error != 0) {
-                ta::Console::error("FREETYPE: Failed to load font from file. error: " + std::to_string(error), "Font.cpp:35");
+                id::Console::error("FREETYPE: Failed to load font from file. error: " + std::to_string(error), "Font.cpp:35");
                 return false;
             }
 
-            ta::Console::success("FREETYPE: Successfully loaded font \"" + filename + "\"", "Font.cpp:35");
+            id::Console::success("FREETYPE: Successfully loaded font \"" + filename + "\"", "Font.cpp:35");
 
             return true;
         }
@@ -51,11 +51,11 @@ namespace ta {
             }
 
             if (!FT_New_Memory_Face(m_freetype, location, size, index, &m_face)) {
-                ta::Console::error("FREETYPE: Failed to load font from memory", "Font.cpp:42");
+                id::Console::error("FREETYPE: Failed to load font from memory", "Font.cpp:42");
                 return false;
             }
 
-            ta::Console::success("FREETYPE: Successfully loaded from memory", "Font.cpp:42");
+            id::Console::success("FREETYPE: Successfully loaded from memory", "Font.cpp:42");
 
             return true;
         }
@@ -64,7 +64,7 @@ namespace ta {
             return m_face;
         }
 
-        ta::graphics::Font::Character Font::getCharacter(wchar_t character, int height) {
+        id::graphics::Font::Character Font::getCharacter(wchar_t character, int height) {
             Character ch;
             ch.valid = false;
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -76,7 +76,7 @@ namespace ta {
             }
 
             {
-                ta::Lock lock(m_mutex);
+                id::Lock lock(m_mutex);
                 FT_Set_Pixel_Sizes(m_face, 0, height);
 
                 if (FT_Load_Char(m_face, character, FT_LOAD_RENDER)) {
@@ -118,4 +118,4 @@ namespace ta {
             return ch;
         }
     } /* graphics */
-} /* ta */
+} /* id */

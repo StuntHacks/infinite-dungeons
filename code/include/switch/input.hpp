@@ -7,7 +7,7 @@
 #include <switch.h>
 #include "global/graphics/Vertex.hpp"
 
-namespace ta {
+namespace id {
     /**
      * @brief Handles user input
      */
@@ -100,8 +100,8 @@ namespace ta {
                     downButtons,     ///< Buttons that are pressed by this player this frame, regardless whether they were pressed in the last frame or not
                     releasedButtons; ///< Buttons that have been released by this player this frame
                 ControllerData controllerData; ///< Controller data
-                ta::graphics::Vector2i joystickCartesian[2];
-                ta::graphics::Vector2f joystickPolar[2];
+                id::graphics::Vector2i joystickCartesian[2];
+                id::graphics::Vector2f joystickPolar[2];
             };
 
             int pressedButtons,  ///< Buttons that have been pressed by any player this frame
@@ -184,14 +184,14 @@ namespace ta {
             return (buttonsReleased(player) & buttons);
         }
 
-        static inline ta::graphics::Vector2i getJoystickCartesian(ta::Input::Joystick stick, Player player) {
+        static inline id::graphics::Vector2i getJoystickCartesian(id::Input::Joystick stick, Player player) {
             return m_inputData.playerData[(int) player].joystickCartesian[static_cast<int>(stick)];
         }
 
         /**
          * @return First value is the angle (in degrees), second is the distance
          */
-        static inline ta::graphics::Vector2f getJoystickPolar(ta::Input::Joystick stick, Player player) {
+        static inline id::graphics::Vector2f getJoystickPolar(id::Input::Joystick stick, Player player) {
             return m_inputData.playerData[(int) player].joystickPolar[static_cast<int>(stick)];
         }
 
@@ -199,4 +199,4 @@ namespace ta {
         static void scanInput();
         static InputData m_inputData;
     };
-} /* ta */
+} /* id */

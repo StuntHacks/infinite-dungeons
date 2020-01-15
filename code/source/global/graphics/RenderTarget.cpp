@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-namespace ta {
+namespace id {
     namespace graphics {
         RenderTarget::RenderTarget(float width, float height) :
         m_width(width),
@@ -59,8 +59,8 @@ namespace ta {
             glBindVertexArray(m_vao);
 
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-            ta::graphics::Renderer::prepare();
-            glBufferData(GL_ARRAY_BUFFER, sizeof(ta::graphics::Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
+            id::graphics::Renderer::prepare();
+            glBufferData(GL_ARRAY_BUFFER, sizeof(id::graphics::Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
 
             // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
             glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -103,16 +103,16 @@ namespace ta {
             m_posY = posY;
         }
 
-        void RenderTarget::setPosition(ta::graphics::Vector2f dimensions) {
+        void RenderTarget::setPosition(id::graphics::Vector2f dimensions) {
             m_posX = dimensions.u;
             m_posY = dimensions.v;
         }
 
-        ta::graphics::Vector2f RenderTarget::getPosition() {
+        id::graphics::Vector2f RenderTarget::getPosition() {
             return { static_cast<float>(m_posX), static_cast<float>(m_posY) };
         }
 
-        void RenderTarget::draw(ta::graphics::Renderer& renderer, bool) {
+        void RenderTarget::draw(id::graphics::Renderer& renderer, bool) {
             glActiveTexture(GL_TEXTURE0);
             glBindVertexArray(m_vao);
             glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -130,4 +130,4 @@ namespace ta {
             return m_texture;
         }
     } /* graphics */
-} /* ta */
+} /* id */

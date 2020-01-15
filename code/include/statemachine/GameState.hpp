@@ -1,8 +1,9 @@
 #pragma once
 #include "StateHandler.hpp"
+#include "global/Singleton.hpp"
 #include "global/graphics/graphics.hpp"
 
-namespace ta {
+namespace id {
     class GameState {
     public:
         /**
@@ -20,6 +21,6 @@ namespace ta {
          */
         virtual void onExit() = 0;
 
-        virtual void update(ta::StateHandler& handler, ta::graphics::Renderer& renderer) = 0;
+        virtual void update(id::StateHandler& handler, id::graphics::Renderer& renderer) = 0;
     };
-} /* ta */
+} /* id */

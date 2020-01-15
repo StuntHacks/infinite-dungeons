@@ -11,7 +11,7 @@
 
 #include "Vertex.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         class Shader;
 
@@ -35,7 +35,7 @@ namespace ta {
              * @param shader The shader to attach
              * @return       This shader-program, in order to easily attach multiple shaders
              */
-            ShaderProgram& attach(const ta::graphics::Shader& shader);
+            ShaderProgram& attach(const id::graphics::Shader& shader);
 
             /**
              * @brief Links the shader program
@@ -65,11 +65,11 @@ namespace ta {
             void setFloat(const std::string& name, float value);
             void setInteger(const std::string& name, int value);
             void setVector2f(const std::string& name, float x, float y);
-            void setVector2f(const std::string& name, const ta::graphics::Vector2f& value);
+            void setVector2f(const std::string& name, const id::graphics::Vector2f& value);
             void setVector3f(const std::string& name, float x, float y, float z);
-            void setVector3f(const std::string& name, const ta::graphics::Vector3f& value);
+            void setVector3f(const std::string& name, const id::graphics::Vector3f& value);
             void setVector4f(const std::string& name, float x, float y, float z, float w);
-            void setVector4f(const std::string& name, const ta::graphics::Vector4f& value);
+            void setVector4f(const std::string& name, const id::graphics::Vector4f& value);
             void setMatrix4(const std::string& name, const glm::mat4& matrix);
 
         private:
@@ -79,4 +79,4 @@ namespace ta {
             unsigned int m_program;
         };
     } /* graphics */
-} /* ta */
+} /* id */

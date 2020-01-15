@@ -4,17 +4,17 @@
 #include "global/graphics/Texture.hpp"
 #include "global/graphics/drawables/Model.hpp"
 
-namespace ta {
+namespace id {
     // textures
-    ta::graphics::Texture& AssetPipeline::getTexture(const std::string& assetpath, bool smoothTexture, GLenum wrapS, GLenum wrapT, bool recache) {
+    id::graphics::Texture& AssetPipeline::getTexture(const std::string& assetpath, bool smoothTexture, GLenum wrapS, GLenum wrapT, bool recache) {
         const std::string smoothness = ":" + std::string(smoothTexture ? "smooth" : "rough");
 
         if (m_textureCache.count(assetpath + smoothness) == 0 || recache) {
-            ta::Console::log(recache ?
+            id::Console::log(recache ?
                                 "Recaching texture \"" + assetpath + smoothness + "\"..." :
                                 "Texture \"" + assetpath + smoothness + "\" not cached. Loading...",
                             "AssetPipeline.cpp");
-            m_textureCache[assetpath + smoothness] = ta::graphics::Texture(assetpath, smoothTexture, wrapS, wrapT, false);
+            m_textureCache[assetpath + smoothness] = id::graphics::Texture(assetpath, smoothTexture, wrapS, wrapT, false);
         }
 
         return m_textureCache[assetpath + smoothness];
@@ -24,7 +24,7 @@ namespace ta {
         return m_textureCache.count(assetpath + ":" + std::string(smoothTexture ? "smooth" : "rough")) > 0;
     }
 
-    bool AssetPipeline::insertTexture(const std::string& assetpath, ta::graphics::Texture& texture, bool smoothTexture, bool overwrite) {
+    bool AssetPipeline::insertTexture(const std::string& assetpath, id::graphics::Texture& texture, bool smoothTexture, bool overwrite) {
         if (!existsTexture(assetpath, smoothTexture) || overwrite) {
             texture.setAutoDelete(false);
             m_textureCache[assetpath + ":" + std::string(smoothTexture ? "smooth" : "rough")] = texture;
@@ -50,4 +50,4 @@ namespace ta {
     // private methods
     AssetPipeline::AssetPipeline() { /* do nothing */ }
 
-} /* ta */
+} /* id */

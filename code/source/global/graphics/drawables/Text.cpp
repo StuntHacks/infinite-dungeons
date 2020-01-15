@@ -4,9 +4,9 @@
 #include "global/graphics/drawables/Text.hpp"
 #include "switch/lock.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
-        Text::Text(ta::graphics::Font& font, const std::wstring& text, int height, float posX, float posY, ta::graphics::Color textColor) :
+        Text::Text(id::graphics::Font& font, const std::wstring& text, int height, float posX, float posY, id::graphics::Color textColor) :
         m_height(height),
         m_lineSpacing(0),
         m_letterSpacing(0),
@@ -54,16 +54,16 @@ namespace ta {
                 }
                 )text";
 
-                ta::graphics::Shader vsh, fsh;
-                vsh.compile(vshSource, ta::graphics::Shader::Type::Vertex);
-                fsh.compile(fshSource, ta::graphics::Shader::Type::Fragment);
+                id::graphics::Shader vsh, fsh;
+                vsh.compile(vshSource, id::graphics::Shader::Type::Vertex);
+                fsh.compile(fshSource, id::graphics::Shader::Type::Fragment);
                 m_shader.attach(vsh).attach(fsh).link();
 
                 glGenVertexArrays(1, &m_vao);
                 glGenBuffers(1, &m_vbo);
                 glBindVertexArray(m_vao);
                 glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-                ta::graphics::Vertex vertices[6] = {
+                id::graphics::Vertex vertices[6] = {
                     { { 0.0f, 1.0f, 0.5f }, { 0.0f, 1.0f, 0.0f, 0.5f }, { 0.0f, 1.0f } },
                     { { 0.0f, 0.0f, 0.5f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } },
                     { { 1.0f, 0.0f, 0.5f }, { 0.0f, 1.0f, 0.0f, 0.5f }, { 1.0f, 0.0f } },
@@ -73,7 +73,7 @@ namespace ta {
                     { { 0.0f, 1.0f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
                 };
                 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-                ta::graphics::Renderer::prepare();
+                id::graphics::Renderer::prepare();
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
                 glBindVertexArray(0);
             }
@@ -84,11 +84,11 @@ namespace ta {
             glDeleteVertexArrays(1, &m_vao);
         }
 
-        void Text::setFont(ta::graphics::Font& font) {
+        void Text::setFont(id::graphics::Font& font) {
             m_font = font;
         }
 
-        ta::graphics::Font& Text::getFont() const {
+        id::graphics::Font& Text::getFont() const {
             return m_font;
         }
 
@@ -167,24 +167,24 @@ namespace ta {
             m_posY = posY;
         }
 
-        void Text::setPosition(ta::graphics::Vector2f dimensions) {
+        void Text::setPosition(id::graphics::Vector2f dimensions) {
             m_posX = dimensions.u;
             m_posY = dimensions.v;
         }
 
-        ta::graphics::Vector2f Text::getPosition() {
+        id::graphics::Vector2f Text::getPosition() {
             return { static_cast<float>(m_posX), static_cast<float>(m_posY) };
         }
 
-        void Text::setTextColor(ta::graphics::Color color) {
+        void Text::setTextColor(id::graphics::Color color) {
             m_textColor = color;
         }
 
-        ta::graphics::Color Text::getTextColor() {
+        id::graphics::Color Text::getTextColor() {
             return m_textColor;
         }
 
-        void Text::draw(ta::graphics::Renderer& renderer, bool) {
+        void Text::draw(id::graphics::Renderer& renderer, bool) {
             m_shader.use();
             m_shader.setMatrix4("projection", renderer.getOrthoProjection());
             m_shader.setVector4f("textColor", { m_textColor.getRed(), m_textColor.getGreen(), m_textColor.getBlue(), m_textColor.getAlpha() });
@@ -243,7 +243,7 @@ namespace ta {
                     continue;
                 }
 
-                ta::graphics::Font::Character ch = m_font.getCharacter(*c, m_height);
+                id::graphics::Font::Character ch = m_font.getCharacter(*c, m_height);
 
                 GLfloat xpos = x + ch.bearing.x;
                 GLfloat ypos = y - ch.bearing.y;
@@ -270,4 +270,4 @@ namespace ta {
             renderer.getCurrentShader().use();
         }
     } /* graphics */
-} /* ta */
+} /* id */

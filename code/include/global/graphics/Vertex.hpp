@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ta {
+namespace id {
     namespace graphics {
         struct Vector2i {
             int u = 0;
@@ -46,4 +46,4 @@ namespace ta {
         };
 
     } /* graphics */
-} /* ta */
+} /* id */

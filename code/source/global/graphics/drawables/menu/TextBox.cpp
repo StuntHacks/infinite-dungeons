@@ -2,7 +2,7 @@
 #include "global/settings/settings.hpp"
 #include "switch/input.hpp"
 
-namespace ta {
+namespace id {
     namespace menu {
         std::wstring TextBox::getText() const {
             return m_text;
@@ -29,7 +29,7 @@ namespace ta {
         }
 
         void TextBox::display(const std::wstring& text, bool autoProceed, int displayTime, int pauseBefore, int pauseAfter, std::function<void(int)> callback) {
-            if (m_state == ta::menu::TextBox::State::Finished) {
+            if (m_state == id::menu::TextBox::State::Finished) {
                 m_text = text;
                 m_autoProceed = autoProceed;
                 m_displayTime = displayTime;
@@ -50,12 +50,12 @@ namespace ta {
                 m_textObject.setText(L"");
 
                 m_frameCounter = 0;
-                m_state = ta::menu::TextBox::State::PauseBefore;
+                m_state = id::menu::TextBox::State::PauseBefore;
             }
         }
 
-        void TextBox::displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<ta::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected, int pauseBefore, int pauseAfter) {
-            if (m_state == ta::menu::TextBox::State::Finished) {
+        void TextBox::displayQuestion(const std::wstring& text, std::function<void(int)> callback, std::vector<id::menu::TextBox::QuestionOption> options, int defaultOption, unsigned int selected, int pauseBefore, int pauseAfter) {
+            if (m_state == id::menu::TextBox::State::Finished) {
                 m_isQuestion = true;
                 m_options = options;
                 m_defaultOption = defaultOption >= 0 && defaultOption < static_cast<int>(m_options.size()) ? defaultOption : -1;
@@ -67,7 +67,7 @@ namespace ta {
 
         void TextBox::interrupt() {
             m_frameCounter = 0;
-            m_state = ta::menu::TextBox::State::Interrupted;
+            m_state = id::menu::TextBox::State::Interrupted;
         }
 
         void TextBox::finish() {
@@ -78,65 +78,65 @@ namespace ta {
             m_frameCounter = 0;
 
             if (m_page < m_pages.size() - 1) {
-                m_state = ta::menu::TextBox::State::Displaying;
+                m_state = id::menu::TextBox::State::Displaying;
             } else {
-                m_state = ta::menu::TextBox::State::DisplayingFinal;
+                m_state = id::menu::TextBox::State::DisplayingFinal;
             }
         }
 
         void TextBox::skip() {
-            m_state = ta::menu::TextBox::State::Finished;
+            m_state = id::menu::TextBox::State::Finished;
         }
 
         void TextBox::update() {
             switch (m_state) {
-            case ta::menu::TextBox::State::PauseBefore:
+            case id::menu::TextBox::State::PauseBefore:
                 if (m_frameCounter >= m_pauseBefore) {
                     m_frameCounter = 0;
-                    m_state = ta::menu::TextBox::State::Drawing;
+                    m_state = id::menu::TextBox::State::Drawing;
                     return;
                 }
 
                 break;
-            case ta::menu::TextBox::State::Drawing:
+            case id::menu::TextBox::State::Drawing:
                 if (m_cursor == m_pages[m_page].end()) {
                     m_frameCounter = 0;
 
                     if (m_page < m_pages.size() - 1) {
-                        m_state = ta::menu::TextBox::State::Displaying;
+                        m_state = id::menu::TextBox::State::Displaying;
                     } else {
-                        m_state = ta::menu::TextBox::State::DisplayingFinal;
+                        m_state = id::menu::TextBox::State::DisplayingFinal;
                     }
 
                     return;
                 } else {
-                    if (m_frameCounter % (ta::Input::buttonDown(ta::Input::Button::B) ? 2 : ta::settings::TextSpeed) == 0) {
+                    if (m_frameCounter % (id::Input::buttonDown(id::Input::Button::B) ? 2 : id::settings::TextSpeed) == 0) {
                         drawCharacter();
                     }
                 }
 
                 break;
-            case ta::menu::TextBox::State::Interrupted:
+            case id::menu::TextBox::State::Interrupted:
                 // TODO: Clean this mess up
                 if (
                     (
-                        (ta::Input::buttonPressed(ta::Input::Button::A) ||
-                        (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime)
+                        (id::Input::buttonPressed(id::Input::Button::A) ||
+                        (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime)
                     ) && !m_autoProceed) ||
                     (m_autoProceed && m_frameCounter >= m_displayTime)
                 ) {
                     m_frameCounter = 0;
-                    m_state = ta::menu::TextBox::State::Drawing;
+                    m_state = id::menu::TextBox::State::Drawing;
                     return;
                 }
 
                 break;
-            case ta::menu::TextBox::State::Displaying:
+            case id::menu::TextBox::State::Displaying:
                 // TODO: Clean this mess up
                 if (
                     (
-                        (ta::Input::buttonPressed(ta::Input::Button::A) ||
-                        (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime)
+                        (id::Input::buttonPressed(id::Input::Button::A) ||
+                        (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime)
                     ) && !m_autoProceed) ||
                     (m_autoProceed && m_frameCounter >= m_displayTime)
                 ) {
@@ -146,20 +146,20 @@ namespace ta {
                     m_textObject.setText(L"");
                     m_cursor = m_pages[m_page].begin();
 
-                    m_state = ta::menu::TextBox::State::Drawing;
+                    m_state = id::menu::TextBox::State::Drawing;
                     return;
                 }
 
                 break;
-            case ta::menu::TextBox::State::DisplayingFinal:
+            case id::menu::TextBox::State::DisplayingFinal:
                 if (m_isQuestion) {
-                    if (ta::Input::buttonPressed(ta::Input::Button::Up)) {
+                    if (id::Input::buttonPressed(id::Input::Button::Up)) {
                         if (m_optionsCursor > 0) {
                             m_optionsCursor--;
                         } else {
                             m_optionsCursor = m_options.size() - 1;
                         }
-                    } else if (ta::Input::buttonPressed(ta::Input::Button::Down)) {
+                    } else if (id::Input::buttonPressed(id::Input::Button::Down)) {
                         if (m_optionsCursor < m_options.size() - 1) {
                             m_optionsCursor++;
                         } else {
@@ -167,25 +167,25 @@ namespace ta {
                         }
                     }
 
-                    if (ta::Input::buttonPressed(ta::Input::Button::A)) {
+                    if (id::Input::buttonPressed(id::Input::Button::A)) {
                         m_result = m_options[m_optionsCursor].resultValue > -1 ? m_options[m_optionsCursor].resultValue : m_optionsCursor;
                         m_frameCounter = 0;
-                        m_state = ta::menu::TextBox::State::PauseAfter;
-                    } else if (ta::Input::buttonPressed(ta::Input::Button::B) && m_defaultOption != -1) {
+                        m_state = id::menu::TextBox::State::PauseAfter;
+                    } else if (id::Input::buttonPressed(id::Input::Button::B) && m_defaultOption != -1) {
                         m_result = m_options[m_defaultOption].resultValue > -1 ? m_options[m_defaultOption].resultValue : m_defaultOption;
                         m_frameCounter = 0;
-                        m_state = ta::menu::TextBox::State::PauseAfter;
+                        m_state = id::menu::TextBox::State::PauseAfter;
                     }
                 } else {
-                    if (ta::Input::buttonPressed(ta::Input::Button::A) || (ta::Input::buttonDown(ta::Input::Button::B) && m_frameCounter >= m_displayTime) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                    if (id::Input::buttonPressed(id::Input::Button::A) || (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
                         m_frameCounter = 0;
-                        m_state = ta::menu::TextBox::State::PauseAfter;
+                        m_state = id::menu::TextBox::State::PauseAfter;
                         return;
                     }
                 }
 
                 break;
-            case ta::menu::TextBox::State::PauseAfter:
+            case id::menu::TextBox::State::PauseAfter:
                 if (m_frameCounter >= m_pauseAfter) {
                     m_frameCounter = 0;
                     m_displayTime = 0;
@@ -204,7 +204,7 @@ namespace ta {
                     m_page = 0;
 
                     m_autoProceed = false;
-                    m_state = ta::menu::TextBox::State::Finished;
+                    m_state = id::menu::TextBox::State::Finished;
 
                     std::function<void(int)> callback = m_callback;
                     m_callback = [](int){};
@@ -223,7 +223,7 @@ namespace ta {
             m_frameCounter++;
         }
 
-        ta::menu::TextBox::State TextBox::getState() {
+        id::menu::TextBox::State TextBox::getState() {
             return m_state;
         }
 
@@ -239,10 +239,10 @@ namespace ta {
         m_optionsCursor(0),
         m_autoProceed(false),
         m_isQuestion(false),
-        m_state(ta::menu::TextBox::State::Finished),
+        m_state(id::menu::TextBox::State::Finished),
         m_text(L""),
         m_callback([](int){}),
-        m_font(ta::settings::DefaultFontPath),
+        m_font(id::settings::DefaultFontPath),
         m_textObject(m_font) {
             m_cursor = m_text.begin();
         }
@@ -305,4 +305,4 @@ namespace ta {
             m_cursor++;
         }
     } /* menu */
-} /* ta */
+} /* id */

@@ -1,7 +1,7 @@
 #include <switch.h>
 #include "switch/mutex.hpp"
 
-namespace ta {
+namespace id {
     Mutex::Mutex() {
         rmutexInit(&m_mutex);
     }
@@ -17,4 +17,4 @@ namespace ta {
     void Mutex::unlock() {
         rmutexUnlock(&m_mutex);
     }
-} /* ta */
+} /* id */

@@ -9,9 +9,9 @@
 #include "global/graphics/Texture.hpp"
 #include "global/graphics/drawables/Text.hpp"
 
-namespace ta {
+namespace id {
     namespace menu {
-        class CircleSelect: public ta::graphics::Drawable {
+        class CircleSelect: public id::graphics::Drawable {
         public:
             enum State {
                 FadingIn,
@@ -23,19 +23,19 @@ namespace ta {
 
             struct Item {
                 std::wstring title;
-                ta::graphics::Texture* icon;
+                id::graphics::Texture* icon;
                 std::vector<std::wstring> data;
             };
 
             virtual std::wstring getTitle() const;
             virtual int getSelectedID() const;
-            virtual std::vector<ta::menu::CircleSelect::Item> getOptions() const;
+            virtual std::vector<id::menu::CircleSelect::Item> getOptions() const;
 
             /**
              * @brief Displays the Selection
              * @param callback A callback to call after a selection is done. The single parameter is the selected choice, or -1 if nothing was selected
              */
-            virtual void display(std::vector<ta::menu::CircleSelect::Item> options, ta::Input::Button button, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
+            virtual void display(std::vector<id::menu::CircleSelect::Item> options, id::Input::Button button, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
 
             /**
              * @brief Closes the selection
@@ -44,24 +44,24 @@ namespace ta {
             virtual void close(bool dismiss = true);
 
             virtual void update();
-            virtual void draw(ta::graphics::Renderer& renderer, bool) = 0;
+            virtual void draw(id::graphics::Renderer& renderer, bool) = 0;
 
-            virtual ta::menu::CircleSelect::State getState();
+            virtual id::menu::CircleSelect::State getState();
 
         protected:
             CircleSelect();
 
             /* data */
             int m_cursor, m_result, m_frameCounter;
-            ta::menu::CircleSelect::State m_state;
+            id::menu::CircleSelect::State m_state;
             std::wstring m_title;
-            std::vector<ta::menu::CircleSelect::Item> m_options;
-            ta::Input::Button m_button;
+            std::vector<id::menu::CircleSelect::Item> m_options;
+            id::Input::Button m_button;
 
             std::function<void(int)> m_callback;
 
-            ta::graphics::Font m_font;
-            ta::graphics::Text m_textObject;
+            id::graphics::Font m_font;
+            id::graphics::Text m_textObject;
         };
     } /* menu */
-} /* ta */
+} /* id */

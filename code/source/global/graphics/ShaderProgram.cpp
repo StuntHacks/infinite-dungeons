@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <stdio.h>
 
-namespace ta {
+namespace id {
     namespace graphics {
         ShaderProgram::ShaderProgram() :
             m_program(0) { /* do nothing */ }
@@ -14,7 +14,7 @@ namespace ta {
             glDeleteProgram(m_program);
         }
 
-        ShaderProgram& ShaderProgram::attach(const ta::graphics::Shader& shader) {
+        ShaderProgram& ShaderProgram::attach(const id::graphics::Shader& shader) {
             if (m_program == 0) {
                 m_program = glCreateProgram();
                 m_created = true;
@@ -35,7 +35,7 @@ namespace ta {
                 if (!success) {
                     char buf[512];
                     glGetProgramInfoLog(m_program, sizeof(buf), nullptr, buf);
-                    ta::Console::error("Link error " + std::string(buf), "ShaderProgram.cpp:32");
+                    id::Console::error("Link error " + std::string(buf), "ShaderProgram.cpp:32");
                     return false;
                 }
 
@@ -81,7 +81,7 @@ namespace ta {
             glUniform2f(glGetUniformLocation(m_program, name.c_str()), x, y);
         }
 
-        void ShaderProgram::setVector2f(const std::string& name, const ta::graphics::Vector2f& value) {
+        void ShaderProgram::setVector2f(const std::string& name, const id::graphics::Vector2f& value) {
             glUniform2f(glGetUniformLocation(m_program, name.c_str()), value.u, value.v);
         }
 
@@ -89,7 +89,7 @@ namespace ta {
             glUniform3f(glGetUniformLocation(m_program, name.c_str()), x, y, z);
         }
 
-        void ShaderProgram::setVector3f(const std::string& name, const ta::graphics::Vector3f& value) {
+        void ShaderProgram::setVector3f(const std::string& name, const id::graphics::Vector3f& value) {
             glUniform3f(glGetUniformLocation(m_program, name.c_str()), value.x, value.y, value.z);
         }
 
@@ -97,7 +97,7 @@ namespace ta {
             glUniform4f(glGetUniformLocation(m_program, name.c_str()), x, y, z, w);
         }
 
-        void ShaderProgram::setVector4f(const std::string& name, const ta::graphics::Vector4f& value) {
+        void ShaderProgram::setVector4f(const std::string& name, const id::graphics::Vector4f& value) {
             glUniform4f(glGetUniformLocation(m_program, name.c_str()), value.x, value.y, value.z, value.w);
         }
 
@@ -105,4 +105,4 @@ namespace ta {
             glUniformMatrix4fv(glGetUniformLocation(m_program, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
         }
     } /* graphics */
-} /* ta */
+} /* id */

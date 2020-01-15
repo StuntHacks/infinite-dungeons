@@ -1,7 +1,7 @@
 #include "statemachine/StateHandler.hpp"
 #include "statemachine/GameState.hpp"
 
-namespace ta {
+namespace id {
     StateHandler::~StateHandler() {
         while (!m_states.empty()) {
             m_states.back()->cleanup();
@@ -9,7 +9,7 @@ namespace ta {
         }
     }
 
-    void StateHandler::change(ta::GameState& t_state) {
+    void StateHandler::change(id::GameState& t_state) {
         if (!m_states.empty()) {
             m_states.back()->onExit();
             m_states.back() = &t_state;
@@ -19,7 +19,7 @@ namespace ta {
         }
     }
 
-    void StateHandler::push(ta::GameState& t_state) {
+    void StateHandler::push(id::GameState& t_state) {
         if (!m_states.empty()) m_states.back()->onExit();
         m_states.push_back(&t_state);
         m_states.back()->onEntry();
@@ -31,7 +31,7 @@ namespace ta {
         if (!m_states.empty()) m_states.back()->onEntry();
     }
 
-    void StateHandler::update(ta::graphics::Renderer& renderer) {
+    void StateHandler::update(id::graphics::Renderer& renderer) {
         m_states.back()->update(*this, renderer);
     }
-} /* ta */
+} /* id */

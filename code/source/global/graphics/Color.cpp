@@ -1,6 +1,6 @@
 #include "global/graphics/Color.hpp"
 
-namespace ta {
+namespace id {
     namespace graphics {
         Color::Color() :
             m_red(0.f),
@@ -65,4 +65,4 @@ namespace ta {
             return m_alpha;
         }
     } /* graphics */
-} /* ta */
+} /* id */

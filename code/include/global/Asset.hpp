@@ -2,16 +2,16 @@
 
 #include "global/AssetPipeline.hpp"
 
-namespace ta {
+namespace id {
     class Asset {
     public:
-        Asset(ta::AssetPipeline::Type type, const std::string& assetpath);
-        ta::AssetPipeline::Type getType();
+        Asset(id::AssetPipeline::Type type, const std::string& assetpath);
+        id::AssetPipeline::Type getType();
         std::string& getAssetpath();
 
     private:
         /* data */
-        ta::AssetPipeline::Type m_type;
+        id::AssetPipeline::Type m_type;
         std::string m_assetpath;
     };
-} /* ta */
+} /* id */
