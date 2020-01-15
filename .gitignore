@@ -5,3 +5,4 @@ build/
 *.nso
 *.pfs0
 romfs/assets/**/*.*
+docs/
