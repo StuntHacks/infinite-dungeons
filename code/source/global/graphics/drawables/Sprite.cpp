@@ -60,21 +60,29 @@ namespace ta {
             ta::graphics::Renderer::prepare();
             glBufferData(GL_ARRAY_BUFFER, sizeof(ta::graphics::Vertex) * m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
 
-            // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-            // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-            // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
             glBindVertexArray(0);
+        }
+
+        Sprite::~Sprite() {
+            glDeleteBuffers(1, &m_vbo);
+            glDeleteVertexArrays(1, &m_vao);
         }
 
         // texture
         void Sprite::setTexture(ta::graphics::Texture& texture) {
             m_texture = texture;
+            m_texture.setAutoDelete(false);
         }
 
-        void Sprite::setTexture(ta::graphics::Texture* texture) {
-            m_texture = *texture;
+        void Sprite::setTexture(const std::string& assetpath, bool smoothTexture) {
+            m_texture = ta::AssetPipeline::getInstance().getTexture(assetpath, smoothTexture);
+        }
+
+        void Sprite::setTexture(ta::Asset asset, bool smoothTexture) {
+            if (asset.getType() == ta::AssetPipeline::Type::Texture) {
+                m_texture = ta::AssetPipeline::getInstance().getTexture(asset.getAssetpath(), smoothTexture);
+            }
         }
 
         ta::graphics::Texture& Sprite::getTexture() {
@@ -211,7 +219,7 @@ namespace ta {
             m_shader.setMatrix4("transform", transform);
 
             glBindVertexArray(m_vao);
-            glBindTexture(GL_TEXTURE_2D, m_texture.getTexture());
+            m_texture.bind();
             glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
             glBindVertexArray(0);
             glBindTexture(GL_TEXTURE_2D, 0);

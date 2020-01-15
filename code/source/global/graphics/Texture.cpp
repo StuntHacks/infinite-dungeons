@@ -5,13 +5,24 @@
 
 namespace ta {
     namespace graphics {
-        Texture::Texture() :
+        Texture::Texture(bool autoDelete) :
         m_texture(0),
         m_width(0),
-        m_height(0) { /* do nothing */ }
+        m_height(0),
+        m_autoDelete(autoDelete) { /* do nothing */ }
+
+        Texture::Texture(const std::string& filepath, bool smoothTexture, GLenum wrapS, GLenum wrapT, bool autoDelete) :
+        m_texture(0),
+        m_width(0),
+        m_height(0),
+        m_autoDelete(autoDelete) {
+            loadFromFile(filepath, smoothTexture, wrapS, wrapT);
+        }
 
         Texture::~Texture() {
-            glDeleteTextures(1, &m_texture);
+            if (m_autoDelete) {
+                deleteTexture();
+            }
         }
 
         bool Texture::loadFromFile(const std::string& filepath, bool smoothTexture, GLenum wrapS, GLenum wrapT) {
@@ -64,6 +75,25 @@ namespace ta {
 
         unsigned int Texture::getHeight() {
             return m_height;
+        }
+
+        bool Texture::getAutoDelete() {
+            return m_autoDelete;
+        }
+
+        void Texture::setAutoDelete(bool autoDelete) {
+            m_autoDelete = autoDelete;
+        }
+
+        void Texture::deleteTexture() {
+            glDeleteTextures(1, &m_texture);
+            m_width = 0;
+            m_height = 0;
+            m_texture = 0;
+        }
+
+        void Texture::bind() {
+            glBindTexture(GL_TEXTURE_2D, m_texture);
         }
     } /* graphics */
 } /* ta */
