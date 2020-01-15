@@ -72,6 +72,7 @@ namespace ta {
         // texture
         void Sprite::setTexture(ta::graphics::Texture& texture) {
             m_texture = texture;
+            m_texture.setAutoDelete(false);
         }
 
         void Sprite::setTexture(const std::string& assetpath, bool smoothTexture) {
