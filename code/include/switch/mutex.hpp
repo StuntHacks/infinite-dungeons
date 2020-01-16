@@ -1,5 +1,5 @@
 /**
- * @file mutex.hpp
+ * @file switch/mutex.hpp
  * @brief Defines the Mutex class
  */
 #pragma once
