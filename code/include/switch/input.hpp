@@ -184,12 +184,21 @@ namespace id {
             return (buttonsReleased(player) & buttons);
         }
 
+        /**
+         * @brief Returns the position of the given stick in cartesian coordinates
+         * @param  stick  The stick to query
+         * @param  player The player to query from
+         * @return        A vector consisting of the x- and y-position (both between [-32767; 32768])
+         */
         static inline id::graphics::Vector2i getJoystickCartesian(id::Input::Joystick stick, Player player) {
             return m_inputData.playerData[(int) player].joystickCartesian[static_cast<int>(stick)];
         }
 
         /**
-         * @return First value is the angle (in degrees), second is the distance
+         * @brief Returns the position of the given stick in polar coordinates
+         * @param  stick  The stick to query
+         * @param  player The player to query from
+         * @return        A vector consisting of the angle (in degrees) and the length (between [-1.0; 1.0])
          */
         static inline id::graphics::Vector2f getJoystickPolar(id::Input::Joystick stick, Player player) {
             return m_inputData.playerData[(int) player].joystickPolar[static_cast<int>(stick)];

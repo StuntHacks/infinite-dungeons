@@ -9,19 +9,19 @@ namespace id {
         }
     }
 
-    void StateHandler::change(id::GameState& t_state) {
+    void StateHandler::change(id::GameState& state) {
         if (!m_states.empty()) {
             m_states.back()->onExit();
-            m_states.back() = &t_state;
+            m_states.back() = &state;
             m_states.back()->onEntry();
         } else {
-            push(t_state);
+            push(state);
         }
     }
 
-    void StateHandler::push(id::GameState& t_state) {
+    void StateHandler::push(id::GameState& state) {
         if (!m_states.empty()) m_states.back()->onExit();
-        m_states.push_back(&t_state);
+        m_states.push_back(&state);
         m_states.back()->onEntry();
     }
 
