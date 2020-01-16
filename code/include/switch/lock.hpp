@@ -1,3 +1,7 @@
+/**
+ * @file switch/lock.hpp
+ * @brief Defines the Lock class
+ */
 #pragma once
 
 #include "mutex.hpp"
@@ -12,9 +16,9 @@ namespace id {
     public:
         /**
          * @brief Creates the lock
-         * @param t_mutex The mutex to lock
+         * @param mutex The mutex to lock
          */
-        Lock(Mutex& t_mutex);
+        Lock(Mutex& mutex);
 
         /**
          * @brief Destructs the lock

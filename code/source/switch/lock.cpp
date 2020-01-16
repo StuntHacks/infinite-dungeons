@@ -1,8 +1,8 @@
 #include "switch/lock.hpp"
 
 namespace id {
-    Lock::Lock(Mutex& t_mutex) :
-            m_mutex(t_mutex) {
+    Lock::Lock(Mutex& mutex) :
+            m_mutex(mutex) {
         m_mutex.lock();
     }
 
