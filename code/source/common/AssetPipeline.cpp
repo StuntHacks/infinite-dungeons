@@ -26,6 +26,7 @@ namespace id {
 
     bool AssetPipeline::insertTexture(const std::string& assetpath, id::graphics::Texture& texture, bool smoothTexture, bool overwrite) {
         if (!existsTexture(assetpath, smoothTexture) || overwrite) {
+            id::Lock lock(m_mutex);
             texture.setAutoDelete(false);
             m_textureCache[assetpath + ":" + std::string(smoothTexture ? "smooth" : "rough")] = texture;
             return true;
@@ -35,6 +36,7 @@ namespace id {
     }
 
     void AssetPipeline::clearTextureCache() {
+        id::Lock lock(m_mutex);
         for (auto& texture: m_textureCache) {
             texture.second.deleteTexture();
         }

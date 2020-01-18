@@ -6,6 +6,7 @@
 
 #include <map>
 #include "common/Singleton.hpp"
+#include "switch/lock.hpp"
 #include "opengl.hpp"
 
 namespace id {
@@ -217,6 +218,7 @@ namespace id {
         AssetPipeline();
 
         /* data */
+        id::Mutex m_mutex;
              // "filepath:smooth|rough"
         std::map<std::string, id::graphics::Texture> m_textureCache;
         std::map<std::string, id::graphics::Font> m_fontCache;
