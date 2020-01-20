@@ -30,6 +30,12 @@ namespace id {
              */
             virtual ~Texture();
 
+            /**
+             * @brief Returns whether the texture is loaded or not
+             * @return `true` if the texture is loaded, `false` otherwise
+             */
+            bool isLoaded();
+
             template <class LoaderType>
             bool loadFromFile(const std::string& filepath) {
                 static_assert(std::is_base_of<id::loaders::TextureLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of TextureLoader.");
