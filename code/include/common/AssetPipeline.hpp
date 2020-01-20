@@ -17,7 +17,7 @@ namespace id {
     /**
      * @brief Loads and caches assets to allow for safe, centralized usage
      *
-     * The AssetPipeline works by caching every currently loaded asset with a corresponding path or id. When loading an asset from the filesystem, this will automatically be set to the path of the loaded file. When
+     * The AssetPipeline works by caching every currently loaded asset with a corresponding path or id. When loading an asset from the filesystem, this will automatically be set to the path of the loaded file. When adding an already loaded Asset manually, you should set this to a unique id you want to apply to that asset. When getting assets, you can then either provide a path on the filesystem, and the AssetPipeline will return a cached version of it or load it if it isn't yet cached, or an id to a manually added asset. This identifier is referred to as the `assetpath` in parameters.
      */
     class AssetPipeline: public id::Singleton<AssetPipeline> {
     friend class id::Singleton<AssetPipeline>;
