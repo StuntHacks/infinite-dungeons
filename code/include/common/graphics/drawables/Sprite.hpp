@@ -16,6 +16,7 @@ namespace id {
             virtual ~Sprite();
 
             void setTexture(id::graphics::Texture& texture);
+            id::graphics::Texture& getTexture();
 
             void setWidth(float width);
             float getWidth();
