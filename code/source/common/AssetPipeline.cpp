@@ -1,38 +1,37 @@
 #include "common/AssetPipeline.hpp"
-#include "common/Console.hpp"
-#include "common/graphics/Font.hpp"
-#include "common/graphics/Texture.hpp"
-#include "common/graphics/drawables/Model.hpp"
 
 namespace id {
+    void AssetPipeline::clear() {
+        // clearModelCache();
+        clearTextureCache();
+        // clearFontCache();
+        // // clearAudioCache();
+        // clearFileCache();
+        // clearWideFileCache();
+    }
+
     // textures
-    id::graphics::Texture& AssetPipeline::getTexture(const std::string& assetpath, bool smoothTexture, GLenum wrapS, GLenum wrapT, bool recache) {
-        const std::string smoothness = ":" + std::string(smoothTexture ? "smooth" : "rough");
-
-        if (m_textureCache.count(assetpath + smoothness) == 0 || recache) {
-            id::Console::log(recache ?
-                                "Recaching texture \"" + assetpath + smoothness + "\"..." :
-                                "Texture \"" + assetpath + smoothness + "\" not cached. Loading...",
-                            "AssetPipeline.cpp");
-            m_textureCache[assetpath + smoothness] = id::graphics::Texture(assetpath, smoothTexture, wrapS, wrapT, false);
-        }
-
-        return m_textureCache[assetpath + smoothness];
+    bool AssetPipeline::existsTexture(const std::string& assetpath) {
+        return m_textureCache.count(assetpath) > 0;
     }
 
-    bool AssetPipeline::existsTexture(const std::string& assetpath, bool smoothTexture) {
-        return m_textureCache.count(assetpath + ":" + std::string(smoothTexture ? "smooth" : "rough")) > 0;
-    }
-
-    bool AssetPipeline::insertTexture(const std::string& assetpath, id::graphics::Texture& texture, bool smoothTexture, bool overwrite) {
-        if (!existsTexture(assetpath, smoothTexture) || overwrite) {
+    bool AssetPipeline::insertTexture(const std::string& assetpath, id::graphics::Texture& texture, bool overwrite) {
+        if (!existsTexture(assetpath) || overwrite) {
             id::Lock lock(m_mutex);
             texture.setAutoDelete(false);
-            m_textureCache[assetpath + ":" + std::string(smoothTexture ? "smooth" : "rough")] = texture;
+            m_textureCache[assetpath] = texture;
             return true;
         }
 
         return false;
+    }
+
+    void AssetPipeline::deleteTexture(const std::string& assetpath) {
+        if (existsTexture(assetpath)) {
+            id::Lock lock(m_mutex);
+            m_textureCache[assetpath].setAutoDelete(true);
+            m_textureCache.erase(assetpath);
+        }
     }
 
     void AssetPipeline::clearTextureCache() {
