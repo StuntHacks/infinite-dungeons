@@ -1,6 +1,8 @@
 #include "Application.hpp"
 #include "AssetPipeline.hpp"
 #include "Console.hpp"
+#include "Mutex.hpp"
+#include "Lock.hpp"
 #include "menu/menu.hpp"
 #include "loaders/loaders.hpp"
 #include "graphics/graphics.hpp"
