@@ -43,8 +43,8 @@ namespace id {
             const std::string& getCurrentShaderName() const;
             id::graphics::ShaderProgram& getCurrentShader();
 
-            static bool addDrawHook(const std::string& name, std::function<void(id::graphics::Renderer&)> callback);
-            static bool removeDrawHook(const std::string& name);
+            bool addDrawHook(const std::string& name, std::function<void(id::graphics::Renderer&)> callback);
+            bool removeDrawHook(const std::string& name);
 
             static inline glm::mat4 getOrthoProjection() {
                 return glm::ortho(0.0f, 1920.0f, 1080.0f, 0.0f);
@@ -59,7 +59,7 @@ namespace id {
             id::graphics::ShaderProgram m_defaultShader;
             std::map<std::string, id::graphics::ShaderProgram> m_shaders;
 
-            static inline std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
+            std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
 
             static EGLDisplay m_display;
             static EGLContext m_context;
