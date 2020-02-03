@@ -61,9 +61,11 @@ namespace id {
 
             std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
 
-            static EGLDisplay m_display;
-            static EGLContext m_context;
-            static EGLSurface m_surface;
+            #ifdef __SWITCH__
+                static EGLDisplay m_display;
+                static EGLContext m_context;
+                static EGLSurface m_surface;
+            #endif
         };
     } /* graphics */
 } /* id */
