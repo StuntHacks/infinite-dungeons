@@ -63,18 +63,26 @@ namespace id {
             bool loadFromFile(const std::string& filepath) {
                 static_assert(std::is_base_of<id::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
 
-                std::ifstream file(filepath);
-                std::string buffer((std::istreambuf_iterator<char>(file)),
-                                    std::istreambuf_iterator<char>());
+                LoaderType loader;
+                if (!loader.loadFromFile(filepath)) {
+                    // log...
+                    return false;
+                }
 
-                return _load<LoaderType>(buffer);
+                return _load<LoaderType>(loader);
             };
 
             template <class LoaderType>
             bool loadFromMemory(const std::string& buffer) {
                 static_assert(std::is_base_of<id::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
 
-                return _load<LoaderType>(buffer);
+                LoaderType loader;
+                if (!loader.loadFromMemory(buffer)) {
+                    // log...
+                    return false;
+                }
+
+                return _load<LoaderType>(loader);
             };
 
             virtual void draw(id::graphics::Renderer& renderer, bool);
@@ -88,14 +96,7 @@ namespace id {
             };
 
             template <class LoaderType>
-            bool _load(const std::string& buffer) {
-                LoaderType loader;
-
-                if (!loader.load(buffer)) {
-                    // log...
-                    return false;
-                }
-
+            bool _load(LoaderType loader) {
                 std::vector<id::graphics::Model::Vertex> geometry = loader.getGeometry();
 
                 m_drawBatches.clear();

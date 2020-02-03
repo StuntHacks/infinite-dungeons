@@ -108,6 +108,7 @@ RECENT REVISION HISTORY:
     Blazej Dariusz Roszkowski                                     github:Michaelangel007
 */
 
+#pragma once
 #ifndef STBI_INCLUDE_STB_IMAGE_H
 #define STBI_INCLUDE_STB_IMAGE_H
 

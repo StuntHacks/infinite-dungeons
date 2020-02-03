@@ -9,6 +9,10 @@
 #include "opengl.hpp"
 
 namespace id {
+    namespace loaders {
+        class TextureLoader;
+    } /* loaders */
+
     namespace graphics {
         /**
          * @brief Contains an OpenGl-texture, and provides loading-methods
@@ -22,29 +26,43 @@ namespace id {
             Texture(bool autoDelete = true);
 
             /**
-             * @brief Constructs and loads a texture
-             * @param filepath      The filepath
-             * @param smoothTexture Whether to smooth the Texture
-             * @param wrapS         The s-wrap of the texture
-             * @param wrapT         The t-wrap of the texture
-             * @param autoDelete    Whether the texture should automatically delete itself when the constructor is called
-             */
-            Texture(const std::string& filepath, bool smoothTexture = true, GLenum wrapS = GL_REPEAT, GLenum wrapT = GL_REPEAT, bool autoDelete = true);
-
-            /**
              * @brief Destructs the Texture
              */
             virtual ~Texture();
 
             /**
-             * @brief Loads a Texture from the filesystem
-             * @param  filepath      The filepath
-             * @param  smoothTexture Whether to smooth the Texture
-             * @param  wrapS         The s-wrap of the texture
-             * @param  wrapT         The t-wrap of the texture
-             * @return               `true` if the loading succeeded, `false` otherwise
+             * @brief Returns whether the texture is loaded or not
+             * @return `true` if the texture is loaded, `false` otherwise
              */
-            bool loadFromFile(const std::string& filepath, bool smoothTexture = true, GLenum wrapS = GL_REPEAT, GLenum wrapT = GL_REPEAT);
+            bool isLoaded();
+
+            template <class LoaderType>
+            bool loadFromFile(const std::string& filepath) {
+                static_assert(std::is_base_of<id::loaders::TextureLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of TextureLoader.");
+
+                LoaderType loader;
+                if (!loader.loadFromFile(filepath)) {
+                    // log...
+                    return false;
+                }
+
+                _load<LoaderType>(loader);
+                return true;
+            };
+
+            template <class LoaderType>
+            bool loadFromMemory(const std::string& buffer) {
+                static_assert(std::is_base_of<id::loaders::TextureLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of TextureLoader.");
+
+                LoaderType loader;
+                if (!loader.loadFromMemory(buffer)) {
+                    // log...
+                    return false;
+                }
+
+                 _load<LoaderType>(loader);
+                 return true;
+            };
 
             /**
              * @brief Returns the OpenGL texture-id of the Texture
@@ -85,6 +103,14 @@ namespace id {
              * @brief Binds the texture
              */
             void bind();
+
+        protected:
+            template <class LoaderType>
+            void _load(LoaderType loader) {
+                m_texture = loader.getTexture();
+                m_width = loader.getWidth();
+                m_height = loader.getHeight();
+            };
 
         private:
             /* data */

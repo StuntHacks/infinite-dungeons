@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 
 namespace id {
     /**
@@ -17,12 +18,30 @@ namespace id {
         class Loader {
         public:
             /**
+             * @brief Destructs the Loader
+             */
+            virtual ~Loader() { /* do nothing */ };
+
+            virtual bool loadFromFile(const std::string& filepath) {
+                std::ifstream file(filepath);
+                std::string buffer((std::istreambuf_iterator<char>(file)),
+                                    std::istreambuf_iterator<char>());
+
+                return loadFromMemory(buffer);
+            }
+
+            /**
              * @brief  Loads data from a buffer into the Loader
              * @param  buffer The buffer to load from
              * @return        Whether the loading was successful
              * @note Interpreting the loaded data is up to the implementations
              */
-            virtual bool load(const std::string& buffer) = 0;
+            virtual bool loadFromMemory(const std::string& buffer) = 0;
+
+            /**
+             * @brief Unloads any data currently inside the Loader
+             */
+            virtual void unload() = 0;
         };
     } /* loaders */
 } /* id */

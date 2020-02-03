@@ -75,16 +75,6 @@ namespace id {
             m_texture.setAutoDelete(false);
         }
 
-        void Sprite::setTexture(const std::string& assetpath, bool smoothTexture) {
-            m_texture = id::AssetPipeline::getInstance().getTexture(assetpath, smoothTexture);
-        }
-
-        void Sprite::setTexture(id::Asset asset, bool smoothTexture) {
-            if (asset.getType() == id::AssetPipeline::Type::Texture) {
-                m_texture = id::AssetPipeline::getInstance().getTexture(asset.getAssetpath(), smoothTexture);
-            }
-        }
-
         id::graphics::Texture& Sprite::getTexture() {
             return m_texture;
         }

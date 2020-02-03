@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common/Asset.hpp"
 #include "common/graphics/Color.hpp"
 #include "common/graphics/Drawable.hpp"
 #include "common/graphics/ShaderProgram.hpp"
@@ -17,8 +16,6 @@ namespace id {
             virtual ~Sprite();
 
             void setTexture(id::graphics::Texture& texture);
-            void setTexture(const std::string& assetpath, bool smoothTexture = true);
-            void setTexture(id::Asset asset, bool smoothTexture = true);
             id::graphics::Texture& getTexture();
 
             void setWidth(float width);
