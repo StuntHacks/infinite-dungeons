@@ -3,9 +3,7 @@
 #include <functional>
 #include <map>
 #include <vector>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <glad/glad.h>
+#include "opengl.hpp"
 
 #include "Color.hpp"
 #include "ShaderProgram.hpp"
