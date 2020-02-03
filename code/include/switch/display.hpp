@@ -1,3 +1,4 @@
+#ifdef __SWITCH__
 /**
  * @file switch/lock.hpp
  * @brief Defines the Display namespace
@@ -20,3 +21,4 @@ namespace id {
         }
     } /* Display */
 } /* id */
+#endif

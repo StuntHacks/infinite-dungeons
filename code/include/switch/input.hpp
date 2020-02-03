@@ -1,3 +1,4 @@
+#ifdef __SWITCH__
 /**
  * @file switch/input.hpp
  * @brief Defines the Input class
@@ -209,3 +210,4 @@ namespace id {
         static InputData m_inputData;
     };
 } /* id */
+#endif
