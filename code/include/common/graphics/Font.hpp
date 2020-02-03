@@ -6,7 +6,7 @@
 #include <map>
 
 #include "opengl.hpp"
-#include "switch/mutex.hpp"
+#include "common/Mutex.hpp"
 
 namespace id {
     namespace graphics {
