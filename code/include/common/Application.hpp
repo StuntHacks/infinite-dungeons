@@ -4,6 +4,8 @@
  */
 #pragma once
 
+#include "Singleton.hpp"
+
 /**
  * @brief The main Infinite Dungeons namespace
  */
@@ -11,7 +13,8 @@ namespace id {
     /**
      * @brief Handles the main loop
      */
-    class Application {
+    class Application: public id::Singleton<Application> {
+    friend class id::Singleton<Application>;
     public:
         /**
          * @brief Returns whether the app is still running, and calls loop-hooks
