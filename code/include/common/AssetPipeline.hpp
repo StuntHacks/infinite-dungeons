@@ -10,7 +10,7 @@
 #include "common/graphics/Font.hpp"
 #include "common/graphics/Texture.hpp"
 #include "common/graphics/drawables/Model.hpp"
-#include "switch/lock.hpp"
+#include "common/Lock.hpp"
 #include "opengl.hpp"
 
 namespace id {
