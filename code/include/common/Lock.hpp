@@ -28,6 +28,6 @@ namespace id {
 
     private:
         /* data */
-        Mutex m_mutex;
+        Mutex& m_mutex;
     };
 } /* id */
