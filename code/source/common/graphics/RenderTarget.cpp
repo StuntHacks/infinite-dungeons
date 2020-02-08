@@ -1,7 +1,6 @@
 #include "common/graphics/RenderTarget.hpp"
 #include "common/graphics/Renderer.hpp"
-
-#include <glad/glad.h>
+#include "opengl.hpp"
 
 namespace id {
     namespace graphics {

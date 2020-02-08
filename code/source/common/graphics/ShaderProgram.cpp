@@ -1,8 +1,8 @@
 #include "common/graphics/ShaderProgram.hpp"
 #include "common/graphics/Shader.hpp"
 #include "common/Console.hpp"
+#include "opengl.hpp"
 
-#include <glad/glad.h>
 #include <stdio.h>
 
 namespace id {

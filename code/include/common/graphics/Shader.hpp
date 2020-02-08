@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <string>
+#include "opengl.hpp"
 
 namespace id {
     namespace graphics {
