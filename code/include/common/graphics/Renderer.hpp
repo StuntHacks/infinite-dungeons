@@ -7,19 +7,23 @@
 
 #include "Color.hpp"
 #include "ShaderProgram.hpp"
+#include "common/Singleton.hpp"
 
 namespace id {
+    class Application;
+
+    /**
+     * @brief Contains anything graphics-related
+     */
     namespace graphics {
         class Color;
         class Drawable;
 
-        class Renderer {
+        class Renderer: public id::Singleton<Renderer> {
+        friend class id::Singleton<Renderer>;
+        friend class id::Application;
         public:
-            Renderer(bool force2d = false);
             virtual ~Renderer();
-
-            void force2d(bool force2d) { m_force2d = force2d; }
-            bool is2dForced() { return m_force2d; }
 
             virtual void setClearColor(id::graphics::Color color);
             id::graphics::Color getClearColor();
@@ -51,8 +55,8 @@ namespace id {
             }
 
         private:
+            Renderer();
             /* data */
-            bool m_force2d;
             std::string m_currentShader;
             id::graphics::Color m_clearColor;
             std::vector<id::graphics::Drawable*> m_drawStack2d, m_drawStack3d;
@@ -62,9 +66,13 @@ namespace id {
             std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
 
             #ifdef __SWITCH__
-                static EGLDisplay m_display;
-                static EGLContext m_context;
-                static EGLSurface m_surface;
+                EGLDisplay m_display;
+                EGLContext m_context;
+                EGLSurface m_surface;
+            #else
+                #ifdef __PC__
+                    GLFWwindow* m_window;
+                #endif
             #endif
         };
     } /* graphics */
