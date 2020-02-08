@@ -1,9 +1,12 @@
-.PHONY: clean all nx pc run netload netload_quiet docs
+.PHONY: clean all nx pc run link netload netload_quiet docs
 
 all: nx pc
 
 pc:
 	@make -f Makefile.pc
+
+link:
+	@make link -f Makefile.pc
 
 run:
 	@make run -f Makefile.pc
