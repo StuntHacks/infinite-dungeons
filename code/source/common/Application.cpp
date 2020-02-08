@@ -18,7 +18,7 @@ namespace id {
             #ifdef __PC__
                 id::pc::Input::scanInput();
                 id::menu::TextBoxManager::getInstance().update();
-                return m_isRunning && !glfwWindowShouldClose(id::graphics::Renderer::getInstance().m_window);
+                return m_isRunning && (id::graphics::Renderer::getInstance().m_window ? !glfwWindowShouldClose(id::graphics::Renderer::getInstance().m_window) : false);
             #endif
         #endif
     }
