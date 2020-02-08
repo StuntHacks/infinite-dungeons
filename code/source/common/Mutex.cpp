@@ -22,6 +22,8 @@ namespace id {
         }
     #else
         #ifdef __PC__
+            Mutex::Mutex() { /* do nothing */ }
+
             Mutex::~Mutex() {
                 unlock();
             }

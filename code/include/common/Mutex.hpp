@@ -18,12 +18,10 @@ namespace id {
      */
     class Mutex {
     public:
-        #ifdef __SWITCH__
-            /**
-             * @brief Creates the mutex
-             */
-            Mutex();
-        #endif
+        /**
+         * @brief Creates the mutex
+         */
+        Mutex();
 
         /**
          * @brief Destructor
