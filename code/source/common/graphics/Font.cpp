@@ -1,6 +1,6 @@
 #include "common/graphics/Font.hpp"
 #include "common/Console.hpp"
-#include "switch/lock.hpp"
+#include "common/Lock.hpp"
 
 namespace id {
     namespace graphics {
@@ -116,6 +116,17 @@ namespace id {
             }
 
             return ch;
+        }
+
+        Font& Font::operator=(const id::graphics::Font& rhs) {
+            if(this == &rhs) {
+                return *this;
+            }
+
+            m_path = rhs.m_path;
+            m_freetype = rhs.m_freetype;
+            m_face = rhs.m_face;
+            return *this;
         }
     } /* graphics */
 } /* id */
