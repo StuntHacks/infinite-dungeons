@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 const vec2 lightBias = vec2(0.7, 0.6);
 
