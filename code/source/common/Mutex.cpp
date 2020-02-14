@@ -1,4 +1,4 @@
-#include "common/mutex.hpp"
+#include "common/Mutex.hpp"
 #ifdef __SWITCH__
     #include <switch.h>
 #endif

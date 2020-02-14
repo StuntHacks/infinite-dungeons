@@ -1,5 +1,5 @@
 #include "common/graphics/drawables/menu/TextBox.hpp"
-#include "common/settings/settings.hpp"
+#include "common/settings/Settings.hpp"
 #include "switch/input.hpp"
 
 namespace id {
