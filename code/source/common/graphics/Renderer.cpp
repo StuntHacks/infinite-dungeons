@@ -73,11 +73,6 @@ namespace id {
             m_drawStack3d.clear();
         }
 
-        void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
-
         void Renderer::render(bool clearScreen) {
             #ifdef __SWITCH__
                 if (m_context) {
