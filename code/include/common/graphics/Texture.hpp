@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include "opengl.hpp"
+#include "common/Console.hpp"
 
 namespace id {
     namespace loaders {
@@ -43,10 +44,14 @@ namespace id {
                 LoaderType loader;
                 if (!loader.loadFromFile(filepath)) {
                     // log...
+
+                    id::Console::error("Successfully loaded texture \"" + filepath + "\"", "");
                     return false;
                 }
 
                 _load<LoaderType>(loader);
+
+                id::Console::success("Successfully loaded texture \"" + filepath + "\"", "");
                 return true;
             };
 
@@ -107,7 +112,7 @@ namespace id {
         protected:
             template <class LoaderType>
             void _load(LoaderType loader) {
-                m_texture = loader.getTexture();
+                m_texture = loader.getID();
                 m_width = loader.getWidth();
                 m_height = loader.getHeight();
             };
