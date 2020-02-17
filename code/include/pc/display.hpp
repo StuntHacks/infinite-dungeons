@@ -1,27 +1,28 @@
 #ifdef __PC__
 /**
- * @file pc/lock.hpp
+ * @file pc/display.hpp
  * @brief Defines the Display namespace
  */
 #pragma once
 
+#include "opengl.hpp"
+
 namespace id {
     /**
-     * @brief Contains everything specific to PC-builds
+     * @brief Contains data about the application-window
      */
-    namespace pc {
-        /**
-         * @brief Contains data about the application-window
-         */
-        namespace Display {
-            static inline float getScreenWidth() {
-                return 1920;
-            }
+    namespace Display {
+        static inline float getScreenWidth() {
+            GLint viewport[4];
+            glGetIntegerv(GL_VIEWPORT, viewport);
+            return static_cast<float>(viewport[2]);
+        }
 
-            static inline float getScreenHeight() {
-                return 1080;
-            }
-        } /* Display */
-    } /* pc */
+        static inline float getScreenHeight() {
+            GLint viewport[4];
+            glGetIntegerv(GL_VIEWPORT, viewport);
+            return static_cast<float>(viewport[3]);
+        }
+    } /* Display */
 } /* id */
 #endif
