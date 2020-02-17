@@ -33,6 +33,11 @@ namespace id {
             virtual void clear();
             virtual void clear2d();
             virtual void clear3d();
+
+            /**
+             * @brief Renders the current drawstacks
+             * @param clearScreen Whether to clear the screen from the last frame
+             */
             virtual void render(bool clearScreen = true);
 
             static void prepare();
@@ -50,9 +55,7 @@ namespace id {
             bool addDrawHook(const std::string& name, std::function<void(id::graphics::Renderer&)> callback);
             bool removeDrawHook(const std::string& name);
 
-            static inline glm::mat4 getOrthoProjection() {
-                return glm::ortho(0.0f, 1920.0f, 1080.0f, 0.0f);
-            }
+            static glm::mat4 getOrthoProjection();
 
         private:
             Renderer();

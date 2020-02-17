@@ -233,6 +233,12 @@ namespace id {
             return false;
         }
 
+        glm::mat4 Renderer::getOrthoProjection() {
+            GLint viewport[4];
+            glGetIntegerv(GL_VIEWPORT, viewport);
+            return glm::ortho(static_cast<float>(viewport[0]), static_cast<float>(viewport[2]), static_cast<float>(viewport[3]), static_cast<float>(viewport[1]));
+        }
+
         // protected methods
         Renderer::Renderer() :
         m_currentShader(""),
