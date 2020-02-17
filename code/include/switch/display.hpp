@@ -1,6 +1,6 @@
 #ifdef __SWITCH__
 /**
- * @file switch/lock.hpp
+ * @file switch/display.hpp
  * @brief Defines the Display namespace
  */
 #pragma once

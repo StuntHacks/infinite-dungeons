@@ -10,6 +10,9 @@
 namespace id {
     class Application;
 
+    /**
+     * @brief Contains everything specific to PC-builds
+     */
     namespace pc {
         /**
          * @brief Handles user input
