@@ -3,7 +3,7 @@
 all: nx pc
 
 pc:
-	@make -f Makefile.pc
+	@make all -f Makefile.pc
 
 run:
 	@make run -f Makefile.pc
