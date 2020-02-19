@@ -43,15 +43,10 @@ namespace id {
 
                 LoaderType loader;
                 if (!loader.loadFromFile(filepath)) {
-                    // log...
-
-                    id::Console::error("Successfully loaded texture \"" + filepath + "\"", "");
                     return false;
                 }
 
                 _load<LoaderType>(loader);
-
-                id::Console::success("Successfully loaded texture \"" + filepath + "\"", "");
                 return true;
             };
 
@@ -61,7 +56,6 @@ namespace id {
 
                 LoaderType loader;
                 if (!loader.loadFromMemory(buffer)) {
-                    // log...
                     return false;
                 }
 
