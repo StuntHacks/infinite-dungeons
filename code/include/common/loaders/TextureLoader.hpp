@@ -17,42 +17,37 @@ namespace id {
         class TextureLoader: public Loader {
         public:
             /**
+             * @brief Default constructor
+             */
+            TextureLoader();
+
+            /**
              * @brief Destructs the TextureLoader
              */
-            virtual ~TextureLoader() { unload(); };
+            virtual ~TextureLoader();
 
             /**
              * @brief Returns the width of the loaded texture
              * @return The width
              */
-            virtual int getWidth() {
-                return m_width;
-            }
+            virtual int getWidth();
 
             /**
              * @brief Returns the height of the loaded texture
              * @return The height
              */
-            virtual int getHeight() {
-                return m_height;
-            }
+            virtual int getHeight();
 
             /**
              * @brief Returns the id of the loaded texture
              * @return The id
              */
-            virtual int getID() {
-                return m_texture;
-            }
+            virtual int getID();
 
             /**
              * @brief Unloads any data currently inside the Loader
              */
-            virtual void unload() {
-                m_texture = 0;
-                m_width = 0;
-                m_height = 0;
-            };
+            virtual void unload();
 
         protected:
             /* data */
