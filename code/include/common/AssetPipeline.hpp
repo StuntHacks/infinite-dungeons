@@ -60,7 +60,7 @@ namespace id {
                                 + assetpath +
                                 (recache ?
                                     "\"..." : "\" not cached. Loading..."),
-                                "AssetPipeline.cpp");
+                                "AssetPipeline.hpp:" + std::to_string(__LINE__), id::Console::White);
                 id::graphics::Texture texture = id::graphics::Texture(false);
                 texture.loadFromFile<LoaderType>(assetpath);
                 m_textureCache[assetpath] = texture;

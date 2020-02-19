@@ -251,31 +251,31 @@ namespace id {
                 if (!m_window) {
             #endif
             #endif
-                id::Console::log("Initializing screen...", "Renderer.cpp:19", id::Console::White);
+                id::Console::log("Initializing screen...", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
 
                 #ifdef __SWITCH__
                     // Connect to the EGL default display
                     m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 
                     if (!m_display) {
-                        id::Console::error("EGL: Could not connect to display! error: " + eglGetError(), "Renderer.cpp:24", true);
+                        id::Console::error("EGL: Could not connect to display! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
                         return;
                     }
 
-                    id::Console::success("EGL: Connected to display successfully!", "Renderer.cpp:24");
+                    id::Console::success("EGL: Connected to display successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
 
                     // Initialize the EGL display connection
                     eglInitialize(m_display, nullptr, nullptr);
 
                     // Select OpenGL (Core) as the desired graphics API
                     if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-                        id::Console::error("EGL: Could not bind OpenGL-API! error: " + eglGetError(), "Renderer.cpp:34", true);
+                        id::Console::error("EGL: Could not bind OpenGL-API! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
                         eglTerminate(m_display);
                         m_display = nullptr;
                         return;
                     }
 
-                    id::Console::success("EGL: Bound OpenGL-API successfully!", "Renderer.cpp:34");
+                    id::Console::success("EGL: Bound OpenGL-API successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
 
                     // Get an appropriate EGL framebuffer configuration
                     EGLConfig config;
@@ -295,25 +295,25 @@ namespace id {
                     eglChooseConfig(m_display, framebufferAttributeList, &config, 1, &numConfigs);
 
                     if (numConfigs == 0) {
-                        id::Console::error("EGL: No config found! error: " + eglGetError(), "Renderer.cpp:61", true);
+                        id::Console::error("EGL: No config found! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
                         eglTerminate(m_display);
                         m_display = nullptr;
                         return;
                     }
 
-                    id::Console::log("EGL: Configurations loaded", "Renderer.cpp:61", id::Console::White);
+                    id::Console::log("EGL: Configurations loaded", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
 
                     // Create an EGL window surface
                     m_surface = eglCreateWindowSurface(m_display, config, nwindowGetDefault(), nullptr);
 
                     if (!m_surface) {
-                        id::Console::error("EGL: Surface creation failed! error: " + eglGetError(), "Renderer.cpp:73", true);
+                        id::Console::error("EGL: Surface creation failed! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
                         eglTerminate(m_display);
                         m_display = nullptr;
                         return;
                     }
 
-                    id::Console::success("EGL: Surface created successfully!", "Renderer.cpp:73");
+                    id::Console::success("EGL: Surface created successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
 
                     // Create an EGL rendering context
                     static const EGLint contextAttributeList[] = {
@@ -326,7 +326,7 @@ namespace id {
                     m_context = eglCreateContext(m_display, config, EGL_NO_CONTEXT, contextAttributeList);
 
                     if (!m_context) {
-                        id::Console::error("EGL: Context creation failed! error: " + eglGetError(), "Renderer.cpp:92", true);
+                        id::Console::error("EGL: Context creation failed! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
                         eglDestroySurface(m_display, m_surface);
                         m_surface = nullptr;
                         eglTerminate(m_display);
@@ -334,7 +334,7 @@ namespace id {
                         return;
                     }
 
-                    id::Console::success("EGL: Context created successfully!", "Renderer.cpp:92");
+                    id::Console::success("EGL: Context created successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
 
                     // Connect the context to the surface
                     eglMakeCurrent(m_display, m_surface, m_surface, m_context);
@@ -350,28 +350,27 @@ namespace id {
                             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
                         #endif
 
-                        m_window = glfwCreateWindow(800, 600, "Infinite Dungeons", NULL, NULL);
+                        m_window = glfwCreateWindow(1920, 1080, "Infinite Dungeons", glfwGetPrimaryMonitor(), nullptr);
 
                         if (!m_window) {
-                            id::Console::error("Failed to create GLFW window", "Renderer.cpp", true);
+                            id::Console::error("Failed to create GLFW window", "Renderer.cpp:" + std::to_string(__LINE__), true);
                             glfwTerminate();
                             return;
                         }
 
-                        id::Console::success("Successfully created GLFW window", "Renderer.cpp");
+                        id::Console::success("Successfully created GLFW window", "Renderer.cpp:" + std::to_string(__LINE__));
 
                         glfwMakeContextCurrent(m_window);
 
                         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-                            id::Console::error("Failed to initialize GLAD", "Renderer.cpp", true);
+                            id::Console::error("Failed to initialize GLAD", "Renderer.cpp:" + std::to_string(__LINE__), true);
                             glfwTerminate();
                             return;
                         }
 
-                        id::Console::success("Successfully initialized GLAD", "Renderer.cpp");
+                        id::Console::success("Successfully initialized GLAD", "Renderer.cpp:" + std::to_string(__LINE__));
 
-                        // glViewport(0, 0, 1920, 1080);
-                        glViewport(0, 0, 800, 600);
+                        glViewport(0, 0, 1920, 1080);
                         glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){ glViewport(0, 0, width, height); });
                     #endif
                 #endif
@@ -415,7 +414,7 @@ namespace id {
 
                 if (!m_defaultShader.attach(vsh).attach(fsh).link()) {
                     // this should never happen
-                    id::Console::error("Failed to link default shader", "Renderer.cpp:146", true);
+                    id::Console::error("Failed to link default shader", "Renderer.cpp:" + std::to_string(__LINE__), true);
 
                     #ifdef __SWITCH__
                         eglDestroyContext(m_display, m_context);
@@ -434,10 +433,10 @@ namespace id {
                     return;
                 }
 
-                id::Console::log("Default shader linked", "Renderer.cpp:146", id::Console::White);
+                id::Console::log("Default shader linked", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
 
                 if (!m_defaultShader.use()) {
-                    id::Console::error("Failed to use default shader", "Renderer.cpp:163", true);
+                    id::Console::error("Failed to use default shader", "Renderer.cpp:" + std::to_string(__LINE__), true);
 
                     #ifdef __SWITCH__
                         eglDestroyContext(m_display, m_context);
@@ -456,7 +455,7 @@ namespace id {
                     return;
                 }
 
-                id::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:163");
+                id::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
 
                 m_defaultShader.setMatrix4("transform", glm::mat4(1.0f));
 

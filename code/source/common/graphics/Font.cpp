@@ -8,11 +8,11 @@ namespace id {
         m_path(filename),
         m_face(nullptr) {
             if (FT_Init_FreeType(&m_freetype)) {
-                id::Console::error("FREETYPE: Could not init FreeType Library", "Font.cpp:9");
+                id::Console::error("FREETYPE: Could not init FreeType Library", "Font.cpp:" + std::to_string(__LINE__));
                 return;
             }
 
-            id::Console::success("FREETYPE: Successfully loaded FreeType Library", "Font.cpp:9");
+            id::Console::success("FREETYPE: Successfully loaded FreeType Library", "Font.cpp:" + std::to_string(__LINE__));
 
             if (filename != "") {
                 loadFromFile(filename);
@@ -36,11 +36,11 @@ namespace id {
             int error = FT_New_Face(m_freetype, filename.c_str(), 0, &m_face);
 
             if (error != 0) {
-                id::Console::error("FREETYPE: Failed to load font from file. error: " + std::to_string(error), "Font.cpp:35");
+                id::Console::error("FREETYPE: Failed to load font from file. error: " + std::to_string(error), "Font.cpp:" + std::to_string(__LINE__));
                 return false;
             }
 
-            id::Console::success("FREETYPE: Successfully loaded font \"" + filename + "\"", "Font.cpp:35");
+            id::Console::success("FREETYPE: Successfully loaded font \"" + filename + "\"", "Font.cpp:" + std::to_string(__LINE__));
 
             return true;
         }
@@ -51,11 +51,11 @@ namespace id {
             }
 
             if (!FT_New_Memory_Face(m_freetype, location, size, index, &m_face)) {
-                id::Console::error("FREETYPE: Failed to load font from memory", "Font.cpp:42");
+                id::Console::error("FREETYPE: Failed to load font from memory", "Font.cpp:" + std::to_string(__LINE__));
                 return false;
             }
 
-            id::Console::success("FREETYPE: Successfully loaded from memory", "Font.cpp:42");
+            id::Console::success("FREETYPE: Successfully loaded from memory", "Font.cpp:" + std::to_string(__LINE__));
 
             return true;
         }

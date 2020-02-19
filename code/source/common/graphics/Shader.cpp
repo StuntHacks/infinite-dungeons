@@ -24,7 +24,7 @@ namespace id {
             m_shader = glCreateShader(static_cast<GLenum>(type));
 
             if (!m_shader) {
-                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + ": cannot create shader", "Shader.cpp:24");
+                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + ": cannot create shader", "Shader.cpp:" + std::to_string(__LINE__));
                 return false;
             }
 
@@ -36,7 +36,7 @@ namespace id {
 
             if (!success) {
                 glGetShaderInfoLog(m_shader, sizeof(msg), nullptr, msg);
-                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + msg, "Shader.cpp:35");
+                id::Console::error("OpenGL: " + std::to_string(static_cast<GLenum>(type)) + msg, "Shader.cpp:" + std::to_string(__LINE__));
                 glDeleteShader(m_shader);
                 return false;
             }

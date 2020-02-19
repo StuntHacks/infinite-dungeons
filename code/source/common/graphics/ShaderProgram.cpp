@@ -35,7 +35,7 @@ namespace id {
                 if (!success) {
                     char buf[512];
                     glGetProgramInfoLog(m_program, sizeof(buf), nullptr, buf);
-                    id::Console::error("Link error " + std::string(buf), "ShaderProgram.cpp:32");
+                    id::Console::error("Link error " + std::string(buf), "ShaderProgram.cpp:" + std::to_string(__LINE__));
                     return false;
                 }
 
