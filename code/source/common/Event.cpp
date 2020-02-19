@@ -1,9 +1,7 @@
 #include "common/Event.hpp"
 
 namespace id {
-    void Event::trigger() {
-        m_propagating = true;
-    }
+    Event::Event() : m_propagating(true), m_forced(false) { /* do nothing */ }
 
     bool Event::stopPropagation() {
         if (!m_forced) {
