@@ -15,6 +15,135 @@ namespace id {
      */
     namespace pc {
         /**
+         * @brief Represents the different buttons
+         */
+        enum Button {
+            Unknown = -1,     ///< Unknown key
+            None,             ///< No key (never really gets triggered, meant for internal logic)
+            Space = 32,       ///< Space-key
+            Apostrophe = 39,  ///< Apostrophe-key (')
+            Comma = 44,       ///< Comma-key
+            Minus,            ///< Minus-key
+            Period,           ///< Period-key
+            Slash,            ///< Slash-key
+            Num0,             ///< 0-key
+            Num1,             ///< 1-key
+            Num2,             ///< 2-key
+            Num3,             ///< 3-key
+            Num4,             ///< 4-key
+            Num5,             ///< 5-key
+            Num6,             ///< 6-key
+            Num7,             ///< 7-key
+            Num8,             ///< 8-key
+            Num9,             ///< 9-key
+            Semicolon = 59,   ///< Semicolon-key
+            Equal = 61,       ///< Equal-key (=)
+            A = 65,           ///< A-key
+            B,                ///< B-key
+            C,                ///< C-key
+            D,                ///< D-key
+            E,                ///< E-key
+            F,                ///< F-key
+            G,                ///< G-key
+            H,                ///< H-key
+            I,                ///< I-key
+            J,                ///< J-key
+            K,                ///< K-key
+            L,                ///< L-key
+            M,                ///< M-key
+            N,                ///< N-key
+            O,                ///< O-key
+            P,                ///< P-key
+            Q,                ///< Q-key
+            R,                ///< R-key
+            S,                ///< S-key
+            T,                ///< T-key
+            U,                ///< U-key
+            V,                ///< V-key
+            W,                ///< W-key
+            X,                ///< X-key
+            Y,                ///< Y-key
+            Z,                ///< Z-key
+            LeftBracket,      ///< Left bracket-key ([)
+            Backslash,        ///< Backslash-key (\)
+            RightBracket,     ///< Right bracket-key (])
+            GraveAccent = 96, ///< Grave-accent-key (`)
+            World1 = 161,     ///< Non-US-key 1
+            World2,           ///< Non-US-key 2
+            Escape = 256,     ///< Escape-key
+            Enter,            ///< Enter-key
+            Tab,              ///< Tab-key
+            Backspace,        ///< Backspace
+            Insert,           ///< Insert
+            Delete,           ///< Delete
+            Right,            ///< Right
+            Left,             ///< Left
+            Down,             ///< Down
+            Up,               ///< Up
+            PageUp,           ///< Page-up-key
+            PageDown,         ///< Page-down-key
+            Home,             ///< Home-key
+            End,              ///< End
+            CapsLock = 280,   ///< Capslock
+            ScrollLock,       ///< Scroll-lock
+            NumLock,          ///< Numlock
+            Print,            ///< Print-key
+            Pause,            ///< Pause-key
+            F1 = 290,         ///< F1-key
+            F2,               ///< F2-key
+            F3,               ///< F3-key
+            F4,               ///< F4-key
+            F5,               ///< F5-key
+            F6,               ///< F6-key
+            F7,               ///< F7-key
+            F8,               ///< F8-key
+            F9,               ///< F9-key
+            F10,              ///< F10-key
+            F11,              ///< F11-key
+            F12,              ///< F12-key
+            F13,              ///< F13-key
+            F14,              ///< F14-key
+            F15,              ///< F15-key
+            F16,              ///< F16-key
+            F17,              ///< F17-key
+            F18,              ///< F18-key
+            F19,              ///< F19-key
+            F20,              ///< F20-key
+            F21,              ///< F21-key
+            F22,              ///< F22-key
+            F23,              ///< F23-key
+            F24,              ///< F24-key
+            F25,              ///< F25-key
+            KeyPad0 = 320, ///< 0 on keypad
+            KeyPad1, ///< 1 on keypad
+            KeyPad2, ///< 2 on keypad
+            KeyPad3, ///< 3 on keypad
+            KeyPad4, ///< 4 on keypad
+            KeyPad5, ///< 5 on keypad
+            KeyPad6, ///< 6 on keypad
+            KeyPad7, ///< 7 on keypad
+            KeyPad8, ///< 8 on keypad
+            KeyPad9, ///< 9 on keypad
+            KeyPadDecimal, ///< Decimal-point (.) on keypad
+            KeyPadDivide, ///< Divide (:) on keypad
+            KeyPadMultiply, ///< Multiply (*) on keypad
+            KeyPadSubstract, ///< Substract (-) on keypad
+            KeyPadAdd, ///< Add (+) on keypad
+            KeyPadEnter, ///< Enter on keypad
+            KeyPadEqual, ///< Equal (=) on keypad
+            LeftShift = 340, ///< Left Shift-key
+            LeftControl, ///< Left Ctrl-key
+            LeftAlt, ///< Left Alt-key
+            LeftSuper, ///< Left Super (Windows) key
+            RightShift, ///< Right Shift-key
+            RightControl, ///< Right Ctrl-key
+            RightAlt, ///< Right Alt-key
+            RightSuper, ///< Right Super (Windows) key
+            Menu,       ///< Menu key
+            Last = Menu, ///< ID of last element in this enum
+        };
+
+        /**
          * @brief Handles user input
          */
         class Input {
@@ -24,46 +153,7 @@ namespace id {
              * @brief Represents the different buttons
              */
             enum Button {
-                None = 0,
-                A = (1U<<( 0 )),                                      ///< A
-                B = (1U<<( 1 )),                                      ///< B
-                X = (1U<<( 2 )),                                      ///< X
-                Y = (1U<<( 3 )),                                      ///< Y
-                LeftStick = (1U<<( 4 )),                              ///< Left stick pressed
-                RightStick = (1U<<( 5 )),                             ///< Right stick pressed
-                L = (1U<<( 6 )),                                      ///< L
-                R = (1U<<( 7 )),                                      ///< R
-                ZL = (1U<<( 8 )),                                     ///< ZL
-                ZR = (1U<<( 9 )),                                     ///< ZR
-                Plus = (1U<<( 10 )),                                  ///< Plus
-                Minus = (1U<<( 11 )),                                 ///< Minus
-                DPadLeft = (1U<<( 12 )),                              ///< D-Pad left
-                DPadUp = (1U<<( 13 )),                                ///< D-Pad up
-                DPadRight = (1U<<( 14 )),                             ///< D-Pad right
-                DPadDown = (1U<<( 15 )),                              ///< D-Pad down
-                LeftStickLeft = (1U<<( 16 )),                         ///< Left stick left
-                LeftStickUp = (1U<<( 17 )),                           ///< Left stick up
-                LeftStickRight = (1U<<( 18 )),                        ///< Left stick right
-                LeftStickDown = (1U<<( 19 )),                         ///< Left stick down
-                RightStickLeft = (1U<<( 20 )),                        ///< Right stick left
-                RightStickUp = (1U<<( 21 )),                          ///< Right stick up
-                RightStickRight = (1U<<( 22 )),                       ///< Right stick right
-                RightStickDown = (1U<<( 23 )),                        ///< Right stick down
-                StickLeft = LeftStickLeft | RightStickLeft,           ///< Any stick left
-                StickUp = LeftStickUp | RightStickUp,                 ///< Any stick up
-                StickRight = LeftStickRight | RightStickRight,        ///< Any stick right
-                StickDown = LeftStickDown | RightStickDown,           ///< Any stick down
-                Up = DPadUp | LeftStickUp | RightStickUp,             ///< Up
-                Down = DPadDown | LeftStickDown | RightStickDown,     ///< Down
-                Left = DPadLeft | LeftStickLeft | RightStickLeft,     ///< Left
-                Right = DPadRight | LeftStickRight | RightStickRight, ///< Right
-                LeftSL = (1U<<( 24 )),                                ///< SL on the left JoyCon
-                LeftSR = (1U<<( 25 )),                                ///< SR on the left JoyCon
-                RightSL = (1U<<( 26 )),                               ///< SL on the right JoyCon
-                RightSR = (1U<<( 27 )),                               ///< SR on the right JoyCon
-                SL = LeftSL | RightSL,                                ///< SL
-                SR = LeftSR | RightSR,                                ///< SR
-                Touch = (1U<<( 28 )),                                 ///< Touch (only whether the user touches *somewhere* on the screen)
+                None = -1, ///< -key
             };
 
             enum class Joystick: int {
