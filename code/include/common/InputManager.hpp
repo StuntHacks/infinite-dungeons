@@ -33,6 +33,7 @@ namespace id {
      * At instantiation, the following inputs are bound:
      */
     class InputManager: public id::EventDispatcher, public id::Singleton<InputManager> {
+    friend class id::Singleton<InputManager>;
     friend class id::graphics::Renderer;
     public:
         #if defined(__SWITCH__)
