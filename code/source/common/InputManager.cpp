@@ -3,14 +3,6 @@
 #include "common/events/InputEvent.hpp"
 
 namespace id {
-    InputManager::InputManager() {
-         /* do nothing */
-    }
-
-    InputManager::InputManager(bool disableDefaultInputs) {
-         /* do nothing */
-    }
-
     void InputManager::bindInput(const std::string& id, id::InputManager::Key key) {
         m_keyBindings[id] = key;
 
