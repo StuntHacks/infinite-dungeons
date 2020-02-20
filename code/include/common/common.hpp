@@ -1,8 +1,13 @@
+/**
+ * @file common/common.hpp
+ * @brief Includes all common headers
+ */
 #include "Application.hpp"
 #include "AssetPipeline.hpp"
 #include "Console.hpp"
 #include "Event.hpp"
 #include "EventDispatcher.hpp"
+#include "InputManager.hpp"
 #include "Mutex.hpp"
 #include "Lock.hpp"
 #include "Singleton.hpp"
