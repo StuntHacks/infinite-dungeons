@@ -5,6 +5,7 @@
 #include "common/graphics/Vertex.hpp"
 #include "common/menu/TextBoxManager.hpp"
 #include "common/Console.hpp"
+#include "common/InputManager.hpp"
 #include "opengl.hpp"
 
 #include <string>
@@ -369,6 +370,8 @@ namespace id {
                         }
 
                         id::Console::success("Successfully initialized GLAD", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                        glfwSetKeyCallback(m_window, id::InputManager::_keyCallbackPrivate);
 
                         glViewport(0, 0, 1920, 1080);
                         glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){ glViewport(0, 0, width, height); });
