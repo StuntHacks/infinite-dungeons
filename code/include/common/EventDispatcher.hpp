@@ -39,14 +39,23 @@ namespace id {
         bool unregisterCallback(const std::string& callbackID);
 
         /**
+         * @brief Clears all registered callbacks
+         */
+        void clearCallbacks();
+
+        /**
          * @brief Dispatches a given Event to all registered callbacks
          * @param  event The Event to dispatch
          * @return       `true` if the Event successfully propagated to all availiable callbacks, `false` if the propagation was stopped
          */
-        bool dispatch(id::Event& event);
+        virtual bool dispatch(id::Event& event);
 
     protected:
-        const std::string getUUID() const;
+        /**
+         * @brief Returns a random UUID-shaped string to be used as a callback-id
+         * @return A random ID. This does not test against already existing IDs - this needs to be done in the calling function
+         */
+        const std::string _getUUID() const;
 
     private:
         /* data */

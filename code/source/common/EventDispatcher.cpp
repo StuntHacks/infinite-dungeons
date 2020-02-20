@@ -11,7 +11,7 @@ namespace id {
             int findEntry;
 
             do {
-                id = getUUID();
+                id = _getUUID();
                 findEntry = m_eventRegistrations.count(id);
             } while (findEntry != 0);
         }
@@ -65,6 +65,12 @@ namespace id {
         return false;
     }
 
+    void EventDispatcher::clearCallbacks() {
+        m_eventRegistrations.clear();
+        m_events.clear();
+        m_callbacks.clear();
+    }
+
     bool EventDispatcher::dispatch(id::Event& event) {
         for (auto& callback: m_events[event.getEventName()]) {
             if (!event.isPropagating()) {
@@ -79,7 +85,7 @@ namespace id {
 
     // protected methods
     // credits to: https://stackoverflow.com/a/58467162
-    const std::string EventDispatcher::getUUID() const {
+    const std::string EventDispatcher::_getUUID() const {
         static std::random_device dev;
         static std::mt19937 rng(dev());
 
