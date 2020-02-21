@@ -7,6 +7,7 @@
 #include "Console.hpp"
 #include "Event.hpp"
 #include "EventDispatcher.hpp"
+#include "TypedEventDispatcher.hpp"
 #include "InputManager.hpp"
 #include "Mutex.hpp"
 #include "Lock.hpp"
