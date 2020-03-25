@@ -75,12 +75,10 @@ namespace id {
         }
 
         void Renderer::render(bool clearScreen) {
-            #ifdef __SWITCH__
+            #if defined(__SWITCH__)
                 if (m_context) {
-            #else
-            #ifdef __PC__
+            #elif defined(__PC__)
                 if (m_window) {
-            #endif
             #endif
                 id::menu::TextBoxManager::getInstance().draw(*this);
 
@@ -127,7 +125,6 @@ namespace id {
                     #ifdef __PC__
                         if (!glfwWindowShouldClose(m_window)) {
                             glfwSwapBuffers(m_window);
-                            glfwPollEvents();
                         }
                     #endif
                 #endif
@@ -243,14 +240,11 @@ namespace id {
         // protected methods
         Renderer::Renderer() :
         m_currentShader(""),
-        m_clearColor(0, 0, 0, 0)
-        {
-            #ifdef __SWITCH__
+        m_clearColor(0, 0, 0, 0) {
+            #if defined(__SWITCH__)
                 if (!m_context) {
-            #else
-            #ifdef __PC__
+            #elif defined(__PC__)
                 if (!m_window) {
-            #endif
             #endif
                 id::Console::log("Initializing screen...", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
 
