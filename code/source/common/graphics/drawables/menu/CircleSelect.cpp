@@ -1,6 +1,5 @@
 #include "common/graphics/drawables/menu/CircleSelect.hpp"
-#include "common/settings/settings.hpp"
-#include "switch/input.hpp"
+#include "common/settings/Settings.hpp"
 #include "common/Console.hpp"
 
 #include <cmath>
@@ -19,12 +18,12 @@ namespace id {
             return m_options;
         }
 
-        void CircleSelect::display(std::vector<id::menu::CircleSelect::Item> options, id::Input::Button button, std::function<void(int)> callback, const std::wstring& title) {
+        void CircleSelect::display(std::vector<id::menu::CircleSelect::Item> options, id::InputManager::Key key, std::function<void(int)> callback, const std::wstring& title) {
             if (m_state == id::menu::CircleSelect::State::Finished) {
                 m_frameCounter = 0;
                 m_cursor = 0;
                 m_title = title;
-                m_button = button;
+                m_key = key;
                 m_state = id::menu::CircleSelect::State::FadingIn;
                 m_options = options;
                 m_callback = callback;
@@ -86,7 +85,7 @@ namespace id {
 
                     m_options.clear();
                     m_title = L"";
-                    m_button = id::Input::None;
+                    m_key = id::InputManager::Key::None;
 
                     m_state = id::menu::CircleSelect::State::Finished;
 
@@ -116,7 +115,7 @@ namespace id {
         m_frameCounter(0),
         m_state(id::menu::CircleSelect::State::Finished),
         m_title(L""),
-        m_button(id::Input::None),
+        m_key(id::InputManager::Key::None),
         m_callback([](int){}),
         m_font(id::settings::DefaultFontPath),
         m_textObject(m_font) { /* do nothing */ }

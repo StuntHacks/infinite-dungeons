@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "switch/input.hpp"
+#include "common/InputManager.hpp"
 #include "common/graphics/Font.hpp"
 #include "common/graphics/Texture.hpp"
 #include "common/graphics/drawables/Text.hpp"
@@ -35,7 +36,7 @@ namespace id {
              * @brief Displays the Selection
              * @param callback A callback to call after a selection is done. The single parameter is the selected choice, or -1 if nothing was selected
              */
-            virtual void display(std::vector<id::menu::CircleSelect::Item> options, id::Input::Button button, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
+            virtual void display(std::vector<id::menu::CircleSelect::Item> options, id::InputManager::Key key, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
 
             /**
              * @brief Closes the selection
@@ -56,7 +57,7 @@ namespace id {
             id::menu::CircleSelect::State m_state;
             std::wstring m_title;
             std::vector<id::menu::CircleSelect::Item> m_options;
-            id::Input::Button m_button;
+            id::InputManager::Key m_key;
 
             std::function<void(int)> m_callback;
 
