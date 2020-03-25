@@ -65,7 +65,6 @@ namespace id {
 
                 LoaderType loader;
                 if (!loader.loadFromFile(filepath)) {
-                    // log...
                     return false;
                 }
 
@@ -78,7 +77,6 @@ namespace id {
 
                 LoaderType loader;
                 if (!loader.loadFromMemory(buffer)) {
-                    // log...
                     return false;
                 }
 
