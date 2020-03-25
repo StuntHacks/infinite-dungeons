@@ -39,7 +39,7 @@ namespace id {
         #if defined(__SWITCH__)
             using Key = id::nx::Button; ///< Defines different Buttons on the Switch
         #elif defined(__PC__)
-            using Key = id::pc::Button; ///< Defines different Keys on the PC
+            using Key = id::pc::Key; ///< Defines different Keys on the PC
         #endif
 
         /**
