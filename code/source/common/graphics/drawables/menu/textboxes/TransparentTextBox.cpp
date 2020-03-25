@@ -6,11 +6,6 @@
 
 namespace id {
     namespace menu {
-        id::menu::TransparentTextBox& TransparentTextBox::getInstance() {
-            static id::menu::TransparentTextBox instance;
-            return instance;
-        }
-
         TransparentTextBox::~TransparentTextBox() {
             glDeleteBuffers(1, &m_vbo);
             glDeleteVertexArrays(1, &m_vao);
