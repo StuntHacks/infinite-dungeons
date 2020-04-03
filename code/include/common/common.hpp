@@ -4,6 +4,7 @@
  */
 #include "Application.hpp"
 #include "AssetPipeline.hpp"
+#include "AutoDeletable.hpp"
 #include "Console.hpp"
 #include "Event.hpp"
 #include "EventDispatcher.hpp"
