@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include "opengl.hpp"
+#include "common/AutoDeletable.hpp"
 #include "common/Console.hpp"
 
 namespace id {
@@ -18,7 +19,7 @@ namespace id {
         /**
          * @brief Contains an OpenGl-texture, and provides loading-methods
          */
-        class Texture {
+        class Texture: public id::AutoDeletable {
         public:
             /**
              * @brief Constructor
@@ -82,21 +83,9 @@ namespace id {
             unsigned int getHeight();
 
             /**
-             * @brief Returns whether the Texture should automatically delete itself
-             * @return `true` if autoDelete is enabled, `false` otherwise
-             */
-            bool getAutoDelete();
-
-            /**
-             * @brief Sets whether the texture should automatically delete itself
-             * @param autoDelete Whether to automatically delete or not
-             */
-            void setAutoDelete(bool autoDelete);
-
-            /**
              * @brief Deletes the texture
              */
-            void deleteTexture();
+            void deleteThis();
 
             /**
              * @brief Binds the texture
@@ -114,7 +103,6 @@ namespace id {
         private:
             /* data */
             unsigned int m_texture, m_width, m_height;
-            bool m_autoDelete;
         };
     } /* graphics */
 } /* id */

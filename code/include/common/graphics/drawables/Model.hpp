@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "opengl.hpp"
+#include "common/AutoDeletable.hpp"
 #include "common/graphics/Drawable.hpp"
 #include "common/graphics/Texture.hpp"
 #include "common/graphics/Vertex.hpp"
@@ -15,7 +16,7 @@ namespace id {
     } /* loaders */
 
     namespace graphics {
-        class Model: public Drawable {
+        class Model: public Drawable, public id::AutoDeletable {
         friend class id::loaders::ModelLoader;
         public:
             struct Vertex {
@@ -56,8 +57,14 @@ namespace id {
                 std::vector<id::graphics::Model::Joint> m_children;
             };
 
-            Model();
+            Model(bool autoDelete = true);
             virtual ~Model();
+
+            /**
+             * @brief Returns whether the texture is loaded or not
+             * @return `true` if the texture is loaded, `false` otherwise
+             */
+            bool isLoaded();
 
             template <class LoaderType>
             bool loadFromFile(const std::string& filepath) {
@@ -84,6 +91,11 @@ namespace id {
             };
 
             virtual void draw(id::graphics::Renderer& renderer, bool);
+
+            /**
+             * @brief Deletes the model
+             */
+            void deleteThis();
 
         protected:
             struct DrawBatch {
