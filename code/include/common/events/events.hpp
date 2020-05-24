@@ -6,3 +6,4 @@
 #include "ClickEvent.hpp"
 #include "KeyPressEvent.hpp"
 #include "InputEvent.hpp"
+#include "TextEvent.hpp"
