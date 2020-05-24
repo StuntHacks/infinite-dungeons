@@ -4,5 +4,5 @@
  */
 #include "PressEvent.hpp"
 #include "ClickEvent.hpp"
-#include "KeyEvent.hpp"
+#include "KeyPressEvent.hpp"
 #include "InputEvent.hpp"

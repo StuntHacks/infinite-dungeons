@@ -1,10 +1,10 @@
 /**
- * @file common/events/KeyEvent.hpp
- * @brief Defines the KeyEvent-class
+ * @file common/events/KeyPressEvent.hpp
+ * @brief Defines the KeyPressEvent-class
  */
 #pragma once
 
-#include "common/Event.hpp"
+#include "common/events/PressEvent.hpp"
 #include "common/graphics/Vertex.hpp"
 
 namespace id {
@@ -12,12 +12,12 @@ namespace id {
         /**
          * @brief A key-press
          */
-        class KeyEvent: public id::Event {
+        class KeyPressEvent: public id::events::PressEvent {
         public:
-            KeyEvent(int keyCode);
+            KeyPressEvent(int keyCode, PressEvent::State state);
 
             virtual inline std::string getEventName() {
-                return "id::KeyEvent";
+                return "id::events::KeyPressEvent";
             };
 
             int getKeyCode();
