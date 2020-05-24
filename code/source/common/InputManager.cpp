@@ -2,6 +2,7 @@
 #include "common/Application.hpp"
 #include "common/events/InputEvent.hpp"
 #include "common/events/KeyPressEvent.hpp"
+#include "common/events/TextEvent.hpp"
 
 namespace id {
     void InputManager::bindInput(const std::string& id, id::InputManager::Key key) {
@@ -57,9 +58,18 @@ namespace id {
             }
         }
 
+        void InputManager::_characterCallback(GLFWwindow* window, unsigned int codepoint) {
+            id::events::TextEvent evt(static_cast<wchar_t>(codepoint));
+            dispatch(evt);
+        }
+
         // private methods
-        void InputManager::_keyCallbackPrivate(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        void InputManager::__keyCallbackPrivate(GLFWwindow* window, int key, int scancode, int action, int mods) {
             getInstance()._keyCallback(window, key, scancode, action, mods);
+        }
+
+        void InputManager::__characterCallbackPrivate(GLFWwindow* window, unsigned int codepoint) {
+            getInstance()._characterCallback(window, codepoint);
         }
     #endif
 } /* id */

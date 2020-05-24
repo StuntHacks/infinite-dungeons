@@ -82,13 +82,16 @@ namespace id {
              * See https://www.glfw.org/docs/latest/input_guide.html for more information
              */
             void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+            void _characterCallback(GLFWwindow* window, unsigned int codepoint);
         #endif
 
     private:
         InputManager() { /* do nothing */ };
 
         #if defined(__PC__)
-            static void _keyCallbackPrivate(GLFWwindow* window, int key, int scancode, int action, int mods);
+            static void __keyCallbackPrivate(GLFWwindow* window, int key, int scancode, int action, int mods);
+            static void __characterCallbackPrivate(GLFWwindow* window, unsigned int codepoint);
         #endif
 
         /* data */
