@@ -4,19 +4,19 @@
  */
 #pragma once
 
-#include "common/events/KeyEvent.hpp"
+#include "common/events/PressEvent.hpp"
 #include "common/graphics/Vertex.hpp"
 
 namespace id {
     namespace events {
         /**
-         * @brief An input registered by the InputManager
+         * @brief A named input registered by the InputManager, representing a key-press
          */
-        class InputEvent: public id::events::KeyEvent {
+        class InputEvent: public id::events::PressEvent {
         public:
-            InputEvent(const std::string& inputName, int keyCode);
+            InputEvent(const std::string& inputName, PressEvent::State state);
 
-            inline std::string getEventName() {
+            virtual inline std::string getEventName() {
                 return m_name;
             };
 

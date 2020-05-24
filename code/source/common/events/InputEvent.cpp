@@ -2,8 +2,8 @@
 
 namespace id {
     namespace events {
-        InputEvent::InputEvent(const std::string& inputName, int keyCode) :
-        id::events::KeyEvent(keyCode),
+        InputEvent::InputEvent(const std::string& inputName, State state) :
+        id::events::PressEvent(state),
         m_name(inputName) { /* do nothing */ }
     } /* events */
 } /* id */
