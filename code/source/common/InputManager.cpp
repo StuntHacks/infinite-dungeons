@@ -1,6 +1,7 @@
 #include "common/InputManager.hpp"
 #include "common/Application.hpp"
 #include "common/events/InputEvent.hpp"
+#include "common/events/KeyPressEvent.hpp"
 
 namespace id {
     void InputManager::bindInput(const std::string& id, id::InputManager::Key key) {
@@ -47,8 +48,11 @@ namespace id {
         void InputManager::_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
             if (m_keys.count(static_cast<id::InputManager::Key>(key)) != 0) {
                 for (auto& input: m_keys[static_cast<id::InputManager::Key>(key)]) {
-                    id::events::InputEvent evt(input, key);
-                    dispatch(evt);
+                    id::events::InputEvent inputEvt(input, static_cast<id::events::PressEvent::State>(action));
+                    id::events::KeyPressEvent keyEvt(key, static_cast<id::events::PressEvent::State>(action));
+
+                    dispatch(inputEvt);
+                    dispatch(keyEvt);
                 }
             }
         }
