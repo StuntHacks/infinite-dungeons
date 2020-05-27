@@ -5,7 +5,6 @@
 #pragma once
 
 #include "common/events/PressEvent.hpp"
-#include "common/graphics/Vertex.hpp"
 
 namespace id {
     namespace events {
