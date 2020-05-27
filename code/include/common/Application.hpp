@@ -6,9 +6,6 @@
 
 #include "Singleton.hpp"
 
-/**
- * @brief The main Infinite Dungeons namespace
- */
 namespace id {
     /**
      * @brief Handles the main loop
