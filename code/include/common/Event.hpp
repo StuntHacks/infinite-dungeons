@@ -48,6 +48,8 @@ namespace id {
         /**
          * @brief Returns the name of the Event as a string. Implement this in your child-Events
          * @return The name of the triggered Event as a string
+         *
+         * @note The event-name is the namespaced name of the event-class (for example, `"id::events::InputEvent"`)
          */
         virtual inline std::string getEventName() = 0;
     private:
