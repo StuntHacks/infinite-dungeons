@@ -3,8 +3,8 @@
 namespace id {
     namespace events {
         KeyPressEvent::KeyPressEvent(int keyCode, State state) :
-        m_keyCode(keyCode),
-        id::events::PressEvent(state) { /* do nothing */ }
+        id::events::PressEvent(state),
+        m_keyCode(keyCode) { /* do nothing */ }
 
         int KeyPressEvent::getKeyCode() {
             return m_keyCode;
