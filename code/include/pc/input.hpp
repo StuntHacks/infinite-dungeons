@@ -16,7 +16,7 @@ namespace id {
         /**
          * @brief Represents different keys
          */
-        enum Key {
+        enum class Key: int {
             Unknown = -1,     ///< Unknown key
             None,             ///< No key (never really gets triggered, meant for internal logic)
             Space = 32,       ///< Space-key
@@ -140,6 +140,38 @@ namespace id {
             RightSuper,       ///< Right Super (Windows) key
             Menu,             ///< Menu key
             Last = Menu,      ///< ID of last element in this enum
+        };
+
+        /**
+         * @brief Represents different controller buttons (Nintendo-layout)
+         */
+        enum class Button: int {
+            Unknown = -2,     ///< Unknown button
+            None,             ///< No button (never really gets triggered, meant for internal logic)
+            B,                ///< B/Circle
+            A,                ///< A/Cross
+            Y,                ///< Y/Triangle
+            X,                ///< X/Square
+            LeftBumper,       ///< Left bumper
+            RightBumper,      ///< Right bumper
+            Select,           ///< Select/Back
+            Start,            ///< Start
+            Home,             ///< Home/Guide
+            LeftTrigger,      ///< Left trigger
+            RightTrigger,     ///< Right trigger
+            Up,               ///< D-Pad up
+            Right,            ///< D-Pad right
+            Down,             ///< D-Pad down
+            Left,             ///< D-Pad left
+            Last = Left,      ///< ID of last element in this enum
+        };
+
+        /**
+         * @brief Represents the two joysticks (when using a single Joy-Con, only Joystick::Left will be in use)
+         */
+        enum class Joystick: int {
+            Left = 0,  ///< Left
+            Right = 2 ///< Right
         };
 
         /**
