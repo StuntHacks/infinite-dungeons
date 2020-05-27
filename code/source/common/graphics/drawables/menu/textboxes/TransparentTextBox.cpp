@@ -1,14 +1,11 @@
+#include "pc/pc.hpp"
+#include "switch/switch.hpp"
 #include "common/graphics/Renderer.hpp"
 #include "common/graphics/drawables/menu/textboxes/TransparentTextBox.hpp"
 #include "opengl.hpp"
 
 namespace id {
     namespace menu {
-        id::menu::TransparentTextBox& TransparentTextBox::getInstance() {
-            static id::menu::TransparentTextBox instance;
-            return instance;
-        }
-
         TransparentTextBox::~TransparentTextBox() {
             glDeleteBuffers(1, &m_vbo);
             glDeleteVertexArrays(1, &m_vao);
@@ -27,62 +24,62 @@ namespace id {
         // protected methods
         TransparentTextBox::TransparentTextBox() :
         TextBox() {
-            float height = 220.0f, shadowHeight = 40.0f, opacity = 0.7f;
+            float height = 220.0f, shadowHeight = 40.0f, opacity = 0.55f;
 
             m_textObject.setTextColor(id::graphics::Color(1.0f, 1.0f, 1.0f, 1.0f));
-            m_textObject.setPosition(50.0f, 920.0f);
+            m_textObject.setPosition(50.0f, id::Display::getScreenHeight() - 160.0f);
             m_textObject.setHeight(50);
             m_textObject.setLineSpacing(10);
 
             m_vertices.push_back({
-                { 0.0f, 1080.0f - height, 0.0f },
+                { 0.0f, id::Display::getScreenHeight() - height, 0.0f },
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
             m_vertices.push_back({
-                { 1920.0f, 1080.0f - height, 0.0f},
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight() - height, 0.0f},
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
             m_vertices.push_back({
-                { 1920.0f, 1080.0f, 0.0f },
-                { 0.0f, 0.0f, 0.0f, opacity }
-            });
-
-            m_vertices.push_back({
-                { 0.0f, 1080.0f - height, 0.0f },
-                { 0.0f, 0.0f, 0.0f, opacity }
-            });
-            m_vertices.push_back({
-                { 1920.0f, 1080.0f, 0.0f},
-                { 0.0f, 0.0f, 0.0f, opacity }
-            });
-            m_vertices.push_back({
-                { 0.0f, 1080.0f, 0.0f },
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight(), 0.0f },
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
 
             m_vertices.push_back({
-                { 0.0f, 1080.0f - height, 0.0f },
+                { 0.0f, id::Display::getScreenHeight() - height, 0.0f },
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
             m_vertices.push_back({
-                { 1920.0f, 1080.0f - height, 0.0f},
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight(), 0.0f},
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
             m_vertices.push_back({
-                { 0.0f, 1080.0f - height - shadowHeight, 0.0f },
+                { 0.0f, id::Display::getScreenHeight(), 0.0f },
+                { 0.0f, 0.0f, 0.0f, opacity }
+            });
+
+            m_vertices.push_back({
+                { 0.0f, id::Display::getScreenHeight() - height, 0.0f },
+                { 0.0f, 0.0f, 0.0f, opacity }
+            });
+            m_vertices.push_back({
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight() - height, 0.0f},
+                { 0.0f, 0.0f, 0.0f, opacity }
+            });
+            m_vertices.push_back({
+                { 0.0f, id::Display::getScreenHeight() - height - shadowHeight, 0.0f },
                 { 0.0f, 0.0f, 0.0f, 0.0f }
             });
 
             m_vertices.push_back({
-                { 0.0f, 1080.0f - height - shadowHeight, 0.0f },
+                { 0.0f, id::Display::getScreenHeight() - height - shadowHeight, 0.0f },
                 { 0.0f, 0.0f, 0.0f, 0.0f }
             });
             m_vertices.push_back({
-                { 1920.0f, 1080.0f - height - shadowHeight, 0.0f},
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight() - height - shadowHeight, 0.0f},
                 { 0.0f, 0.0f, 0.0f, 0.0f }
             });
             m_vertices.push_back({
-                { 1920.0f, 1080.0f - height, 0.0f },
+                { id::Display::getScreenWidth(), id::Display::getScreenHeight() - height, 0.0f },
                 { 0.0f, 0.0f, 0.0f, opacity }
             });
 

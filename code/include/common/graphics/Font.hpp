@@ -6,7 +6,7 @@
 #include <map>
 
 #include "opengl.hpp"
-#include "switch/mutex.hpp"
+#include "common/Mutex.hpp"
 
 namespace id {
     namespace graphics {
@@ -28,6 +28,8 @@ namespace id {
 
             FT_Face& getFontFace();
             id::graphics::Font::Character getCharacter(wchar_t character, int height);
+
+            virtual Font& operator=(const id::graphics::Font& rhs);
 
         private:
             /* data */

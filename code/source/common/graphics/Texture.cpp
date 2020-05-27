@@ -6,12 +6,13 @@ namespace id {
         Texture::Texture(bool autoDelete) :
         m_texture(0),
         m_width(0),
-        m_height(0),
-        m_autoDelete(autoDelete) { /* do nothing */ }
+        m_height(0) {
+            setAutoDelete(autoDelete);
+        }
 
         Texture::~Texture() {
             if (m_autoDelete) {
-                deleteTexture();
+                deleteThis();
             }
         }
 
@@ -31,15 +32,7 @@ namespace id {
             return m_height;
         }
 
-        bool Texture::getAutoDelete() {
-            return m_autoDelete;
-        }
-
-        void Texture::setAutoDelete(bool autoDelete) {
-            m_autoDelete = autoDelete;
-        }
-
-        void Texture::deleteTexture() {
+        void Texture::deleteThis() {
             if (isLoaded()) {
                 glDeleteTextures(1, &m_texture);
             }

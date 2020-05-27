@@ -22,13 +22,13 @@ namespace id {
              */
             virtual ~Loader() { /* do nothing */ };
 
-            virtual bool loadFromFile(const std::string& filepath) {
-                std::ifstream file(filepath);
-                std::string buffer((std::istreambuf_iterator<char>(file)),
-                                    std::istreambuf_iterator<char>());
-
-                return loadFromMemory(buffer);
-            }
+            /**
+             * @brief Loads data from a file into the Loader
+             * @param  filepath The filepath to load from
+             * @return          Whether the loading was successful
+             * @note This only loads the file into memory and passes it to `loadFromMemory()`
+             */
+            virtual bool loadFromFile(const std::string& filepath);
 
             /**
              * @brief  Loads data from a buffer into the Loader

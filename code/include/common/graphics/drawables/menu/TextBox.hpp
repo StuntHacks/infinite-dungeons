@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "common/Event.hpp"
 #include "common/graphics/Font.hpp"
 #include "common/graphics/drawables/Text.hpp"
 
@@ -69,15 +70,20 @@ namespace id {
 
             virtual id::menu::TextBox::State getState();
 
+
         protected:
             TextBox();
+            virtual void _continue(id::Event& e);
+            virtual void _cancel(id::Event& e);
+            virtual void _up(id::Event& e);
+            virtual void _down(id::Event& e);
             std::vector<std::wstring> split(const std::wstring& text, const std::wstring& delimeter);
             void drawCharacter();
 
             /* data */
             int m_displayTime, m_pauseBefore, m_pauseAfter, m_frameCounter, m_result, m_defaultOption;
             size_t m_page, m_optionsCursor;
-            bool m_autoProceed, m_isQuestion;
+            bool m_autoProceed, m_isQuestion, m_continue, m_cancel, m_up, m_down;
             id::menu::TextBox::State m_state;
 
             std::wstring m_text;

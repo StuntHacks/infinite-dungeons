@@ -5,207 +5,43 @@
 #include "common/graphics/Vertex.hpp"
 #include "common/menu/TextBoxManager.hpp"
 #include "common/Console.hpp"
+#include "common/InputManager.hpp"
 #include "opengl.hpp"
 
 #include <string>
-#include <switch.h>
 
-EGLDisplay id::graphics::Renderer::m_display;
-EGLContext id::graphics::Renderer::m_context;
-EGLSurface id::graphics::Renderer::m_surface;
+#ifdef __SWITCH__
+    #include <switch.h>
+#endif
 
 namespace id {
     namespace graphics {
-        Renderer::Renderer(bool force2d) :
-        m_currentShader(""),
-        m_clearColor(0, 0, 0, 0) {
-            if (!m_context) {
-                id::Console::log("Initializing screen...", "Renderer.cpp:19", id::Console::White);
-
-                // Connect to the EGL default display
-                m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-
-                if (!m_display) {
-                    id::Console::error("EGL: Could not connect to display! error: " + eglGetError(), "Renderer.cpp:24", true);
-                    return;
-                }
-
-                id::Console::success("EGL: Connected to display successfully!", "Renderer.cpp:24");
-
-                // Initialize the EGL display connection
-                eglInitialize(m_display, nullptr, nullptr);
-
-                // Select OpenGL (Core) as the desired graphics API
-                if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-                    id::Console::error("EGL: Could not bind OpenGL-API! error: " + eglGetError(), "Renderer.cpp:34", true);
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::success("EGL: Bound OpenGL-API successfully!", "Renderer.cpp:34");
-
-                // Get an appropriate EGL framebuffer configuration
-                EGLConfig config;
-                EGLint numConfigs;
-
-                static const EGLint framebufferAttributeList[] = {
-                    EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
-                    EGL_RED_SIZE,     8,
-                    EGL_GREEN_SIZE,   8,
-                    EGL_BLUE_SIZE,    8,
-                    EGL_ALPHA_SIZE,   8,
-                    EGL_DEPTH_SIZE,   24,
-                    EGL_STENCIL_SIZE, 8,
-                    EGL_NONE
-                };
-
-                eglChooseConfig(m_display, framebufferAttributeList, &config, 1, &numConfigs);
-
-                if (numConfigs == 0) {
-                    id::Console::error("EGL: No config found! error: " + eglGetError(), "Renderer.cpp:61", true);
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::log("EGL: Configurations loaded", "Renderer.cpp:61", id::Console::White);
-
-                // Create an EGL window surface
-                m_surface = eglCreateWindowSurface(m_display, config, nwindowGetDefault(), nullptr);
-
-                if (!m_surface) {
-                    id::Console::error("EGL: Surface creation failed! error: " + eglGetError(), "Renderer.cpp:73", true);
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::success("EGL: Surface created successfully!", "Renderer.cpp:73");
-
-                // Create an EGL rendering context
-                static const EGLint contextAttributeList[] = {
-                    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-                    EGL_CONTEXT_MAJOR_VERSION_KHR, 4,
-                    EGL_CONTEXT_MINOR_VERSION_KHR, 3,
-                    EGL_NONE
-                };
-
-                m_context = eglCreateContext(m_display, config, EGL_NO_CONTEXT, contextAttributeList);
-
-                if (!m_context) {
-                    id::Console::error("EGL: Context creation failed! error: " + eglGetError(), "Renderer.cpp:92", true);
-                    eglDestroySurface(m_display, m_surface);
-                    m_surface = nullptr;
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::success("EGL: Context created successfully!", "Renderer.cpp:92");
-
-                // Connect the context to the surface
-                eglMakeCurrent(m_display, m_surface, m_surface, m_context);
-                gladLoadGL();
-
-                glClearColor(m_clearColor.getRed(), m_clearColor.getGreen(), m_clearColor.getBlue(), 1.0f);
-
-                // default shaders
-                const std::string vertexShaderSource = R"text(
-                    #version 330 core
-                    layout (location = 0) in vec3 aPos;
-                    layout (location = 1) in vec4 aColor;
-                    layout (location = 2) in vec2 aTexCoords;
-                    layout (location = 3) in vec3 aNormals;
-
-                    uniform mat4 transform;
-                    uniform mat4 projection;
-
-                    out vec4 ourColor;
-
-                    void main()
-                    {
-                        gl_Position = projection * transform * vec4(aPos.xyz, 1.0);
-                        ourColor = aColor;
-                    }
-                )text";
-
-                const std::string fragmentShaderSource = R"text(
-                    #version 330 core
-                    in vec4 ourColor;
-                    out vec4 fragColor;
-
-                    void main()
-                    {
-                        fragColor = ourColor;
-                    }
-                )text";
-
-                id::graphics::Shader vsh, fsh;
-                vsh.compile(vertexShaderSource, id::graphics::Shader::Type::Vertex);
-                fsh.compile(fragmentShaderSource, id::graphics::Shader::Type::Fragment);
-
-                if (!m_defaultShader.attach(vsh).attach(fsh).link()) {
-                    // this should never happen
-                    id::Console::error("Failed to link default shader", "Renderer.cpp:146", true);
-
-                    eglDestroyContext(m_display, m_context);
-                    m_context = nullptr;
-
-                    eglDestroySurface(m_display, m_surface);
-                    m_surface = nullptr;
-
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::log("Default shader linked", "Renderer.cpp:146", id::Console::White);
-
-                if (!m_defaultShader.use()) {
-                    id::Console::error("Failed to use default shader", "Renderer.cpp:163", true);
-
-                    eglDestroyContext(m_display, m_context);
-                    m_context = nullptr;
-
-                    eglDestroySurface(m_display, m_surface);
-                    m_surface = nullptr;
-
-                    eglTerminate(m_display);
-                    m_display = nullptr;
-                    return;
-                }
-
-                id::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:163");
-
-                m_defaultShader.setMatrix4("transform", glm::mat4(1.0f));
-
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-                m_force2d = force2d;
-            }
-        }
-
         Renderer::~Renderer() {
             clear();
 
-            if (m_display) {
-                eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+            #ifdef __SWITCH__
+                if (m_display) {
+                    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
-                if (m_context) {
-                    eglDestroyContext(m_display, m_context);
-                    m_context = nullptr;
+                    if (m_context) {
+                        eglDestroyContext(m_display, m_context);
+                        m_context = nullptr;
+                    }
+
+                    if (m_surface) {
+                        eglDestroySurface(m_display, m_surface);
+                        m_surface = nullptr;
+                    }
+
+                    eglTerminate(m_display);
+                    m_display = nullptr;
                 }
 
-                if (m_surface) {
-                    eglDestroySurface(m_display, m_surface);
-                    m_surface = nullptr;
-                }
-
-                eglTerminate(m_display);
-                m_display = nullptr;
-            }
+            #else
+                #ifdef __PC__
+                    glfwTerminate();
+                #endif
+            #endif
         }
 
         void Renderer::draw2d(id::graphics::Drawable& drawable) {
@@ -239,8 +75,16 @@ namespace id {
         }
 
         void Renderer::render(bool clearScreen) {
-            if (m_context) {
+            #if defined(__SWITCH__)
+                if (m_context) {
+            #elif defined(__PC__)
+                if (m_window) {
+            #endif
                 id::menu::TextBoxManager::getInstance().draw(*this);
+
+                #ifdef __PC__
+                    id::InputManager::__scanCallbackPrivate();
+                #endif
 
                 for (auto& callback: m_drawHooks) {
                     callback.second(*this);
@@ -251,17 +95,15 @@ namespace id {
                 }
 
                 // 3D
-                if (!m_force2d) {
-                    glCullFace(GL_BACK);
-                    glEnable(GL_CULL_FACE);
-                    glEnable(GL_DEPTH_TEST);
-                    glDisable(GL_BLEND);
-                    glm::mat4 view = glm::mat4(1.0f);
-                    getCurrentShader().setMatrix4("projection", view);
+                glCullFace(GL_BACK);
+                glEnable(GL_CULL_FACE);
+                glEnable(GL_DEPTH_TEST);
+                glDisable(GL_BLEND);
+                glm::mat4 view = glm::mat4(1.0f);
+                getCurrentShader().setMatrix4("projection", view);
 
-                    for (auto& drawable: m_drawStack3d) {
-                        drawable->draw(*this, false);
-                    }
+                for (auto& drawable: m_drawStack3d) {
+                    drawable->draw(*this, false);
                 }
 
                 // 2D
@@ -273,12 +115,6 @@ namespace id {
                 glm::mat4 projectionMatrix = getOrthoProjection();
                 getCurrentShader().setMatrix4("projection", projectionMatrix);
 
-                if (m_force2d) {
-                    for (auto& drawable: m_drawStack3d) {
-                        drawable->draw(*this, true);
-                    }
-                }
-
                 for (auto& drawable: m_drawStack2d) {
                     drawable->draw(*this, true);
                 }
@@ -287,7 +123,15 @@ namespace id {
                     clear();
                 }
 
-                eglSwapBuffers(m_display, m_surface);
+                #ifdef __SWITCH__
+                    eglSwapBuffers(m_display, m_surface);
+                #else
+                    #ifdef __PC__
+                        if (!glfwWindowShouldClose(m_window)) {
+                            glfwSwapBuffers(m_window);
+                        }
+                    #endif
+                #endif
             }
         }
 
@@ -389,6 +233,243 @@ namespace id {
             }
 
             return false;
+        }
+
+        glm::mat4 Renderer::getOrthoProjection() {
+            GLint viewport[4];
+            glGetIntegerv(GL_VIEWPORT, viewport);
+            return glm::ortho(static_cast<float>(viewport[0]), static_cast<float>(viewport[2]), static_cast<float>(viewport[3]), static_cast<float>(viewport[1]));
+        }
+
+        #ifdef __PC__
+        GLFWwindow& Renderer::getGLFWWindow() const {
+            return *m_window;
+        }
+        #endif
+
+        // protected methods
+        Renderer::Renderer() :
+        m_currentShader(""),
+        m_clearColor(0, 0, 0, 0) {
+            #if defined(__SWITCH__)
+                if (!m_context) {
+            #elif defined(__PC__)
+                if (!m_window) {
+            #endif
+                id::Console::log("Initializing screen...", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
+
+                #ifdef __SWITCH__
+                    // Connect to the EGL default display
+                    m_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+                    if (!m_display) {
+                        id::Console::error("EGL: Could not connect to display! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
+                        return;
+                    }
+
+                    id::Console::success("EGL: Connected to display successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                    // Initialize the EGL display connection
+                    eglInitialize(m_display, nullptr, nullptr);
+
+                    // Select OpenGL (Core) as the desired graphics API
+                    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
+                        id::Console::error("EGL: Could not bind OpenGL-API! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                        return;
+                    }
+
+                    id::Console::success("EGL: Bound OpenGL-API successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                    // Get an appropriate EGL framebuffer configuration
+                    EGLConfig config;
+                    EGLint numConfigs;
+
+                    static const EGLint framebufferAttributeList[] = {
+                        EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+                        EGL_RED_SIZE,     8,
+                        EGL_GREEN_SIZE,   8,
+                        EGL_BLUE_SIZE,    8,
+                        EGL_ALPHA_SIZE,   8,
+                        EGL_DEPTH_SIZE,   24,
+                        EGL_STENCIL_SIZE, 8,
+                        EGL_NONE
+                    };
+
+                    eglChooseConfig(m_display, framebufferAttributeList, &config, 1, &numConfigs);
+
+                    if (numConfigs == 0) {
+                        id::Console::error("EGL: No config found! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                        return;
+                    }
+
+                    id::Console::log("EGL: Configurations loaded", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
+
+                    // Create an EGL window surface
+                    m_surface = eglCreateWindowSurface(m_display, config, nwindowGetDefault(), nullptr);
+
+                    if (!m_surface) {
+                        id::Console::error("EGL: Surface creation failed! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                        return;
+                    }
+
+                    id::Console::success("EGL: Surface created successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                    // Create an EGL rendering context
+                    static const EGLint contextAttributeList[] = {
+                        EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+                        EGL_CONTEXT_MAJOR_VERSION_KHR, 4,
+                        EGL_CONTEXT_MINOR_VERSION_KHR, 3,
+                        EGL_NONE
+                    };
+
+                    m_context = eglCreateContext(m_display, config, EGL_NO_CONTEXT, contextAttributeList);
+
+                    if (!m_context) {
+                        id::Console::error("EGL: Context creation failed! error: " + eglGetError(), "Renderer.cpp:" + std::to_string(__LINE__), true);
+                        eglDestroySurface(m_display, m_surface);
+                        m_surface = nullptr;
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                        return;
+                    }
+
+                    id::Console::success("EGL: Context created successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                    // Connect the context to the surface
+                    eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+                    gladLoadGL();
+                #else
+                    #ifdef __PC__
+                        glfwInit();
+                        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+                        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+                        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+                        #ifdef __OSX__
+                            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+                        #endif
+
+                        m_window = glfwCreateWindow(1920, 1080, "Infinite Dungeons", glfwGetPrimaryMonitor(), nullptr);
+
+                        if (!m_window) {
+                            id::Console::error("Failed to create GLFW window", "Renderer.cpp:" + std::to_string(__LINE__), true);
+                            glfwTerminate();
+                            return;
+                        }
+
+                        id::Console::success("Successfully created GLFW window", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                        glfwMakeContextCurrent(m_window);
+
+                        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+                            id::Console::error("Failed to initialize GLAD", "Renderer.cpp:" + std::to_string(__LINE__), true);
+                            glfwTerminate();
+                            return;
+                        }
+
+                        id::Console::success("Successfully initialized GLAD", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                        glfwSetKeyCallback(m_window, id::InputManager::__keyCallbackPrivate);
+                        glfwSetCharCallback(m_window, id::InputManager::__characterCallbackPrivate);
+
+                        glViewport(0, 0, 1920, 1080);
+                        glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){ glViewport(0, 0, width, height); });
+                    #endif
+                #endif
+
+                glClearColor(m_clearColor.getRed(), m_clearColor.getGreen(), m_clearColor.getBlue(), 1.0f);
+
+                // default shaders
+                const std::string vertexShaderSource = R"text(
+                    #version 430 core
+                    layout (location = 0) in vec3 aPos;
+                    layout (location = 1) in vec4 aColor;
+                    layout (location = 2) in vec2 aTexCoords;
+                    layout (location = 3) in vec3 aNormals;
+
+                    uniform mat4 transform;
+                    uniform mat4 projection;
+
+                    out vec4 ourColor;
+
+                    void main()
+                    {
+                        gl_Position = projection * transform * vec4(aPos.xyz, 1.0);
+                        ourColor = aColor;
+                    }
+                )text";
+
+                const std::string fragmentShaderSource = R"text(
+                    #version 430 core
+                    in vec4 ourColor;
+                    out vec4 fragColor;
+
+                    void main()
+                    {
+                        fragColor = ourColor;
+                    }
+                )text";
+
+                id::graphics::Shader vsh, fsh;
+                vsh.compile(vertexShaderSource, id::graphics::Shader::Type::Vertex);
+                fsh.compile(fragmentShaderSource, id::graphics::Shader::Type::Fragment);
+
+                if (!m_defaultShader.attach(vsh).attach(fsh).link()) {
+                    // this should never happen
+                    id::Console::error("Failed to link default shader", "Renderer.cpp:" + std::to_string(__LINE__), true);
+
+                    #ifdef __SWITCH__
+                        eglDestroyContext(m_display, m_context);
+                        m_context = nullptr;
+
+                        eglDestroySurface(m_display, m_surface);
+                        m_surface = nullptr;
+
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                    #else
+                        #ifdef __PC__
+                            glfwTerminate();
+                        #endif
+                    #endif
+                    return;
+                }
+
+                id::Console::log("Default shader linked", "Renderer.cpp:" + std::to_string(__LINE__), id::Console::White);
+
+                if (!m_defaultShader.use()) {
+                    id::Console::error("Failed to use default shader", "Renderer.cpp:" + std::to_string(__LINE__), true);
+
+                    #ifdef __SWITCH__
+                        eglDestroyContext(m_display, m_context);
+                        m_context = nullptr;
+
+                        eglDestroySurface(m_display, m_surface);
+                        m_surface = nullptr;
+
+                        eglTerminate(m_display);
+                        m_display = nullptr;
+                    #else
+                        #ifdef __PC__
+                            glfwTerminate();
+                        #endif
+                    #endif
+                    return;
+                }
+
+                id::Console::success("EGL: Default shader applied successfully!", "Renderer.cpp:" + std::to_string(__LINE__));
+
+                m_defaultShader.setMatrix4("transform", glm::mat4(1.0f));
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            }
         }
     } /* graphics */
 } /* id */

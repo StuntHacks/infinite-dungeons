@@ -1,4 +1,4 @@
-#include "switch/lock.hpp"
+#include "common/Lock.hpp"
 
 namespace id {
     Lock::Lock(Mutex& mutex) :

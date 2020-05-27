@@ -3,25 +3,27 @@
 #include <functional>
 #include <map>
 #include <vector>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <glad/glad.h>
+#include "opengl.hpp"
 
 #include "Color.hpp"
 #include "ShaderProgram.hpp"
+#include "common/Singleton.hpp"
 
 namespace id {
+    class Application;
+
+    /**
+     * @brief Contains anything graphics-related
+     */
     namespace graphics {
         class Color;
         class Drawable;
 
-        class Renderer {
+        class Renderer: public id::Singleton<Renderer> {
+        friend class id::Singleton<Renderer>;
+        friend class id::Application;
         public:
-            Renderer(bool force2d = false);
             virtual ~Renderer();
-
-            void force2d(bool force2d) { m_force2d = force2d; }
-            bool is2dForced() { return m_force2d; }
 
             virtual void setClearColor(id::graphics::Color color);
             id::graphics::Color getClearColor();
@@ -31,6 +33,11 @@ namespace id {
             virtual void clear();
             virtual void clear2d();
             virtual void clear3d();
+
+            /**
+             * @brief Renders the current drawstacks
+             * @param clearScreen Whether to clear the screen from the last frame
+             */
             virtual void render(bool clearScreen = true);
 
             static void prepare();
@@ -45,27 +52,35 @@ namespace id {
             const std::string& getCurrentShaderName() const;
             id::graphics::ShaderProgram& getCurrentShader();
 
-            static bool addDrawHook(const std::string& name, std::function<void(id::graphics::Renderer&)> callback);
-            static bool removeDrawHook(const std::string& name);
+            bool addDrawHook(const std::string& name, std::function<void(id::graphics::Renderer&)> callback);
+            bool removeDrawHook(const std::string& name);
 
-            static inline glm::mat4 getOrthoProjection() {
-                return glm::ortho(0.0f, 1920.0f, 1080.0f, 0.0f);
-            }
+            static glm::mat4 getOrthoProjection();
+
+            #ifdef __PC__
+            GLFWwindow& getGLFWWindow() const;
+            #endif
 
         private:
+            Renderer();
             /* data */
-            bool m_force2d;
             std::string m_currentShader;
             id::graphics::Color m_clearColor;
             std::vector<id::graphics::Drawable*> m_drawStack2d, m_drawStack3d;
             id::graphics::ShaderProgram m_defaultShader;
             std::map<std::string, id::graphics::ShaderProgram> m_shaders;
 
-            static inline std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
+            std::map<std::string, std::function<void(id::graphics::Renderer&)>> m_drawHooks;
 
-            static EGLDisplay m_display;
-            static EGLContext m_context;
-            static EGLSurface m_surface;
+            #ifdef __SWITCH__
+                EGLDisplay m_display;
+                EGLContext m_context;
+                EGLSurface m_surface;
+            #else
+                #ifdef __PC__
+                    GLFWwindow* m_window;
+                #endif
+            #endif
         };
     } /* graphics */
 } /* id */

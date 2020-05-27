@@ -10,7 +10,7 @@
 #include "common/graphics/Font.hpp"
 #include "common/graphics/Texture.hpp"
 #include "common/graphics/drawables/Model.hpp"
-#include "switch/lock.hpp"
+#include "common/Lock.hpp"
 #include "opengl.hpp"
 
 namespace id {
@@ -45,7 +45,7 @@ namespace id {
          */
         /**
          * @brief Gets a texture asset. If the given assetpath isn't cached yet, it will load it from the filesystem
-         * @param  assetpath  The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load
+         * @param  assetpath  The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load from the filesystem
          * @param  recache    Whether the asset should be loaded from the filesystem regardless whether it's cached
          * @tparam LoaderType the Loader-implementation to use
          * @return            The asset
@@ -60,7 +60,7 @@ namespace id {
                                 + assetpath +
                                 (recache ?
                                     "\"..." : "\" not cached. Loading..."),
-                                "AssetPipeline.cpp");
+                                "AssetPipeline.hpp:" + std::to_string(__LINE__), id::Console::White);
                 id::graphics::Texture texture = id::graphics::Texture(false);
                 texture.loadFromFile<LoaderType>(assetpath);
                 m_textureCache[assetpath] = texture;
@@ -142,10 +142,28 @@ namespace id {
          */
         /**
          * @brief Gets a model asset. If the given assetpath isn't cached yet, it will load it from the filesystem
-         * @param  assetpath The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load from the filesystem regardless whether it's cached
+         * @param  assetpath The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load from the filesystem
+         * @param  recache    Whether the asset should be loaded from the filesystem regardless whether it's cached
          * @return           The asset
          */
-        id::graphics::Model& getModel(const std::string& assetpath);
+        template <class LoaderType>
+        id::graphics::Model& getModel(const std::string& assetpath, bool recache = false)  {
+            static_assert(std::is_base_of<id::loaders::ModelLoader, LoaderType>::value, "Wrong Loader-type provided. Make sure you use an implementation of ModelLoader.");
+
+            if (m_modelCache.count(assetpath) == 0 || recache) {
+                id::Console::log((recache ?
+                                    "Recaching model \"" : "Texture \"")
+                                + assetpath +
+                                (recache ?
+                                    "\"..." : "\" not cached. Loading..."),
+                                "AssetPipeline.hpp:" + std::to_string(__LINE__), id::Console::White);
+                id::graphics::Model model = id::graphics::Texture(false);
+                model.loadFromFile<LoaderType>(assetpath);
+                m_modelCache[assetpath] = model;
+            }
+
+            return m_modelCache[assetpath];
+        };
 
         /**
          * @brief Checks whether a model asset is already cached
@@ -264,7 +282,6 @@ namespace id {
 
         /* data */
         id::Mutex m_mutex;
-             // "filepath:smooth|rough"
         std::map<std::string, id::graphics::Texture> m_textureCache;
         std::map<std::string, id::graphics::Font> m_fontCache;
         std::map<std::string, id::graphics::Model> m_modelCache;

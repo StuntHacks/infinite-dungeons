@@ -1,8 +1,12 @@
-build/
+build*/
 *.elf
 *.nacp
 *.nro
 *.nso
 *.pfs0
 romfs/assets/**/*.*
-docs/
+/docs
+
+# Atom-specific files
+toolbar.coffee
+.atom-build.yml

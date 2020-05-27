@@ -2,10 +2,18 @@
 
 namespace id {
     namespace graphics {
-        Model::Model() { /* do nothing */ }
+        Model::Model(bool autoDelete) {
+            setAutoDelete(autoDelete);
+        }
 
         Model::~Model() {
+            if (m_autoDelete) {
+                deleteThis();
+            }
+        }
 
+        bool Model::isLoaded() {
+            return false;
         }
 
         void Model::draw(id::graphics::Renderer& renderer, bool) {
@@ -40,6 +48,11 @@ namespace id {
 
         glm::mat4 Model::Joint::getInverseLocalBindTransform() const {
             return m_inverseBindTransform;
+        }
+
+        void Model::deleteThis() {
+            if (isLoaded()) {
+            }
         }
 
         // protected methods

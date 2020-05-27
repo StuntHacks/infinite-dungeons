@@ -2,7 +2,7 @@
 #include "common/graphics/Renderer.hpp"
 #include "common/graphics/Shader.hpp"
 #include "common/graphics/drawables/Text.hpp"
-#include "switch/lock.hpp"
+#include "common/Lock.hpp"
 
 namespace id {
     namespace graphics {

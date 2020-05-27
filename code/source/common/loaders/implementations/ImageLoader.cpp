@@ -10,13 +10,13 @@ namespace id {
             unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
 
             if (_load(data, width, height, nrChannels)) {
-                id::Console::success("Successfully loaded texture \"" + filepath + "\"!", "ImageLoader.cpp:12");
+                id::Console::success("Successfully loaded texture \"" + filepath + "\"!", "ImageLoader.cpp:" + std::to_string(__LINE__));
 
                 stbi_image_free(data);
                 return true;
             }
 
-            id::Console::error("Failed to load texture \"" + filepath + "\"!", "ImageLoader.cpp:12");
+            id::Console::error("Failed to load texture \"" + filepath + "\"!", "ImageLoader.cpp:" + std::to_string(__LINE__));
 
             stbi_image_free(data);
             return false;
@@ -27,13 +27,13 @@ namespace id {
             unsigned char* data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(buffer.c_str()), buffer.length(), &width, &height, &nrChannels, 0);
 
             if (_load(data, width, height, nrChannels)) {
-                id::Console::success("Successfully loaded texture from buffer!", "ImageLoader.cpp:29");
+                id::Console::success("Successfully loaded texture from buffer!", "ImageLoader.cpp:" + std::to_string(__LINE__));
 
                 stbi_image_free(data);
                 return true;
             }
 
-            id::Console::error("Failed to load texture from buffer!", "ImageLoader.cpp:29");
+            id::Console::error("Failed to load texture from buffer!", "ImageLoader.cpp:" + std::to_string(__LINE__));
 
             stbi_image_free(data);
             return false;

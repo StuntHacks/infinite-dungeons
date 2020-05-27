@@ -1,6 +1,14 @@
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <glad/glad.h>
+#pragma once
+#ifdef __SWITCH__
+    #include <EGL/egl.h>
+    #include <EGL/eglext.h>
+    #include <glad/glad.h>
+#else
+    #ifdef __PC__
+        #include "pc/glad/glad.h"
+        #include <GLFW/glfw3.h>
+    #endif
+#endif
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

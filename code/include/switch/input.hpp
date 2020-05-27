@@ -1,3 +1,4 @@
+#ifdef __SWITCH__
 /**
  * @file switch/input.hpp
  * @brief Defines the Input class
@@ -5,15 +6,14 @@
 #pragma once
 
 #include <switch.h>
+#include "common/InputManager.hpp"
 #include "common/graphics/Vertex.hpp"
 
 namespace id {
     /**
-     * @brief Handles user input
+     * Contains everything Switch-related
      */
-    class Input {
-    friend class Application;
-    public:
+    namespace nx {
         /**
          * @brief Represents the different buttons
          */
@@ -60,25 +60,28 @@ namespace id {
             Touch = (1U<<( 28 )),                                 ///< Touch (only whether the user touches *somewhere* on the screen)
         };
 
+        /**
+         * @brief Represents the two joysticks (when using a single Joy-Con, only Joystick::Left will be in use)
+         */
         enum class Joystick: int {
-            Left = JOYSTICK_LEFT,
-            Right = JOYSTICK_RIGHT
+            Left = JOYSTICK_LEFT,  ///< Left
+            Right = JOYSTICK_RIGHT ///< Right
         };
 
         /**
          * @brief Represents the different players
          */
         enum class Player: int {
-            P1 = 0,   // Player 1
-            P2,       // Player 2
-            P3,       // Player 3
-            P4,       // Player 4
-            P5,       // Player 5
-            P6,       // Player 6
-            P7,       // Player 7
-            P8,       // Player 8
-            Handheld, // Handheld
-            All       // All players
+            P1 = 0,   ///< Player 1
+            P2,       ///< Player 2
+            P3,       ///< Player 3
+            P4,       ///< Player 4
+            P5,       ///< Player 5
+            P6,       ///< Player 6
+            P7,       ///< Player 7
+            P8,       ///< Player 8
+            Handheld, ///< Handheld
+            All       ///< All players
         };
 
         /**
@@ -100,8 +103,8 @@ namespace id {
                     downButtons,     ///< Buttons that are pressed by this player this frame, regardless whether they were pressed in the last frame or not
                     releasedButtons; ///< Buttons that have been released by this player this frame
                 ControllerData controllerData; ///< Controller data
-                id::graphics::Vector2i joystickCartesian[2];
-                id::graphics::Vector2f joystickPolar[2];
+                id::graphics::Vector2i joystickCartesian[2]; ///< Joystick-positions in cartesian-format (x, y; positions in [-32767; 32768])
+                id::graphics::Vector2f joystickPolar[2]; ///< Joystick-positions in polar-format (angle, distance; distance in [-1.0; 1.0])
             };
 
             int pressedButtons,  ///< Buttons that have been pressed by any player this frame
@@ -109,7 +112,14 @@ namespace id {
                 releasedButtons; ///< Buttons that have been released by any player this frame
             PlayerInput playerData[(int) Player::All]; ///< Input data for every player
         };
+    } /* nx */
 
+    /**
+     * @brief Handles user input
+     */
+    class Input {
+    friend class Application;
+    public:
         /**
          * @brief Returns whether the console is being used in handheld mode
          * @return `true` if the console is being used in handheld mode, `false` otherwise
@@ -123,7 +133,7 @@ namespace id {
          * @param  player The player to check
          * @return        `true` if the given player is connected, `false` otherwise
          */
-        static inline bool isPlayerConnected(Player player) {
+        static inline bool isPlayerConnected(id::nx::Player player) {
             return hidIsControllerConnected((HidControllerID) player);
         }
 
@@ -132,8 +142,8 @@ namespace id {
          * @param  player The player to read the buttons from
          * @return        Button values in bits
          */
-        static inline u32 buttonsDown(Player player = Player::All) {
-            return (player == Player::All ? m_inputData.downButtons : m_inputData.playerData[(int) player].downButtons);
+        static inline u32 buttonsDown(id::nx::Player player = id::nx::Player::All) {
+            return (player == id::nx::Player::All ? m_inputData.downButtons : m_inputData.playerData[(int) player].downButtons);
         }
 
         /**
@@ -141,8 +151,8 @@ namespace id {
          * @param  player The player to read the buttons from
          * @return        Button values in bits
          */
-        static inline u32 buttonsPressed(Player player = Player::All) {
-            return (player == Player::All ? m_inputData.pressedButtons : m_inputData.playerData[(int) player].pressedButtons);
+        static inline u32 buttonsPressed(id::nx::Player player = id::nx::Player::All) {
+            return (player == id::nx::Player::All ? m_inputData.pressedButtons : m_inputData.playerData[(int) player].pressedButtons);
         }
 
         /**
@@ -150,8 +160,8 @@ namespace id {
          * @param  player The player to read the buttons from
          * @return        Button values in bits
          */
-        static inline u32 buttonsReleased(Player player = Player::All) {
-            return (player == Player::All ? m_inputData.releasedButtons : m_inputData.playerData[(int) player].releasedButtons);
+        static inline u32 buttonsReleased(id::nx::Player player = id::nx::Player::All) {
+            return (player == id::nx::Player::All ? m_inputData.releasedButtons : m_inputData.playerData[(int) player].releasedButtons);
         }
 
         /**
@@ -160,7 +170,7 @@ namespace id {
          * @param  player  The player to read the buttons from
          * @return         Whether the button is pressed or not
          */
-        static inline bool buttonPressed(Button buttons, Player player = Player::All) {
+        static inline bool buttonPressed(id::nx::Button buttons, id::nx::Player player = id::nx::Player::All) {
             return (buttonsPressed(player) & buttons);
         }
 
@@ -170,7 +180,7 @@ namespace id {
          * @param  player  The player to read the buttons from
          * @return         Whether the button is pressed or not
          */
-        static inline bool buttonDown(Button buttons, Player player = Player::All) {
+        static inline bool buttonDown(id::nx::Button buttons, id::nx::Player player = id::nx::Player::All) {
             return (buttonsDown(player) & buttons);
         }
 
@@ -180,7 +190,7 @@ namespace id {
          * @param  player  The player to read the buttons from
          * @return         Whether the button was released or not
          */
-        static inline bool buttonReleased(Button buttons, Player player = Player::All) {
+        static inline bool buttonReleased(id::nx::Button buttons, id::nx::Player player = id::nx::Player::All) {
             return (buttonsReleased(player) & buttons);
         }
 
@@ -190,7 +200,7 @@ namespace id {
          * @param  player The player to query from
          * @return        A vector consisting of the x- and y-position (both between [-32767; 32768])
          */
-        static inline id::graphics::Vector2i getJoystickCartesian(id::Input::Joystick stick, Player player) {
+        static inline id::graphics::Vector2i getJoystickCartesian(id::nx::Joystick stick, id::nx::Player player) {
             return m_inputData.playerData[(int) player].joystickCartesian[static_cast<int>(stick)];
         }
 
@@ -200,12 +210,13 @@ namespace id {
          * @param  player The player to query from
          * @return        A vector consisting of the angle (in degrees) and the length (between [-1.0; 1.0])
          */
-        static inline id::graphics::Vector2f getJoystickPolar(id::Input::Joystick stick, Player player) {
+        static inline id::graphics::Vector2f getJoystickPolar(id::nx::Joystick stick, id::nx::Player player) {
             return m_inputData.playerData[(int) player].joystickPolar[static_cast<int>(stick)];
         }
 
     private:
         static void scanInput();
-        static InputData m_inputData;
+        static id::nx::InputData m_inputData;
     };
 } /* id */
+#endif

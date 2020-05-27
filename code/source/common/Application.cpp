@@ -1,14 +1,26 @@
 #include "common/Application.hpp"
+#include "common/graphics/Renderer.hpp"
 #include "common/menu/TextBoxManager.hpp"
 #include "switch/input.hpp"
+#include "pc/input.hpp"
 
-#include <switch.h>
+#ifdef __SWITCH__
+    #include <switch.h>
+#endif
 
 namespace id {
     bool Application::isRunning() {
-        id::Input::scanInput();
-        id::menu::TextBoxManager::getInstance().update();
-        return m_isRunning && appletMainLoop();
+        #ifdef __SWITCH__
+            id::Input::scanInput();
+            id::menu::TextBoxManager::getInstance().update();
+            return m_isRunning && appletMainLoop();
+        #else
+            #ifdef __PC__
+                id::pc::Input::scanInput();
+                id::menu::TextBoxManager::getInstance().update();
+                return m_isRunning && (id::graphics::Renderer::getInstance().m_window ? !glfwWindowShouldClose(id::graphics::Renderer::getInstance().m_window) : false);
+            #endif
+        #endif
     }
 
     void Application::exit() {

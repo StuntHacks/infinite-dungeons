@@ -1,10 +1,10 @@
 /**
- * @file switch/lock.hpp
+ * @file common/Lock.hpp
  * @brief Defines the Lock class
  */
 #pragma once
 
-#include "mutex.hpp"
+#include "Mutex.hpp"
 
 namespace id {
     class Mutex;
@@ -28,6 +28,6 @@ namespace id {
 
     private:
         /* data */
-        Mutex m_mutex;
+        Mutex& m_mutex;
     };
 } /* id */

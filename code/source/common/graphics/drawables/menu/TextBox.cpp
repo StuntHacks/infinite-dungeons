@@ -1,6 +1,6 @@
 #include "common/graphics/drawables/menu/TextBox.hpp"
-#include "common/settings/settings.hpp"
-#include "switch/input.hpp"
+#include "common/settings/Settings.hpp"
+#include "common/InputManager.hpp"
 
 namespace id {
     namespace menu {
@@ -110,7 +110,7 @@ namespace id {
 
                     return;
                 } else {
-                    if (m_frameCounter % (id::Input::buttonDown(id::Input::Button::B) ? 2 : id::settings::TextSpeed) == 0) {
+                    if (m_frameCounter % (m_cancel ? 1 : id::settings::TextSpeed) == 0) {
                         drawCharacter();
                     }
                 }
@@ -120,8 +120,8 @@ namespace id {
                 // TODO: Clean this mess up
                 if (
                     (
-                        (id::Input::buttonPressed(id::Input::Button::A) ||
-                        (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime)
+                        (m_continue ||
+                        (m_cancel && m_frameCounter >= m_displayTime)
                     ) && !m_autoProceed) ||
                     (m_autoProceed && m_frameCounter >= m_displayTime)
                 ) {
@@ -135,8 +135,8 @@ namespace id {
                 // TODO: Clean this mess up
                 if (
                     (
-                        (id::Input::buttonPressed(id::Input::Button::A) ||
-                        (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime)
+                        (m_continue ||
+                        (m_cancel && m_frameCounter >= m_displayTime)
                     ) && !m_autoProceed) ||
                     (m_autoProceed && m_frameCounter >= m_displayTime)
                 ) {
@@ -153,13 +153,13 @@ namespace id {
                 break;
             case id::menu::TextBox::State::DisplayingFinal:
                 if (m_isQuestion) {
-                    if (id::Input::buttonPressed(id::Input::Button::Up)) {
+                    if (m_up) {
                         if (m_optionsCursor > 0) {
                             m_optionsCursor--;
                         } else {
                             m_optionsCursor = m_options.size() - 1;
                         }
-                    } else if (id::Input::buttonPressed(id::Input::Button::Down)) {
+                    } else if (m_down) {
                         if (m_optionsCursor < m_options.size() - 1) {
                             m_optionsCursor++;
                         } else {
@@ -167,17 +167,17 @@ namespace id {
                         }
                     }
 
-                    if (id::Input::buttonPressed(id::Input::Button::A)) {
+                    if (m_continue) {
                         m_result = m_options[m_optionsCursor].resultValue > -1 ? m_options[m_optionsCursor].resultValue : m_optionsCursor;
                         m_frameCounter = 0;
                         m_state = id::menu::TextBox::State::PauseAfter;
-                    } else if (id::Input::buttonPressed(id::Input::Button::B) && m_defaultOption != -1) {
+                    } else if (m_cancel && m_defaultOption != -1) {
                         m_result = m_options[m_defaultOption].resultValue > -1 ? m_options[m_defaultOption].resultValue : m_defaultOption;
                         m_frameCounter = 0;
                         m_state = id::menu::TextBox::State::PauseAfter;
                     }
                 } else {
-                    if (id::Input::buttonPressed(id::Input::Button::A) || (id::Input::buttonDown(id::Input::Button::B) && m_frameCounter >= m_displayTime) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
+                    if (m_continue || (m_cancel && m_frameCounter >= m_displayTime) || (m_autoProceed && m_frameCounter >= m_displayTime)) {
                         m_frameCounter = 0;
                         m_state = id::menu::TextBox::State::PauseAfter;
                         return;
@@ -221,6 +221,10 @@ namespace id {
             }
 
             m_frameCounter++;
+            m_continue = false;
+            m_cancel = false;
+            m_up = false;
+            m_down = false;
         }
 
         id::menu::TextBox::State TextBox::getState() {
@@ -239,12 +243,44 @@ namespace id {
         m_optionsCursor(0),
         m_autoProceed(false),
         m_isQuestion(false),
+        m_continue(false),
+        m_cancel(false),
+        m_up(false),
+        m_down(false),
         m_state(id::menu::TextBox::State::Finished),
         m_text(L""),
         m_callback([](int){}),
         m_font(id::settings::DefaultFontPath),
         m_textObject(m_font) {
             m_cursor = m_text.begin();
+            id::InputManager::getInstance().registerCallback("confirm", std::bind(&TextBox::_continue, this, std::placeholders::_1));
+            id::InputManager::getInstance().registerCallback("cancel", std::bind(&TextBox::_cancel, this, std::placeholders::_1));
+            id::InputManager::getInstance().registerCallback("menuUp", std::bind(&TextBox::_up, this, std::placeholders::_1));
+            id::InputManager::getInstance().registerCallback("menuDown", std::bind(&TextBox::_down, this, std::placeholders::_1));
+        }
+
+        void TextBox::_continue(id::Event& e) {
+            if (!m_continue) {
+                m_continue = true;
+            }
+        }
+
+        void TextBox::_cancel(id::Event& e) {
+            if (!m_cancel) {
+                m_cancel = true;
+            }
+        }
+
+        void TextBox::_up(id::Event& e) {
+            if (!m_up) {
+                m_up = true;
+            }
+        }
+
+        void TextBox::_down(id::Event& e) {
+            if (!m_down) {
+                m_down = true;
+            }
         }
 
         std::vector<std::wstring> TextBox::split(const std::wstring& text, const std::wstring& delimeter) {
