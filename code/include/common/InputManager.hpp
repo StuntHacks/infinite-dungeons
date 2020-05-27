@@ -11,6 +11,8 @@
 #include "common/EventDispatcher.hpp"
 #include "common/Singleton.hpp"
 #include "common/Event.hpp"
+#include "common/events/PressEvent.hpp"
+#include "common/graphics/Vertex.hpp"
 #include "pc/pc.hpp"
 #include "switch/switch.hpp"
 
@@ -37,15 +39,26 @@ namespace id {
     friend class id::graphics::Renderer;
     public:
         #if defined(__SWITCH__)
-            using Key = id::nx::Button; ///< Defines different Buttons on the Switch
+            using Button = id::nx::Button; ///< Defines different Buttons on the Switch
+            using Joystick = id::nx::Joystick; ///< Defines different sticks on the Switch
+            using Player = id::nx::Player; ///< Defines different players on the Switch
         #elif defined(__PC__)
             using Key = id::pc::Key; ///< Defines different Keys on the PC
+            using Button = id::pc::Button; ///< Defines different Keys on the PC
+            using Joystick = id::pc::Joystick; ///< Defines different sticks on the PC
+            using Player = id::pc::Player; ///< Defines different players/controllers on the PC
         #endif
 
         /**
          * @brief Destructor
          */
         virtual ~InputManager() { /* do nothing */ };
+
+        id::events::PressEvent::State getCachedInputState(const std::string& id, bool preferButtons = false);
+
+        id::graphics::Vector2f getJoystickCartesian(Joystick stick);
+
+        id::graphics::Vector2f getJoystickPolar(Joystick stick);
 
         /**
          * @brief Binds an input to the given Key. All callbacks registered to this input will get called when the given Key is pressed
@@ -55,11 +68,32 @@ namespace id {
         void bindInput(const std::string& id, Key key);
 
         /**
-         * @brief Unbinds an input
+         * @brief Binds an input to the given Button. All callbacks registered to this input will get called when the given Button is pressed
+         * @param id     The input to bind
+         * @param button The Button to bind to
+         */
+        void bindInput(const std::string& id, Button button);
+
+        /**
+         * @brief Unbinds an input from every hardware
          * @param  id The input to unbind
          * @return    Whether the unbinding was successful (usually only fails if no such input is bound)
          */
-        bool unbindInput(const std::string& id);
+        void unbindInput(const std::string& id);
+
+        /**
+         * @brief Unbinds a key-input
+         * @param  id The input to unbind
+         * @return    Whether the unbinding was successful (usually only fails if no such input is bound)
+         */
+        bool unbindKeyInput(const std::string& id);
+
+        /**
+         * @brief Unbinds a button-input
+         * @param  id The input to unbind
+         * @return    Whether the unbinding was successful (usually only fails if no such input is bound)
+         */
+        bool unbindButtonInput(const std::string& id);
 
         /**
          * @brief Unbinds all inputs
@@ -84,6 +118,8 @@ namespace id {
             void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
             void _characterCallback(GLFWwindow* window, unsigned int codepoint);
+
+            void _scanCallback();
         #endif
 
     private:
@@ -92,10 +128,15 @@ namespace id {
         #if defined(__PC__)
             static void __keyCallbackPrivate(GLFWwindow* window, int key, int scancode, int action, int mods);
             static void __characterCallbackPrivate(GLFWwindow* window, unsigned int codepoint);
+            static void __scanCallbackPrivate();
         #endif
 
         /* data */
         std::map<std::string, Key> m_keyBindings;
         std::map<Key, std::vector<std::string>> m_keys;
+
+        std::map<std::string, Button> m_buttonBindings;
+        std::map<Button, std::vector<std::string>> m_buttons;
+        std::map<Button, id::events::PressEvent::State> m_cachedButtonStates;
     };
 } /* id */
