@@ -24,7 +24,7 @@ namespace id {
 
             struct Item {
                 std::wstring title;
-                id::graphics::Texture* icon;
+                id::graphics::Texture icon;
                 std::vector<std::wstring> data;
             };
 
@@ -36,7 +36,7 @@ namespace id {
              * @brief Displays the Selection
              * @param callback A callback to call after a selection is done. The single parameter is the selected choice, or -1 if nothing was selected
              */
-            virtual void display(std::vector<id::menu::CircleSelect::Item> options, id::InputManager::Key key, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
+            virtual void display(std::vector<id::menu::CircleSelect::Item> options, const std::string& input, std::function<void(int)> callback = [](int){}, const std::wstring& title = L"");
 
             /**
              * @brief Closes the selection
@@ -57,7 +57,7 @@ namespace id {
             id::menu::CircleSelect::State m_state;
             std::wstring m_title;
             std::vector<id::menu::CircleSelect::Item> m_options;
-            id::InputManager::Key m_key;
+            std::string m_input;
 
             std::function<void(int)> m_callback;
 

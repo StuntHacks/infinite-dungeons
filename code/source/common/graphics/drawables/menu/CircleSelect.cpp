@@ -1,6 +1,7 @@
 #include "common/graphics/drawables/menu/CircleSelect.hpp"
 #include "common/settings/Settings.hpp"
 #include "common/Console.hpp"
+#include "common/InputManager.hpp"
 
 #include <cmath>
 
@@ -18,12 +19,12 @@ namespace id {
             return m_options;
         }
 
-        void CircleSelect::display(std::vector<id::menu::CircleSelect::Item> options, id::InputManager::Key key, std::function<void(int)> callback, const std::wstring& title) {
+        void CircleSelect::display(std::vector<id::menu::CircleSelect::Item> options, const std::string& input, std::function<void(int)> callback, const std::wstring& title) {
             if (m_state == id::menu::CircleSelect::State::Finished) {
                 m_frameCounter = 0;
                 m_cursor = 0;
                 m_title = title;
-                m_key = key;
+                m_input = input;
                 m_state = id::menu::CircleSelect::State::FadingIn;
                 m_options = options;
                 m_callback = callback;
@@ -41,8 +42,10 @@ namespace id {
         }
 
         void CircleSelect::update() {
-            if (m_state == id::menu::CircleSelect::State::FadingIn || m_state == id::menu::CircleSelect::State::Displaying) {
-                if (!id::Input::buttonDown(m_button)) {
+            using namespace id::events;
+
+            if (m_state == State::FadingIn || m_state == State::Displaying) {
+                if (id::InputManager::getInstance().getCachedInputState(m_input) == PressEvent::State::Release) {
                     m_state = id::menu::CircleSelect::State::FadingOut;
                 }
             }
@@ -51,8 +54,8 @@ namespace id {
             switch (m_state) {
             case id::menu::CircleSelect::State::Displaying:
                 {
-                    float angle = id::Input::getJoystickPolar(id::Input::Joystick::Right, id::Input::Player::P1).u;
-                    float weight = id::Input::getJoystickPolar(id::Input::Joystick::Right, id::Input::Player::P1).v;
+                    float angle = id::InputManager::getInstance().getJoystickPolar(id::InputManager::Joystick::Left).u;
+                    float weight = id::InputManager::getInstance().getJoystickPolar(id::InputManager::Joystick::Left).v;
 
                     if (angle < 0.0f) {
                         angle = 360.0f + angle;
@@ -85,7 +88,7 @@ namespace id {
 
                     m_options.clear();
                     m_title = L"";
-                    m_key = id::InputManager::Key::None;
+                    m_input = "";
 
                     m_state = id::menu::CircleSelect::State::Finished;
 
@@ -115,7 +118,7 @@ namespace id {
         m_frameCounter(0),
         m_state(id::menu::CircleSelect::State::Finished),
         m_title(L""),
-        m_key(id::InputManager::Key::None),
+        m_input(""),
         m_callback([](int){}),
         m_font(id::settings::DefaultFontPath),
         m_textObject(m_font) { /* do nothing */ }
