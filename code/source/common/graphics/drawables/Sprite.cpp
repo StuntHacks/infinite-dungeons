@@ -210,6 +210,8 @@ namespace id {
 
             glBindVertexArray(m_vao);
             m_texture.bind();
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
             glBindVertexArray(0);
             glBindTexture(GL_TEXTURE_2D, 0);
