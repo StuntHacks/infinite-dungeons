@@ -82,6 +82,10 @@ namespace id {
             #endif
                 id::menu::TextBoxManager::getInstance().draw(*this);
 
+                #ifdef __PC__
+                    id::InputManager::__scanCallbackPrivate();
+                #endif
+
                 for (auto& callback: m_drawHooks) {
                     callback.second(*this);
                 }
@@ -236,6 +240,12 @@ namespace id {
             glGetIntegerv(GL_VIEWPORT, viewport);
             return glm::ortho(static_cast<float>(viewport[0]), static_cast<float>(viewport[2]), static_cast<float>(viewport[3]), static_cast<float>(viewport[1]));
         }
+
+        #ifdef __PC__
+        GLFWwindow& Renderer::getGLFWWindow() const {
+            return *m_window;
+        }
+        #endif
 
         // protected methods
         Renderer::Renderer() :

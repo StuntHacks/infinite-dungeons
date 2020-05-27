@@ -57,6 +57,10 @@ namespace id {
 
             static glm::mat4 getOrthoProjection();
 
+            #ifdef __PC__
+            GLFWwindow& getGLFWWindow() const;
+            #endif
+
         private:
             Renderer();
             /* data */
