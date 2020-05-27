@@ -14,7 +14,8 @@ namespace id {
         class PressEvent: public id::Event {
         public:
             enum class State: int {
-                Release = 0,
+                Unknown = -1,
+                Release,
                 Press,
                 Repeat
             };
