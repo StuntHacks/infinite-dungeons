@@ -8,31 +8,33 @@
 #include "common/graphics/graphics.hpp"
 
 namespace id {
-    /**
-     * @brief The base class for all gamestates
-     */
-    class GameState {
-    public:
+    namespace game {
         /**
-         * @brief Gets called on destruction
+         * @brief The base class for all gamestates
          */
-        virtual void cleanup() = 0;
+        class GameState {
+        public:
+            /**
+             * @brief Gets called on destruction
+             */
+            virtual void cleanup() = 0;
 
-        /**
-         * @brief Gets called on entry
-         */
-        virtual void onEntry() = 0;
+            /**
+             * @brief Gets called on entry
+             */
+            virtual void onEntry() = 0;
 
-        /**
-         * @brief Gets called on exit
-         */
-        virtual void onExit() = 0;
+            /**
+             * @brief Gets called on exit
+             */
+            virtual void onExit() = 0;
 
-        /**
-         * @brief Updates the GameState
-         * @param handler  The StateHandler currently responsible for this State
-         * @param renderer The Renderer to use
-         */
-        virtual void update(id::StateHandler& handler, id::graphics::Renderer& renderer) = 0;
-    };
+            /**
+             * @brief Updates the GameState
+             * @param handler  The StateHandler currently responsible for this State
+             * @param renderer The Renderer to use
+             */
+            virtual void update(id::game::StateHandler& handler, id::graphics::Renderer& renderer) = 0;
+        };
+    } /* game */
 } /* id */
