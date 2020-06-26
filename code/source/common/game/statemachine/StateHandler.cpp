@@ -1,5 +1,5 @@
-#include "statemachine/StateHandler.hpp"
-#include "statemachine/GameState.hpp"
+#include "game/statemachine/StateHandler.hpp"
+#include "game/statemachine/GameState.hpp"
 
 namespace id {
     namespace game {

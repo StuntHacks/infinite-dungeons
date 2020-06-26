@@ -18,3 +18,4 @@
 #include "menu/menu.hpp"
 #include "graphics/graphics.hpp"
 #include "graphics/drawables/drawables.hpp"
+#include "game/game.hpp"
