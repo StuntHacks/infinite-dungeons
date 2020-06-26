@@ -9,6 +9,7 @@
 #include "common/Singleton.hpp"
 #include "common/graphics/Font.hpp"
 #include "common/graphics/Texture.hpp"
+#include "common/graphics/ShaderProgram.hpp"
 #include "common/graphics/drawables/Model.hpp"
 #include "common/Lock.hpp"
 #include "opengl.hpp"
@@ -202,7 +203,7 @@ namespace id {
          * @param  assetpath The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load from the filesystem regardless whether it's cached
          * @return           The asset
          */
-        std::string getFile(const std::string& assetpath);
+        std::string getFile(const std::string& assetpath, bool recache = false);
 
         /**
          * @brief Checks whether a generic file asset is already cached
@@ -241,7 +242,7 @@ namespace id {
          * @param  assetpath The assetpath. This should be either the "id" already used by another asset, or the path to the asset you want to load from the filesystem regardless whether it's cached
          * @return           The asset
          */
-        std::wstring getWideFile(const std::string& assetpath);
+        std::wstring getWideFile(const std::string& assetpath, bool recache = false);
 
         /**
          * @brief Checks whether a generic unicode file asset is already cached
@@ -271,6 +272,60 @@ namespace id {
         void clearWideFileCache();
         /**@}*/
 
+        /**
+         * @name Shader Shader methods
+         * @{
+         */
+        /**
+         * @brief Loads and compiles a shader-program. If the given path isn't cached yet, it will load it from the filesystem
+         * @param  path      The path to the shader. This should be either the "id" already used by another shader, or the path to the shader you want to load from the filesystem
+         * @param  recache   Whether the asset should be loaded from the filesystem regardless whether it's cached
+         * @return           The compiled shader
+         *
+         * Since shaders consist of multiple files, you need to pass the path to the shader _without any extension_, and make sure the file-structure is correct.
+         *
+         * For example, if you want to load the shader "bar" located under `shaders/foo/`, the file-structure would need to look like this:
+         *
+         *  - shaders/foo/
+         *       - bar.vert
+         *       - bar.frag1
+         *       - bar.frag2
+         *       - ...
+         *
+         * You then need to pass `shaders/foo/bar` to this method, and the AssetPipeline will automatically attach and link them in the right order.
+         *
+         * @note Extensions without a number will always be treated as the first entry, so `bar.vert` will be attached before `bar.vert1`
+         */
+        id::graphics::ShaderProgram& getShader(const std::string& path, bool recache = false);
+
+        /**
+         * @brief Checks whether a generic unicode file asset is already cached
+         * @param  path The path
+         * @return      `true` if the shader is already cached, `false` otherwise
+         */
+        bool existsShader(const std::string& path);
+
+         /**
+          * @brief Inserts an already loaded shader into the cache
+          * @param  path      The path. This should be a unique id for your shader
+          * @param  shader    The shader to insert
+          * @param  overwrite Whether to overwrite the previous asset with the same id, if one exists
+          * @return           `true` if the insertion succeeded, `false` otherwise
+          */
+        bool insertShader(const std::string& path, id::graphics::ShaderProgram& shader, bool overwrite = false);
+
+        /**
+         * @brief Deletes a cached shader
+         * @param path The path
+         */
+        void deleteShader(const std::string& path);
+
+        /**
+         * @brief Clears the shader cache
+         */
+        void clearShaderCache();
+        /**@}*/
+
     protected:
         /**
          * @brief Destructor
@@ -287,5 +342,6 @@ namespace id {
         std::map<std::string, id::graphics::Model> m_modelCache;
         std::map<std::string, std::string> m_fileCache;
         std::map<std::string, std::wstring> m_wideFileCache;
+        std::map<std::string, id::graphics::ShaderProgram> m_shaderCache;
     };
 } /* id */
