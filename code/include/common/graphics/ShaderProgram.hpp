@@ -3,8 +3,8 @@
 #include <string>
 
 #include "opengl.hpp"
-
 #include "Vertex.hpp"
+#include "common/AutoDeletable.hpp"
 
 namespace id {
     namespace graphics {
@@ -13,12 +13,13 @@ namespace id {
         /**
          * @brief Combines multiple different shaders in order to use them in union
          */
-        class ShaderProgram {
+        class ShaderProgram: public id::AutoDeletable {
         public:
             /*
              * @brief Constructs the shader program
+             * @param autoDelete Whether the shader should automatically delete itself when the destructor is called
              */
-            ShaderProgram();
+            ShaderProgram(bool autoDelete = true);
 
             /**
              * @brief Destructs the shader program
@@ -41,9 +42,14 @@ namespace id {
             bool link();
 
             /**
-             * @brief Resets the program ("un-attaches" all shaders)
+             * @brief Resets the program ("un-attaches" all shaders) and prepares it for re-use
              */
             void reset();
+
+            /**
+             * @brief Deletes the program
+             */
+            void deleteThis();
 
             /**
              * @brief Uses the shader program

@@ -7,11 +7,15 @@
 
 namespace id {
     namespace graphics {
-        ShaderProgram::ShaderProgram() :
-            m_program(0) { /* do nothing */ }
+        ShaderProgram::ShaderProgram(bool autoDelete) :
+        m_program(0) {
+            setAutoDelete(autoDelete);
+        }
 
         ShaderProgram::~ShaderProgram() {
-            glDeleteProgram(m_program);
+            if (m_autoDelete) {
+                deleteThis();
+            }
         }
 
         ShaderProgram& ShaderProgram::attach(const id::graphics::Shader& shader) {
@@ -51,6 +55,10 @@ namespace id {
                 m_program = glCreateProgram();
                 m_linked = false;
             }
+        }
+
+        void ShaderProgram::deleteThis() {
+            glDeleteProgram(m_program);
         }
 
         bool ShaderProgram::use() const {
