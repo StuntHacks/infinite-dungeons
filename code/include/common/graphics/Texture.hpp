@@ -23,7 +23,7 @@ namespace id {
         public:
             /**
              * @brief Constructor
-             * @param autoDelete Whether the texture should automatically delete itself when the constructor is called
+             * @param autoDelete Whether the texture should automatically delete itself when the destructor is called
              */
             Texture(bool autoDelete = true);
 
